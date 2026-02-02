@@ -21,66 +21,69 @@ class MoreScreen extends StatelessWidget {
     return AquaPageScaffold(
       currentScreen: current,
       onNavigate: onNavigate,
-      child: Column(
-        children: [
-          const AquaHeader(title: 'Menu'),
-          Padding(
-            padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
-            child: Column(
-              children: [
-                Wrap(
-                  spacing: 16,
-                  runSpacing: 16,
-                  children: [
-                    _MenuCard(
-                      title: 'Analytics',
-                      subtitle: 'History & Trends',
-                      icon: 'monitoring',
-                      color: AquaColors.info,
-                      bg: AquaColors.info.withValues(alpha: 0.10),
-                      onTap: () => onNavigate(AppScreen.analytics),
-                    ),
-                    _MenuCard(
-                      title: 'AI Insights',
-                      subtitle: 'Growth Predictions',
-                      icon: 'psychology',
-                      color: const Color(0xFF8B5CF6),
-                      bg: const Color(0x1A8B5CF6),
-                      onTap: () => onNavigate(AppScreen.insights),
-                    ),
-                    _MenuCard(
-                      title: 'Monitoring',
-                      subtitle: 'Real-time Sensors',
-                      icon: 'speed',
-                      color: AquaColors.warning,
-                      bg: AquaColors.warning.withValues(alpha: 0.10),
-                      onTap: () => onNavigate(AppScreen.monitoring),
-                    ),
-                    _MenuCard(
-                      title: 'Support',
-                      subtitle: 'Help & Guides',
-                      icon: 'help',
-                      color: AquaColors.nature,
-                      bg: AquaColors.nature.withValues(alpha: 0.10),
-                      onTap: () => onNavigate(AppScreen.support),
-                    ),
-                    _MenuCard(
-                      title: 'Profile',
-                      subtitle: 'User & Farm',
-                      icon: 'person',
-                      color: const Color(0xFFEC4899),
-                      bg: const Color(0x1AEC4899),
-                      onTap: () => onNavigate(AppScreen.profile),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 300),
-                
-                
-              ],
-            ),
+      // استخدام ListView أو SingleChildScrollView يسمح للكروت بالتمرير
+      // بينما يظل شريط التنقل (الموجود داخل AquaPageScaffold) ثابتاً في الأسفل
+      child: SingleChildScrollView(
+        physics: const BouncingScrollPhysics(),
+        child: Column(
+          children: [
+            AquaHeader(
+            title: 'Menu',
+            onBack: () => onNavigate(AppScreen.dashboard),
+            
           ),
-        ],
+            Padding(
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 100), // مسافة سفلية إضافية عشان الشريط
+              child: Column(
+                children: [
+                  // الكرت الأول
+                  _MenuCard(
+                    title: 'Analytics',
+                    subtitle: 'History & Trends',
+                    icon: 'monitoring',
+                    color: AquaColors.info,
+                    bg: AquaColors.info.withValues(alpha: 0.10),
+                    onTap: () => onNavigate(AppScreen.analytics),
+                  ),
+                  const SizedBox(height: 18), // مسافة بين الكروت
+                  
+                  // الكرت الثاني
+                  _MenuCard(
+                    title: 'AI Insights',
+                    subtitle: 'Growth Predictions',
+                    icon: 'psychology',
+                    color: const Color(0xFF8B5CF6),
+                    bg: const Color(0x1A8B5CF6),
+                    onTap: () => onNavigate(AppScreen.insights),
+                  ),
+                  const SizedBox(height: 18),
+
+                  // الكرت الثالث
+                  _MenuCard(
+                    title: 'Monitoring',
+                    subtitle: 'Real-time Sensors',
+                    icon: 'speed',
+                    color: AquaColors.warning,
+                    bg: AquaColors.warning.withValues(alpha: 0.10),
+                    onTap: () => onNavigate(AppScreen.monitoring),
+                  ),
+                  const SizedBox(height: 18),
+
+                  // الكرت الرابع
+                  _MenuCard(
+                    title: 'Support',
+                    subtitle: 'Help & Guides',
+                    icon: 'help',
+                    color: AquaColors.nature,
+                    bg: AquaColors.nature.withValues(alpha: 0.10),
+                    onTap: () => onNavigate(AppScreen.support),
+                  ),
+                  
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -106,10 +109,10 @@ class _MenuCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final width = (MediaQuery.of(context).size.width - 16 * 2 - 16) / 2;
+    
     return SizedBox(
-      width: width,
-      height: 128,
+      width: double.infinity, 
+      height: 128, 
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
@@ -142,6 +145,8 @@ class _MenuCard extends StatelessWidget {
                   decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
                 ),
               ),
+              
+              
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -175,6 +180,7 @@ class _MenuCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
+                      
                     ],
                   ),
                 ],
