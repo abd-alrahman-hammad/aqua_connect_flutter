@@ -133,7 +133,6 @@ class DashboardScreen extends StatelessWidget {
                   },
                 ),
                 const SizedBox(height: 24),
-                _ActionPanel(onReport: () => onNavigate(AppScreen.reports)),
               ],
             ),
           ),
@@ -325,8 +324,8 @@ class _VitalityRing extends StatelessWidget {
               ),
             ],
           ),
+
           // Glowing progress dot sitting on the ring
-          
         ],
       ),
     );
@@ -437,116 +436,6 @@ class _SensorCard extends StatelessWidget {
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class _ActionPanel extends StatelessWidget {
-  const _ActionPanel({required this.onReport});
-  final VoidCallback onReport;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Container(
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: isDark ? null : Colors.white,
-        gradient: isDark
-            ? const LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [AquaColors.surfaceDark, Colors.black],
-              )
-            : null,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.10)
-              : AquaColors.slate200,
-        ),
-      ),
-      child: Stack(
-        children: [
-          Positioned(
-            top: -48,
-            right: -48,
-            child: ImageFiltered(
-              imageFilter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-              child: Container(
-                width: 128,
-                height: 128,
-                decoration: BoxDecoration(
-                  color: AquaColors.primary.withValues(alpha: 0.10),
-                  shape: BoxShape.circle,
-                ),
-              ),
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              Row(
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: AquaColors.primary.withValues(alpha: 0.20),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Center(
-                      child: AquaSymbol('analytics', color: AquaColors.primary),
-                    ),
-                  ),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Automated Dosing Active',
-                          style: Theme.of(context).textTheme.titleSmall
-                              ?.copyWith(fontWeight: FontWeight.w800),
-                        ),
-                        const SizedBox(height: 2),
-                        Text(
-                          'Next adjustment in 45 mins',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: isDark
-                                    ? AquaColors.slate400
-                                    : AquaColors.slate500,
-                              ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 16),
-              SizedBox(
-                height: 40,
-                child: ElevatedButton(
-                  onPressed: onReport,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: AquaColors.primary,
-                    foregroundColor: Colors.white,
-                    elevation: 0,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    textStyle: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                  child: const Text('Full System Report'),
-                ),
-              ),
-            ],
-          ),
-        ],
       ),
     );
   }

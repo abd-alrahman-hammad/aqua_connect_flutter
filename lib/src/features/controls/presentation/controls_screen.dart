@@ -22,6 +22,16 @@ class ControlsScreen extends StatefulWidget {
 
 class _ControlsScreenState extends State<ControlsScreen> {
   String mode = 'manual';
+  final Map<String, bool> moduleStates = {
+    'Irrigation Pump': true,
+    'Ventilation Fan': false,
+    'Raise EC': true,
+    'Lower EC': false,
+    'Raise pH': false,
+    'Lower pH': true,
+    'UV Purifier': false,
+    'Heat Gen': true,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -137,60 +147,78 @@ class _ControlsScreenState extends State<ControlsScreen> {
                 Wrap(
                   spacing: 16,
                   runSpacing: 16,
-                  children: const [
+                  children: [
                     _ModuleCard(
                       title: 'Irrigation Pump',
-                      status: 'ACTIVE',
                       sub: '2.4L/m',
                       icon: 'water_drop',
-                      active: true,
+                      active: moduleStates['Irrigation Pump']!,
+                      isEnabled: mode == 'manual',
+                      onToggle: (value) => setState(
+                        () => moduleStates['Irrigation Pump'] = value,
+                      ),
                     ),
                     _ModuleCard(
                       title: 'Ventilation Fan',
-                      status: 'STANDBY',
                       icon: 'mode_fan',
-                      active: false,
+                      active: moduleStates['Ventilation Fan']!,
+                      isEnabled: mode == 'manual',
+                      onToggle: (value) => setState(
+                        () => moduleStates['Ventilation Fan'] = value,
+                      ),
                     ),
                     _ModuleCard(
                       title: 'Raise EC',
-                      status: 'ACTIVE',
                       sub: 'Nutrient Pump',
                       icon: 'science',
-                      active: true,
+                      active: moduleStates['Raise EC']!,
+                      isEnabled: mode == 'manual',
+                      onToggle: (value) =>
+                          setState(() => moduleStates['Raise EC'] = value),
                     ),
                     _ModuleCard(
                       title: 'Lower EC',
-                      status: 'STANDBY',
                       sub: 'Dilution Valve',
                       icon: 'opacity',
-                      active: false,
+                      active: moduleStates['Lower EC']!,
+                      isEnabled: mode == 'manual',
+                      onToggle: (value) =>
+                          setState(() => moduleStates['Lower EC'] = value),
                     ),
                     _ModuleCard(
                       title: 'Raise pH',
-                      status: 'STANDBY',
                       sub: 'Base Doser',
                       icon: 'keyboard_arrow_up',
-                      active: false,
+                      active: moduleStates['Raise pH']!,
+                      isEnabled: mode == 'manual',
+                      onToggle: (value) =>
+                          setState(() => moduleStates['Raise pH'] = value),
                     ),
                     _ModuleCard(
                       title: 'Lower pH',
-                      status: 'ACTIVE',
                       sub: 'Acid Doser',
                       icon: 'keyboard_arrow_down',
-                      active: true,
+                      active: moduleStates['Lower pH']!,
+                      isEnabled: mode == 'manual',
+                      onToggle: (value) =>
+                          setState(() => moduleStates['Lower pH'] = value),
                     ),
                     _ModuleCard(
                       title: 'UV Purifier',
-                      status: 'OFF',
                       icon: 'flare',
-                      active: false,
+                      active: moduleStates['UV Purifier']!,
+                      isEnabled: mode == 'manual',
+                      onToggle: (value) =>
+                          setState(() => moduleStates['UV Purifier'] = value),
                     ),
                     _ModuleCard(
                       title: 'Heat Gen',
-                      status: 'HEATING',
                       sub: '24.5°C',
                       icon: 'thermostat',
-                      active: true,
+                      active: moduleStates['Heat Gen']!,
+                      isEnabled: mode == 'manual',
+                      onToggle: (value) =>
+                          setState(() => moduleStates['Heat Gen'] = value),
                     ),
                   ],
                 ),
@@ -291,17 +319,19 @@ class _ModeButton extends StatelessWidget {
 class _ModuleCard extends StatelessWidget {
   const _ModuleCard({
     required this.title,
-    required this.status,
     this.sub,
     required this.icon,
     required this.active,
+    required this.isEnabled,
+    required this.onToggle,
   });
 
   final String title;
-  final String status;
   final String? sub;
   final String icon;
   final bool active;
+  final bool isEnabled;
+  final Function(bool) onToggle;
 
   @override
   Widget build(BuildContext context) {
@@ -312,114 +342,129 @@ class _ModuleCard extends StatelessWidget {
     final borderColor = active
         ? AquaColors.primary
         : (isDark ? Colors.white.withValues(alpha: 0.05) : AquaColors.slate200);
+    final status = active ? 'ACTIVE' : 'OFF';
 
     return SizedBox(
       width: (MediaQuery.of(context).size.width - 16 * 2 - 16) / 2,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: cardColor,
+      child: Opacity(
+        opacity: isEnabled ? 1.0 : 0.5,
+        child: InkWell(
+          onTap: isEnabled ? () => onToggle(!active) : null,
           borderRadius: BorderRadius.circular(16),
-          border: Border.all(color: borderColor),
-          boxShadow: active
-              ? [
-                  BoxShadow(
-                    color: AquaColors.primary.withValues(alpha: 0.30),
-                    blurRadius: 20,
-                  ),
-                ]
-              : [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.06),
-                    blurRadius: 8,
-                    offset: const Offset(0, 2),
-                  ),
-                ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: cardColor,
+              borderRadius: BorderRadius.circular(16),
+              border: Border.all(color: borderColor),
+              boxShadow: active
+                  ? [
+                      BoxShadow(
+                        color: AquaColors.primary.withValues(alpha: 0.30),
+                        blurRadius: 20,
+                      ),
+                    ]
+                  : [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.06),
+                        blurRadius: 8,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Container(
-                  width: 40,
-                  height: 40,
-                  decoration: BoxDecoration(
-                    color: active
-                        ? AquaColors.primary.withValues(alpha: 0.20)
-                        : (isDark
-                              ? Colors.white.withValues(alpha: 0.05)
-                              : AquaColors.slate100),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Center(
-                    child: AquaSymbol(
-                      icon,
-                      color: active ? AquaColors.primary : AquaColors.slate400,
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        color: active
+                            ? AquaColors.primary.withValues(alpha: 0.20)
+                            : (isDark
+                                  ? Colors.white.withValues(alpha: 0.05)
+                                  : AquaColors.slate100),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Center(
+                        child: AquaSymbol(
+                          icon,
+                          color: active
+                              ? AquaColors.primary
+                              : AquaColors.slate400,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
-                Container(
-                  width: 40,
-                  height: 24,
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: active
-                        ? AquaColors.primary
-                        : (isDark ? AquaColors.slate700 : AquaColors.slate300),
-                    borderRadius: BorderRadius.circular(999),
-                  ),
-                  child: Align(
-                    alignment: active
-                        ? Alignment.centerRight
-                        : Alignment.centerLeft,
+                  GestureDetector(
+                    onTap: isEnabled ? () => onToggle(!active) : null,
                     child: Container(
-                      width: 16,
-                      height: 16,
-                      decoration: const BoxDecoration(
-                        color: Colors.white,
-                        shape: BoxShape.circle,
+                      width: 40,
+                      height: 24,
+                      padding: const EdgeInsets.all(4),
+                      decoration: BoxDecoration(
+                        color: active
+                            ? AquaColors.primary
+                            : (isDark
+                                  ? AquaColors.slate700
+                                  : AquaColors.slate300),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Align(
+                        alignment: active
+                            ? Alignment.centerRight
+                            : Alignment.centerLeft,
+                        child: Container(
+                          width: 16,
+                          height: 16,
+                          decoration: const BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                          ),
+                        ),
                       ),
                     ),
                   ),
-                ),
-              ],
-            ),
-            const SizedBox(height: 12),
-            Text(
-              title,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                Text(
-                  status.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    fontSize: 10,
-                    fontWeight: FontWeight.w800,
-                    color: active ? AquaColors.primary : AquaColors.slate400,
-                    letterSpacing: 0.8,
-                  ),
-                ),
-                if (sub != null) ...[
-                  const SizedBox(width: 6),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Text(
+                title,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
+              ),
+              const SizedBox(height: 4),
+              Row(
+                children: [
                   Text(
-                    '• $sub',
+                    status.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       fontSize: 10,
-                      fontWeight: FontWeight.w700,
-                      color: AquaColors.slate400,
+                      fontWeight: FontWeight.w800,
+                      color: active ? AquaColors.primary : AquaColors.slate400,
+                      letterSpacing: 0.8,
                     ),
                   ),
+                  if (sub != null) ...[
+                    const SizedBox(width: 6),
+                    Text(
+                      '• $sub',
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        fontSize: 10,
+                        fontWeight: FontWeight.w700,
+                        color: AquaColors.slate400,
+                      ),
+                    ),
+                  ],
                 ],
-              ],
-            ),
-          ],
+              ),
+            ],
+          ),
         ),
+      ),
       ),
     );
   }

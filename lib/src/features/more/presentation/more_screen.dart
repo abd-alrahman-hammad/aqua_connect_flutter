@@ -28,86 +28,6 @@ class MoreScreen extends StatelessWidget {
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
             child: Column(
               children: [
-                InkWell(
-                  onTap: () => onNavigate(AppScreen.controls),
-                  borderRadius: BorderRadius.circular(24),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.all(20),
-                    decoration: BoxDecoration(
-                      gradient: const LinearGradient(
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                        colors: [AquaColors.primary, Color(0xFF3D7A14)],
-                      ),
-                      borderRadius: BorderRadius.circular(24),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AquaColors.primary.withValues(alpha: 0.20),
-                          blurRadius: 16,
-                          offset: const Offset(0, 8),
-                        ),
-                      ],
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Container(
-                              width: 48,
-                              height: 48,
-                              decoration: BoxDecoration(
-                                color: Colors.white.withValues(alpha: 0.20),
-                                borderRadius: BorderRadius.circular(16),
-                              ),
-                              child: const Center(
-                                child: AquaSymbol(
-                                  'settings_input_component',
-                                  color: Colors.white,
-                                ),
-                              ),
-                            ),
-                            const SizedBox(height: 12),
-                            Text(
-                              'Smart Controls',
-                              style: Theme.of(context).textTheme.headlineSmall
-                                  ?.copyWith(
-                                    color: Colors.white,
-                                    fontWeight: FontWeight.w900,
-                                  ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Manage pumps, lights & environment',
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: Colors.white.withValues(alpha: 0.80),
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          width: 48,
-                          height: 48,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                          ),
-                          child: const Center(
-                            child: AquaSymbol(
-                              'arrow_forward',
-                              color: AquaColors.primary,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
                 Wrap(
                   spacing: 16,
                   runSpacing: 16,
@@ -154,7 +74,9 @@ class MoreScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                const SizedBox(height: 120),
+                const SizedBox(height: 300),
+                
+                
               ],
             ),
           ),
