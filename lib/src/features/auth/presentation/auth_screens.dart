@@ -156,37 +156,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                       const SizedBox(height: 32),
-                      Column(
-                        children: [
-                          InkWell(
-                            onTap: () {},
-                            borderRadius: BorderRadius.circular(999),
-                            child: Container(
-                              width: 56,
-                              height: 56,
-                              decoration: BoxDecoration(
-                                color: isDark
-                                    ? Colors.white.withValues(alpha: 0.05)
-                                    : AquaColors.slate100,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Center(
-                                child: AquaSymbol('face', size: 32),
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 8),
-                          Text(
-                            'FaceID Login'.toUpperCase(),
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 1.0,
-                                  color: AquaColors.slate400,
-                                ),
-                          ),
-                        ],
-                      ),
+                      
                       const SizedBox(height: 8),
                     ],
                   ),
