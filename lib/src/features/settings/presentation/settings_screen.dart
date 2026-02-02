@@ -61,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       children: [
                         
                         const SizedBox(width: 8),
-                        
+                        Text(
                           'System Settings',
                           style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(fontWeight: FontWeight.w900),
