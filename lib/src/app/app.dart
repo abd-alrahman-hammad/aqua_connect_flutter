@@ -113,6 +113,9 @@ class _AppRoot extends ConsumerWidget {
         page = MoreScreen(current: screen, onNavigate: controller.navigate);
     }
 
-    return page;
+    return Scaffold(
+      body: SafeArea(child: page),
+    );
+    
   }
 }

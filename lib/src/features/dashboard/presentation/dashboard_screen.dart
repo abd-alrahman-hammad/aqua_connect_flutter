@@ -274,7 +274,7 @@ class _VitalityRing extends StatelessWidget {
             angle: -0.75, // ~ -43°
             child: SizedBox(
               width: 240,
-              height: 240,
+              height: 230,
               child: CircularProgressIndicator(
                 value: 0.94,
                 strokeWidth: 10,
@@ -291,15 +291,15 @@ class _VitalityRing extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isDark
-                  ? const Color(0xFF101A11)
+                  ? AquaColors.backgroundDark
                   : AquaColors.backgroundLight,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.35),
-                  blurRadius: 24,
-                  offset: const Offset(0, 12),
-                ),
-              ],
+              // boxShadow: [
+              //   BoxShadow(
+              //     color: Colors.black.withValues(alpha: 0.35),
+              //     blurRadius: 24,
+              //     offset: const Offset(0, 12),
+              //   ),
+              // ],
             ),
           ),
           // Center label
@@ -326,31 +326,7 @@ class _VitalityRing extends StatelessWidget {
             ],
           ),
           // Glowing progress dot sitting on the ring
-          Positioned(
-            bottom: 22,
-            right: 40,
-            child: Container(
-              width: 16,
-              height: 16,
-              decoration: BoxDecoration(
-                color: AquaColors.nature,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isDark
-                      ? AquaColors.backgroundDark
-                      : AquaColors.backgroundLight,
-                  width: 4,
-                ),
-                boxShadow: [
-                  BoxShadow(
-                    color: AquaColors.nature.withValues(alpha: 0.6),
-                    blurRadius: 14,
-                    spreadRadius: 2,
-                  ),
-                ],
-              ),
-            ),
-          ),
+          
         ],
       ),
     );
