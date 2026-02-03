@@ -118,7 +118,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       const SizedBox(height: 16),
                       _PrimaryButton(
-                        label: 'Login',
+                        label: 'Sign In',
                         onPressed: () => widget.onNavigate(AppScreen.dashboard),
                       ),
                       const SizedBox(height: 16),

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+// import 'package:firebase_auth/firebase_auth.dart'; // Uncomment if using Firebase
 
 import '../../../app/screens.dart';
 import '../../../core/theme/aqua_colors.dart';
@@ -17,6 +18,39 @@ class ProfileScreen extends StatelessWidget {
   final AppScreen current;
   final ValueChanged<AppScreen> onNavigate;
 
+  // --- دالة تأكيد تسجيل الخروج ---
+  void _confirmLogout(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Sign Out'),
+        content: const Text('Are you sure you want to logout?'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel', style: TextStyle(color: AquaColors.slate500)),
+          ),
+          TextButton(
+            onPressed: () async {
+              Navigator.pop(context); // إغلاق النافذة
+              
+              // 1. تسجيل الخروج الفعلي (إذا كنت تستخدم فايربيس)
+              // await FirebaseAuth.instance.signOut();
+              
+              // 2. الانتقال لشاشة تسجيل الدخول
+              onNavigate(AppScreen.login);
+            },
+            child: const Text(
+              'sign Out',
+              style: TextStyle(color: AquaColors.critical, fontWeight: FontWeight.bold),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -28,7 +62,11 @@ class ProfileScreen extends StatelessWidget {
           AquaHeader(
             title: 'Farm Profile',
             onBack: () => onNavigate(AppScreen.settings),
-            rightAction: const AquaSymbol('logout', color: AquaColors.critical),
+            // --- زر تسجيل الخروج ---
+            rightAction: IconButton(
+              onPressed: () => _confirmLogout(context), 
+              icon: const AquaSymbol('logout', color: AquaColors.critical),
+            ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 32, 16, 0),
@@ -209,11 +247,11 @@ class ProfileScreen extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 12),
-                _DeviceRow(name: 'ESP32 - Hydro Tower 1', online: true),
+                const _DeviceRow(name: 'ESP32 - Hydro Tower 1', online: true),
                 const SizedBox(height: 12),
-                _DeviceRow(name: 'ESP32 - Seedling Tray', online: true),
+                const _DeviceRow(name: 'ESP32 - Seedling Tray', online: true),
                 const SizedBox(height: 12),
-                _DeviceRow(
+                const _DeviceRow(
                   name: 'Main Reservoir Hub',
                   online: false,
                   dashed: true,
@@ -246,19 +284,19 @@ class _DeviceRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: dashed
             ? (isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : AquaColors.slate100)
+                ? Colors.white.withValues(alpha: 0.05)
+                : AquaColors.slate100)
             : (isDark ? AquaColors.cardDark : Colors.white),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: dashed
               ? (isDark
-                    ? Colors.white.withValues(alpha: 0.10)
-                    : AquaColors.slate300)
+                  ? Colors.white.withValues(alpha: 0.10)
+                  : AquaColors.slate300)
               : (isDark
-                    ? Colors.white.withValues(alpha: 0.05)
-                    : AquaColors.slate200),
-          style: dashed ? BorderStyle.solid : BorderStyle.solid,
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : AquaColors.slate200),
+          style: dashed ? BorderStyle.solid : BorderStyle.solid, // Flutter doesn't support dashed borders natively without package, kept solid for now
         ),
       ),
       child: Row(
@@ -273,8 +311,8 @@ class _DeviceRow extends StatelessWidget {
                   color: online
                       ? AquaColors.primary.withValues(alpha: 0.05)
                       : (isDark
-                            ? Colors.white.withValues(alpha: 0.10)
-                            : AquaColors.slate200),
+                          ? Colors.white.withValues(alpha: 0.10)
+                          : AquaColors.slate200),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(

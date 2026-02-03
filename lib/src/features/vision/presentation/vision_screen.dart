@@ -46,7 +46,7 @@ class VisionScreen extends StatelessWidget {
                         title: 'Plant Health AI Vision',
                         onBack: () => onNavigate(AppScreen.dashboard),
                         rightAction: IconButton(
-                          onPressed: () {},
+                          onPressed: () => onNavigate(AppScreen.settings),
                           icon: const AquaSymbol(
                             'settings',
                             color: Colors.white,
