@@ -19,8 +19,8 @@ import '../features/splash/presentation/splash_screen.dart';
 import 'app_controller.dart';
 import 'screens.dart';
 
-class AquaConnectApp extends ConsumerWidget {
-  const AquaConnectApp({super.key});
+class RayyanApp extends ConsumerWidget {
+  const RayyanApp({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -28,7 +28,7 @@ class AquaConnectApp extends ConsumerWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Aqua Connect',
+      title: 'Rayyan',
       theme: AquaTheme.light(),
       darkTheme: AquaTheme.dark(),
       themeMode: state.isDark ? ThemeMode.dark : ThemeMode.light,

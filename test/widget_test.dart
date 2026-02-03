@@ -7,11 +7,11 @@
 
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:aqua_connect/main.dart';
+import 'package:rayyan/main.dart';
 
 void main() {
   testWidgets('App boots smoke test', (WidgetTester tester) async {
     await tester.pumpWidget(const TestAppHarness());
-    expect(find.text('Aqua Connect'), findsWidgets);
+    expect(find.text('Rayyan'), findsWidgets);
   });
 }

@@ -282,7 +282,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 const SizedBox(height: 16),
                 Center(
                   child: Text(
-                    'Aqua Connect v2.4.1 Build 102',
+                    'Rayyan v2.4.1 Build 102',
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AquaColors.slate400,
                       fontWeight: FontWeight.w800,

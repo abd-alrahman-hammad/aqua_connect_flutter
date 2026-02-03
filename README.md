@@ -1,4 +1,4 @@
-# aqua_connect
+# Rayyan
 
 A new Flutter project.
 

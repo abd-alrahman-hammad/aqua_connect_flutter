@@ -6,7 +6,7 @@ plugins {
 }
 
 android {
-    namespace = "com.aquaconnect.aqua_connect"
+    namespace = "com.rayyan.app"
     compileSdk = flutter.compileSdkVersion
     // Override NDK version to satisfy plugins (path_provider_android, sqflite_android)
     // which require NDK 27.0.12077973. This value is backward compatible and fixes
@@ -24,10 +24,11 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId = "com.aquaconnect.aqua_connect"
+        applicationId = "com.Rayyan.app"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
-        minSdk = flutter.minSdkVersion
+        // minSdk increased to 23 for Firebase Auth compatibility
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
