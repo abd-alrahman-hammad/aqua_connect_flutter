@@ -59,14 +59,14 @@ class _LoginScreenState extends State<LoginScreen> {
                     children: [
                       const SizedBox(height: 8),
                       _AuthBrandHeader(
-                        title: 'Aqua Connect',
+                        title: 'Rayyan',
                         subtitle: 'Smart Hydroponics Management',
                         iconSize: 80,
                       ),
                       const SizedBox(height: 24),
                       _AuthField(
                         label: 'Email Address',
-                        hint: 'grower@aquaconnect.com',
+                        hint: 'grower@rayyan.app',
                         keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 16),
@@ -311,7 +311,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       const _AuthField(
                         label: 'Email Address',
-                        hint: 'grower@aquaconnect.com',
+                        hint: 'grower@rayyan.app',
                         keyboardType: TextInputType.emailAddress,
                         
                       ),

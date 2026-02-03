@@ -87,7 +87,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                             const SizedBox(height: 32),
 
                             Text(
-                              'Aqua Connect',
+                              'Rayyan',
                               style: GoogleFonts.manrope( // غيرت الخط لـ Manrope ليتناسب مع باقي التطبيق
                                 fontSize: 36,
                                 fontWeight: FontWeight.w800,

@@ -258,7 +258,7 @@ class WiFiWizardScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   Text(
-                    'Aqua Connect IoT v2.4.0'.toUpperCase(),
+                    'Rayyan IoT v2.4.0'.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AquaColors.slate400,
                       fontWeight: FontWeight.w900,

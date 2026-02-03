@@ -1,4 +1,4 @@
-package com.aquaconnect.aqua_connect
+package com.rayyan.app
 
 import io.flutter.embedding.android.FlutterActivity
 

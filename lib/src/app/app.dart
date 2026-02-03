@@ -28,7 +28,7 @@ class AquaConnectApp extends ConsumerWidget {
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Aqua Connect',
+      title: 'Rayyan',
       theme: AquaTheme.light(),
       darkTheme: AquaTheme.dark(),
       themeMode: state.isDark ? ThemeMode.dark : ThemeMode.light,
