@@ -7,7 +7,7 @@ final appControllerProvider = StateNotifierProvider<AppController, AppState>((
   ref,
 ) {
   return AppController(
-    const AppState(screen: AppScreen.login, isDark: true, languageCode: 'EN'),
+    const AppState(screen: AppScreen.splash, isDark: true, languageCode: 'EN'),
   );
 });
 

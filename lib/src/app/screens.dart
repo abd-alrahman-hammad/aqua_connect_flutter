@@ -22,4 +22,5 @@ enum AppScreen {
   calibrationTemp,
   reports,
   more,
+  splash,
 }

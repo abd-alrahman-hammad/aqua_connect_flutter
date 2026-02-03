@@ -15,6 +15,7 @@ import '../features/settings/presentation/sub_settings_screens.dart';
 import '../features/support/presentation/support_screens.dart';
 import '../features/vision/presentation/vision_screen.dart';
 import '../features/wifi/presentation/wifi_wizard_screen.dart';
+import '../features/splash/presentation/splash_screen.dart';
 import 'app_controller.dart';
 import 'screens.dart';
 
@@ -47,6 +48,8 @@ class _AppRoot extends ConsumerWidget {
 
     Widget page;
     switch (screen) {
+      case AppScreen.splash:
+        page = SplashScreen(onNavigate: controller.navigate);
       case AppScreen.login:
         page = LoginScreen(onNavigate: controller.navigate);
       case AppScreen.signup:

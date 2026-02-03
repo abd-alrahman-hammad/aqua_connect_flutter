@@ -313,6 +313,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                         label: 'Email Address',
                         hint: 'grower@aquaconnect.com',
                         keyboardType: TextInputType.emailAddress,
+                        
                       ),
                       const SizedBox(height: 24),
                       _PrimaryButton(
@@ -331,6 +332,7 @@ class ForgotPasswordScreen extends StatelessWidget {
   }
 }
 
+// --- هنا تم التعديل لعرض اللوجو الخاص بك ---
 class _AuthBrandHeader extends StatelessWidget {
   const _AuthBrandHeader({
     required this.title,
@@ -347,41 +349,56 @@ class _AuthBrandHeader extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    // ضبط الألوان لتعطي تأثير التوهج النيوني
+    final glowColor = AquaColors.primary.withOpacity(isDark ? 0.15 : 0.10);
+
+// جعل الحدود شفافة تماماً لإخفاء أطراف الدائرة
+final borderColor = Colors.transparent;
+    // final fillColor = AquaColors.primary.withOpacity(isDark ? 0.15 : 0.08);
+
     return Column(
       children: [
         Container(
           width: iconSize,
           height: iconSize,
           decoration: BoxDecoration(
-            color: AquaColors.primary.withValues(alpha: isDark ? 0.20 : 0.10),
-            borderRadius: BorderRadius.circular(16),
+            // color: fillColor,
+            // 1. زوايا دائرية أكبر لتطابق التصميم السابق
+            borderRadius: BorderRadius.circular(24), 
+            // 2. حدود ناعمة
             border: Border.all(
-              color: AquaColors.primary.withValues(alpha: 0.20),
+              color: borderColor,
+              width: 0,
+              style: BorderStyle.none,
             ),
             boxShadow: compact
                 ? null
                 : [
+                    // 3. توهج قوي وناعم (Neon Glow)
                     BoxShadow(
-                      color: AquaColors.primary.withValues(alpha: 0.30),
-                      blurRadius: 20,
+                      color: glowColor,
+                      blurRadius: 30, 
                       spreadRadius: 0,
+                      offset: const Offset(0, 0),
                     ),
                   ],
           ),
-          child: const Center(
-            child: AquaSymbol(
-              'water_drop',
-              size: 48,
-              color: AquaColors.primary,
+          child: Center(
+            child: Image.asset(
+              'assets/logo/logo.png',
+              fit: BoxFit.contain,
             ),
           ),
         ),
-        const SizedBox(height: 16),
+        const SizedBox(height: 20),
         Text(
           title,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w900,
-            letterSpacing: -0.4,
+            letterSpacing: -0.5,
+            // تأكدنا أن النص يظهر بوضوح في كلا الوضعين
+            color: isDark ? Colors.white : AquaColors.slate900, 
           ),
           textAlign: TextAlign.center,
         ),
@@ -390,15 +407,16 @@ class _AuthBrandHeader extends StatelessWidget {
           subtitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+            fontWeight: FontWeight.w500,
+            letterSpacing: 0.2,
           ),
           textAlign: TextAlign.center,
         ),
-        if (!compact) const SizedBox(height: 24),
+        if (!compact) const SizedBox(height: 32),
       ],
     );
   }
 }
-
 class _AuthField extends StatelessWidget {
   const _AuthField({
     required this.label,
