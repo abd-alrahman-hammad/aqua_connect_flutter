@@ -18,68 +18,109 @@ class ControlsModel {
   /// - `false` (0): LED light is off
   final bool ledLight;
 
+  /// Whether the water pump is on
+  final bool waterPump;
+
+  /// Whether the ventilation fan is on
+  final bool fan;
+
+  /// Whether the heater is on
+  final bool heater;
+
+  /// Whether the pH Up pump is on
+  final bool pumpPhUp;
+
+  /// Whether the pH Down pump is on
+  final bool pumpPhDown;
+
+  /// Whether the EC Up pump is on
+  final bool pumpEcUp;
+
+  /// Whether the EC Down pump is on
+  final bool pumpEcDown;
+
   /// Creates a new [ControlsModel] instance
-  const ControlsModel({required this.autoMode, required this.ledLight});
+  const ControlsModel({
+    required this.autoMode,
+    required this.ledLight,
+    required this.waterPump,
+    required this.fan,
+    required this.heater,
+    required this.pumpPhUp,
+    required this.pumpPhDown,
+    required this.pumpEcUp,
+    required this.pumpEcDown,
+  });
 
   /// Creates a [ControlsModel] with default values (all off/disabled)
-  const ControlsModel.initial() : autoMode = false, ledLight = false;
+  const ControlsModel.initial()
+    : autoMode = false,
+      ledLight = false,
+      waterPump = false,
+      fan = false,
+      heater = false,
+      pumpPhUp = false,
+      pumpPhDown = false,
+      pumpEcUp = false,
+      pumpEcDown = false;
 
   /// Creates a [ControlsModel] from a JSON map
-  ///
-  /// Handles three cases for boolean conversion:
-  /// 1. Integer values: 0 = false, 1 = true
-  /// 2. Boolean values: direct mapping
-  /// 3. Null values: defaults to false
-  ///
-  /// Example JSON from Firebase:
-  /// ```json
-  /// {
-  ///   "auto_mode": 1,
-  ///   "led_light": 0
-  /// }
-  /// ```
   factory ControlsModel.fromJson(Map<dynamic, dynamic> json) {
     return ControlsModel(
       autoMode: _parseBool(json['auto_mode']),
       ledLight: _parseBool(json['led_light']),
+      waterPump: _parseBool(json['water_pump']),
+      fan: _parseBool(json['fan']),
+      heater: _parseBool(json['heater']),
+      pumpPhUp: _parseBool(json['pump_ph_up']),
+      pumpPhDown: _parseBool(json['pump_ph_down']),
+      pumpEcUp: _parseBool(json['pump_ec_up']),
+      pumpEcDown: _parseBool(json['pump_ec_down']),
     );
   }
 
   /// Converts the model to a JSON map for Firebase
-  ///
-  /// Converts boolean values to integers for Firebase compatibility:
-  /// - `true` → 1
-  /// - `false` → 0
-  ///
-  /// Returns:
-  /// ```json
-  /// {
-  ///   "auto_mode": 1,
-  ///   "led_light": 0
-  /// }
-  /// ```
   Map<String, dynamic> toJson() {
-    return {'auto_mode': autoMode ? 1 : 0, 'led_light': ledLight ? 1 : 0};
+    return {
+      'auto_mode': autoMode ? 1 : 0,
+      'led_light': ledLight ? 1 : 0,
+      'water_pump': waterPump ? 1 : 0,
+      'fan': fan ? 1 : 0,
+      'heater': heater ? 1 : 0,
+      'pump_ph_up': pumpPhUp ? 1 : 0,
+      'pump_ph_down': pumpPhDown ? 1 : 0,
+      'pump_ec_up': pumpEcUp ? 1 : 0,
+      'pump_ec_down': pumpEcDown ? 1 : 0,
+    };
   }
 
   /// Creates a copy of this model with updated values
-  ///
-  /// Useful for updating individual control settings without
-  /// mutating the original instance.
-  ControlsModel copyWith({bool? autoMode, bool? ledLight}) {
+  ControlsModel copyWith({
+    bool? autoMode,
+    bool? ledLight,
+    bool? waterPump,
+    bool? fan,
+    bool? heater,
+    bool? pumpPhUp,
+    bool? pumpPhDown,
+    bool? pumpEcUp,
+    bool? pumpEcDown,
+  }) {
     return ControlsModel(
       autoMode: autoMode ?? this.autoMode,
       ledLight: ledLight ?? this.ledLight,
+      waterPump: waterPump ?? this.waterPump,
+      fan: fan ?? this.fan,
+      heater: heater ?? this.heater,
+      pumpPhUp: pumpPhUp ?? this.pumpPhUp,
+      pumpPhDown: pumpPhDown ?? this.pumpPhDown,
+      pumpEcUp: pumpEcUp ?? this.pumpEcUp,
+      pumpEcDown: pumpEcDown ?? this.pumpEcDown,
     );
   }
 
-  /// Helper method to parse boolean values from Firebase
-  ///
-  /// Handles multiple input types:
-  /// - `int`: 0 = false, any other value = true
-  /// - `bool`: direct mapping
-  /// - `String`: "0" or "false" = false, otherwise true
-  /// - `null`: defaults to false
+  // ... _parseBool helper remains the same ...
+
   static bool _parseBool(dynamic value) {
     if (value == null) return false;
     if (value is bool) return value;
@@ -93,7 +134,7 @@ class ControlsModel {
 
   @override
   String toString() {
-    return 'ControlsModel(autoMode: $autoMode, ledLight: $ledLight)';
+    return 'ControlsModel(autoMode: $autoMode, ledLight: $ledLight, waterPump: $waterPump, fan: $fan, heater: $heater, pumpPhUp: $pumpPhUp, pumpPhDown: $pumpPhDown, pumpEcUp: $pumpEcUp, pumpEcDown: $pumpEcDown)';
   }
 
   @override
@@ -102,9 +143,25 @@ class ControlsModel {
 
     return other is ControlsModel &&
         other.autoMode == autoMode &&
-        other.ledLight == ledLight;
+        other.ledLight == ledLight &&
+        other.waterPump == waterPump &&
+        other.fan == fan &&
+        other.heater == heater &&
+        other.pumpPhUp == pumpPhUp &&
+        other.pumpPhDown == pumpPhDown &&
+        other.pumpEcUp == pumpEcUp &&
+        other.pumpEcDown == pumpEcDown;
   }
 
   @override
-  int get hashCode => autoMode.hashCode ^ ledLight.hashCode;
+  int get hashCode =>
+      autoMode.hashCode ^
+      ledLight.hashCode ^
+      waterPump.hashCode ^
+      fan.hashCode ^
+      heater.hashCode ^
+      pumpPhUp.hashCode ^
+      pumpPhDown.hashCode ^
+      pumpEcUp.hashCode ^
+      pumpEcDown.hashCode;
 }

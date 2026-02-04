@@ -15,6 +15,7 @@ enum AppScreen {
   settings,
   accountSecurity,
   sensorCalibration,
+  thresholds,
   firmwareUpdate,
   notificationSettings,
   calibrationPh,

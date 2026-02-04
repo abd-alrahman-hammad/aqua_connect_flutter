@@ -124,7 +124,7 @@ class HydroponicDatabaseService {
               final data = event.snapshot.value;
 
               if (data == null) {
-                return const SettingsModel.defaults();
+                return const SettingsModel();
               }
 
               if (data is! Map) {
@@ -173,7 +173,7 @@ class HydroponicDatabaseService {
               final data = event.snapshot.value;
 
               if (data == null) {
-                return const SensorsModel.initial();
+                return const SensorsModel(waterLevel: null);
               }
 
               if (data is! Map) {
@@ -279,6 +279,69 @@ class HydroponicDatabaseService {
       await ref.set(enabled ? 1 : 0);
     } catch (e) {
       throw DatabaseException('Failed to update LED light: $e', null, e);
+    }
+  }
+
+  Future<void> toggleWaterPump(bool enabled) async {
+    try {
+      final ref = _database.child(FirebaseConfig.waterPumpPath);
+      await ref.set(enabled ? 1 : 0);
+    } catch (e) {
+      throw DatabaseException('Failed to update Water Pump: $e', null, e);
+    }
+  }
+
+  Future<void> toggleFan(bool enabled) async {
+    try {
+      final ref = _database.child(FirebaseConfig.fanPath);
+      await ref.set(enabled ? 1 : 0);
+    } catch (e) {
+      throw DatabaseException('Failed to update Fan: $e', null, e);
+    }
+  }
+
+  Future<void> toggleHeater(bool enabled) async {
+    try {
+      final ref = _database.child(FirebaseConfig.heaterPath);
+      await ref.set(enabled ? 1 : 0);
+    } catch (e) {
+      throw DatabaseException('Failed to update Heater: $e', null, e);
+    }
+  }
+
+  Future<void> togglePumpPhUp(bool enabled) async {
+    try {
+      final ref = _database.child(FirebaseConfig.pumpPhUpPath);
+      await ref.set(enabled ? 1 : 0);
+    } catch (e) {
+      throw DatabaseException('Failed to update pH Up Pump: $e', null, e);
+    }
+  }
+
+  Future<void> togglePumpPhDown(bool enabled) async {
+    try {
+      final ref = _database.child(FirebaseConfig.pumpPhDownPath);
+      await ref.set(enabled ? 1 : 0);
+    } catch (e) {
+      throw DatabaseException('Failed to update pH Down Pump: $e', null, e);
+    }
+  }
+
+  Future<void> togglePumpEcUp(bool enabled) async {
+    try {
+      final ref = _database.child(FirebaseConfig.pumpEcUpPath);
+      await ref.set(enabled ? 1 : 0);
+    } catch (e) {
+      throw DatabaseException('Failed to update EC Up Pump: $e', null, e);
+    }
+  }
+
+  Future<void> togglePumpEcDown(bool enabled) async {
+    try {
+      final ref = _database.child(FirebaseConfig.pumpEcDownPath);
+      await ref.set(enabled ? 1 : 0);
+    } catch (e) {
+      throw DatabaseException('Failed to update EC Down Pump: $e', null, e);
     }
   }
 
@@ -447,7 +510,7 @@ class HydroponicDatabaseService {
       final snapshot = await ref.get();
 
       if (!snapshot.exists || snapshot.value == null) {
-        return const SettingsModel.defaults();
+        return const SettingsModel();
       }
 
       final data = snapshot.value;
@@ -468,7 +531,7 @@ class HydroponicDatabaseService {
       final snapshot = await ref.get();
 
       if (!snapshot.exists || snapshot.value == null) {
-        return const SensorsModel.initial();
+        return const SensorsModel(waterLevel: null);
       }
 
       final data = snapshot.value;

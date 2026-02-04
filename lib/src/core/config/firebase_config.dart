@@ -73,7 +73,29 @@ class FirebaseConfig {
   static const String autoModePath = '$controlsPath/auto_mode';
 
   /// Path for LED light control (0 = off, 1 = on)
+  /// Note: Maps to "UV Purifier" in UI
   static const String ledLightPath = '$controlsPath/led_light';
+
+  /// Path for Water Pump (0=off, 1=on)
+  static const String waterPumpPath = '$controlsPath/water_pump';
+
+  /// Path for Ventilation Fan (0=off, 1=on)
+  static const String fanPath = '$controlsPath/fan';
+
+  /// Path for Heater (0=off, 1=on)
+  static const String heaterPath = '$controlsPath/heater';
+
+  /// Path for pH Up Pump (0=off, 1=on)
+  static const String pumpPhUpPath = '$controlsPath/pump_ph_up';
+
+  /// Path for pH Down Pump (0=off, 1=on)
+  static const String pumpPhDownPath = '$controlsPath/pump_ph_down';
+
+  /// Path for EC Up Pump (0=off, 1=on)
+  static const String pumpEcUpPath = '$controlsPath/pump_ec_up';
+
+  /// Path for EC Down Pump (0=off, 1=on)
+  static const String pumpEcDownPath = '$controlsPath/pump_ec_down';
 
   /// Root path for threshold settings
   /// Contains: temp_high, temp_low, ph_high, ec_low

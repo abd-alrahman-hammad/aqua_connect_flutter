@@ -11,9 +11,9 @@ Future<void> main() async {
   // Initialize Firebase with platform-specific configuration
   try {
     await FirebaseInitializer.initialize();
-    debugPrint('✅ Firebase initialized successfully');
+    debugPrint('Firebase initialized successfully');
   } catch (e) {
-    debugPrint('❌ Firebase initialization failed: $e');
+    debugPrint('Firebase initialization failed: $e');
     // Continue running the app even if Firebase fails
     // This allows the app to start and show error UI if needed
   }

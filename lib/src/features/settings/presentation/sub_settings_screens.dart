@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/screens.dart';
+import '../../../core/models/hydroponic/settings_model.dart';
+import '../../../core/services/hydroponic_database_service.dart';
 import '../../../core/theme/aqua_colors.dart';
+import '../../../core/utils/value_formatter.dart';
 import '../../../core/widgets/aqua_header.dart';
 import '../../../core/widgets/aqua_symbol.dart';
 
@@ -200,6 +204,302 @@ class SensorCalibrationScreen extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ThresholdsScreen extends ConsumerStatefulWidget {
+  const ThresholdsScreen({super.key, required this.onNavigate});
+  final ValueChanged<AppScreen> onNavigate;
+
+  @override
+  ConsumerState<ThresholdsScreen> createState() => _ThresholdsScreenState();
+}
+
+class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
+  late final TextEditingController _tempHighController;
+  late final TextEditingController _tempLowController;
+  late final TextEditingController _phHighController;
+  late final TextEditingController _ecLowController;
+  bool _hasPopulated = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tempHighController = TextEditingController();
+    _tempLowController = TextEditingController();
+    _phHighController = TextEditingController();
+    _ecLowController = TextEditingController();
+  }
+
+  @override
+  void dispose() {
+    _tempHighController.dispose();
+    _tempLowController.dispose();
+    _phHighController.dispose();
+    _ecLowController.dispose();
+    super.dispose();
+  }
+
+  void _populateFromSettings(SettingsModel? settings) {
+    if (settings == null || _hasPopulated) return;
+    _hasPopulated = true;
+    _tempHighController.text = (settings.tempHigh ?? 26.0).toStringAsFixed(1);
+    _tempLowController.text = (settings.tempLow ?? 18.0).toStringAsFixed(1);
+    _phHighController.text = (settings.phHigh ?? 6.5).toStringAsFixed(1);
+    _ecLowController.text = (settings.ecLow ?? 1.2).toStringAsFixed(1);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final settingsAsync = ref.watch(settingsStreamProvider);
+    final dbService = ref.read(hydroponicDatabaseServiceProvider);
+
+    return Scaffold(
+      body: Column(
+        children: [
+          AquaHeader(
+            title: 'Operating Thresholds',
+            onBack: () => widget.onNavigate(AppScreen.settings),
+          ),
+          Expanded(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AquaColors.primary.withValues(alpha: 0.10),
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: AquaColors.primary.withValues(alpha: 0.20),
+                      ),
+                    ),
+                    child: Row(
+                      children: [
+                        const AquaSymbol('info', color: AquaColors.primary),
+                        const SizedBox(width: 12),
+                        Expanded(
+                          child: Text(
+                            'These limits control when fans, heaters, and pumps operate automatically.',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: isDark
+                                      ? AquaColors.slate300
+                                      : AquaColors.slate600,
+                                  height: 1.4,
+                                ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                  settingsAsync.when(
+                    data: (settings) {
+                      WidgetsBinding.instance.addPostFrameCallback((_) {
+                        _populateFromSettings(settings);
+                      });
+                      return _ThresholdsForm(
+                        tempHighController: _tempHighController,
+                        tempLowController: _tempLowController,
+                        phHighController: _phHighController,
+                        ecLowController: _ecLowController,
+                        onSave: () async {
+                          final messenger = ScaffoldMessenger.maybeOf(context);
+                          final tempHigh = double.tryParse(
+                            _tempHighController.text,
+                          );
+                          final tempLow = double.tryParse(
+                            _tempLowController.text,
+                          );
+                          final phHigh = double.tryParse(
+                            _phHighController.text,
+                          );
+                          final ecLow = double.tryParse(_ecLowController.text);
+                          final model = SettingsModel(
+                            tempHigh: tempHigh ?? 26.0,
+                            tempLow: tempLow ?? 18.0,
+                            phHigh: phHigh ?? 6.5,
+                            ecLow: ecLow ?? 1.2,
+                          );
+                          await dbService.updateSettings(model);
+                          if (mounted && messenger != null) {
+                            messenger.showSnackBar(
+                              const SnackBar(
+                                content: Text('Thresholds saved successfully'),
+                              ),
+                            );
+                          }
+                        },
+                      );
+                    },
+                    loading: () => _ThresholdsForm(
+                      tempHighController: _tempHighController,
+                      tempLowController: _tempLowController,
+                      phHighController: _phHighController,
+                      ecLowController: _ecLowController,
+                      isLoading: true,
+                      onSave: () {},
+                    ),
+                    error: (_, __) => _ThresholdsForm(
+                      tempHighController: _tempHighController,
+                      tempLowController: _tempLowController,
+                      phHighController: _phHighController,
+                      ecLowController: _ecLowController,
+                      isLoading: true,
+                      onSave: () {},
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ThresholdsForm extends StatelessWidget {
+  const _ThresholdsForm({
+    required this.tempHighController,
+    required this.tempLowController,
+    required this.phHighController,
+    required this.ecLowController,
+    this.isLoading = false,
+    required this.onSave,
+  });
+
+  final TextEditingController tempHighController;
+  final TextEditingController tempLowController;
+  final TextEditingController phHighController;
+  final TextEditingController ecLowController;
+  final bool isLoading;
+  final VoidCallback onSave;
+
+  @override
+  Widget build(BuildContext context) {
+    return _Card(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          _ThresholdField(
+            label: 'Fan Limit (temp_high)',
+            hint: '°C - Fan operating limit',
+            controller: tempHighController,
+            enabled: !isLoading,
+            placeholder: ValueFormatter.nullPlaceholder,
+          ),
+          const SizedBox(height: 16),
+          _ThresholdField(
+            label: 'Heater Limit (temp_low)',
+            hint: '°C - Heater operating limit',
+            controller: tempLowController,
+            enabled: !isLoading,
+            placeholder: ValueFormatter.nullPlaceholder,
+          ),
+          const SizedBox(height: 16),
+          _ThresholdField(
+            label: 'pH Pump Limit (ph_high)',
+            hint: 'pH - pH pump operating limit',
+            controller: phHighController,
+            enabled: !isLoading,
+            placeholder: ValueFormatter.nullPlaceholder,
+          ),
+          const SizedBox(height: 16),
+          _ThresholdField(
+            label: 'Feeding Pump Limit (ec_low)',
+            hint: 'mS/cm - Feeding pump operating limit',
+            controller: ecLowController,
+            enabled: !isLoading,
+            placeholder: ValueFormatter.nullPlaceholder,
+          ),
+          const SizedBox(height: 24),
+          SizedBox(
+            height: 48,
+            child: ElevatedButton(
+              onPressed: isLoading ? null : onSave,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: AquaColors.primary,
+                foregroundColor: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
+                ),
+              ),
+              child: Text(
+                isLoading ? ValueFormatter.nullPlaceholder : 'Save Thresholds',
+                style: const TextStyle(fontWeight: FontWeight.w900),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ThresholdField extends StatelessWidget {
+  const _ThresholdField({
+    required this.label,
+    required this.hint,
+    required this.controller,
+    required this.enabled,
+    required this.placeholder,
+  });
+
+  final String label;
+  final String hint;
+  final TextEditingController controller;
+  final bool enabled;
+  final String placeholder;
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label.toUpperCase(),
+          style: Theme.of(context).textTheme.labelSmall?.copyWith(
+            color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+            fontWeight: FontWeight.w900,
+            letterSpacing: 1.2,
+          ),
+        ),
+        const SizedBox(height: 6),
+        TextField(
+          controller: controller,
+          enabled: enabled,
+          keyboardType: const TextInputType.numberWithOptions(decimal: true),
+          decoration: InputDecoration(
+            hintText: enabled ? hint : placeholder,
+            filled: true,
+            fillColor: isDark ? AquaColors.surfaceDark : AquaColors.slate100,
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.10)
+                    : AquaColors.slate200,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: BorderSide(
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.10)
+                    : AquaColors.slate200,
+              ),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

@@ -12,9 +12,11 @@ class AquaColors {
   static const surfaceDark = Color(0xFF2A3628);
 
   static const critical = Color(0xFFFF4D4D);
+  static const error = critical; // Alias
   static const warning = Color(0xFFFFA500);
   static const info = aqua;
   static const nature = primary;
+  static const success = nature; // Alias
 
   static const slate900 = Color(0xFF0F172A);
   static const slate700 = Color(0xFF334155);

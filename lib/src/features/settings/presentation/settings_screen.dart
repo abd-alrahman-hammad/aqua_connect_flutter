@@ -59,7 +59,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   children: [
                     Row(
                       children: [
-                        
                         const SizedBox(width: 8),
                         Text(
                           'System Settings',
@@ -124,6 +123,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                       title: 'WiFi Management',
                       subtitle: 'Run Connection Wizard',
                       onTap: () => widget.onNavigate(AppScreen.wifi),
+                    ),
+                    _Divider(),
+                    _MenuItem(
+                      icon: 'tune',
+                      title: 'Operating Thresholds',
+                      subtitle: 'Fan, Heater, pH pump, Feeding pump limits',
+                      onTap: () => widget.onNavigate(AppScreen.thresholds),
                     ),
                     _Divider(),
                     _MenuItem(

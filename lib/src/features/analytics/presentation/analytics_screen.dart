@@ -1,13 +1,16 @@
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/screens.dart';
+import '../../../core/services/hydroponic_database_service.dart';
 import '../../../core/theme/aqua_colors.dart';
+import '../../../core/utils/value_formatter.dart';
 import '../../../core/widgets/aqua_header.dart';
 import '../../../core/widgets/aqua_page_scaffold.dart';
 import '../../../core/widgets/aqua_symbol.dart';
 
-class AnalyticsScreen extends StatefulWidget {
+class AnalyticsScreen extends ConsumerStatefulWidget {
   const AnalyticsScreen({
     super.key,
     required this.current,
@@ -18,16 +21,18 @@ class AnalyticsScreen extends StatefulWidget {
   final ValueChanged<AppScreen> onNavigate;
 
   @override
-  State<AnalyticsScreen> createState() => _AnalyticsScreenState();
+  ConsumerState<AnalyticsScreen> createState() => _AnalyticsScreenState();
 }
 
-class _AnalyticsScreenState extends State<AnalyticsScreen> {
+class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   String tab = 'Water';
   int activeBar = 5;
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final sensorsAsync = ref.watch(sensorsStreamProvider);
+    final waterLevel = sensorsAsync.valueOrNull?.waterLevel;
     return AquaPageScaffold(
       currentScreen: widget.current,
       onNavigate: widget.onNavigate,
@@ -36,31 +41,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
           AquaHeader(
             title: 'Historical Analytics',
             onBack: () => widget.onNavigate(AppScreen.dashboard),
-            rightAction: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-              decoration: BoxDecoration(
-                color: AquaColors.primary.withValues(alpha: 0.10),
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  const AquaSymbol(
-                    'ios_share',
-                    size: 16,
-                    color: AquaColors.primary,
-                  ),
-                  const SizedBox(width: 6),
-                  Text(
-                    'Export',
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AquaColors.primary,
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            
           ),
           // Tabs
           Container(
@@ -77,7 +58,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                children: ['Water', 'Nutrients', 'pH Level', 'Temp', 'Oxygen']
+                children: ['Water level', 'EC Level', 'pH Level', 'Temperature']
                     .map((t) {
                       final active = tab == t;
                       return InkWell(
@@ -182,7 +163,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Water Usage Trend',
+                                'Water Level (Live)',
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
                                       color: isDark
@@ -192,7 +173,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                '1,240L',
+                                ValueFormatter.formatPercent(waterLevel),
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineMedium
@@ -301,7 +282,7 @@ class _AnalyticsScreenState extends State<AnalyticsScreen> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                '94%',
+                                ValueFormatter.formatPercent(waterLevel),
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineMedium

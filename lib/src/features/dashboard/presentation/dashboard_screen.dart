@@ -2,13 +2,20 @@ import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/screens.dart';
+import '../../../core/services/hydroponic_database_service.dart';
 import '../../../core/theme/aqua_colors.dart';
+import '../../../core/utils/value_formatter.dart';
+import '../../../core/utils/vitality_utils.dart'; // [NEW]
 import '../../../core/widgets/aqua_page_scaffold.dart';
+import '../../../core/widgets/aqua_sensor_card.dart';
 import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/models/hydroponic/sensors_model.dart'; // [NEW] - for type safety in builder
+import '../../../core/models/hydroponic/settings_model.dart'; // [NEW]
 
-class DashboardScreen extends StatelessWidget {
+class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({
     super.key,
     required this.current,
@@ -19,8 +26,10 @@ class DashboardScreen extends StatelessWidget {
   final ValueChanged<AppScreen> onNavigate;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final sensorsAsync = ref.watch(sensorsStreamProvider);
+    final settingsAsync = ref.watch(settingsStreamProvider);
 
     return AquaPageScaffold(
       currentScreen: current,
@@ -32,7 +41,11 @@ class DashboardScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
             child: Column(
               children: [
-                _VitalityRing(isDark: isDark),
+                _VitalityRing(
+                  isDark: isDark,
+                  sensors: sensorsAsync.valueOrNull,
+                  settings: settingsAsync.valueOrNull,
+                ),
                 const SizedBox(height: 24),
                 Text(
                   'Your hydroponic system is performing optimally. All parameters within range.',
@@ -84,49 +97,85 @@ class DashboardScreen extends StatelessWidget {
                 LayoutBuilder(
                   builder: (context, constraints) {
                     final cardWidth = (constraints.maxWidth - 16) / 2;
+                    final sensors = sensorsAsync.valueOrNull;
+                    final settings = settingsAsync.valueOrNull;
+
+                    // Calculate statuses
+                    // Default to unknown if data is missing
+                    final phStatus = settings != null
+                        ? VitalityUtils.getPhStatus(sensors?.ph, settings)
+                        : SensorStatus.unknown;
+                    final ecStatus = settings != null
+                        ? VitalityUtils.getEcStatus(sensors?.ec, settings)
+                        : SensorStatus.unknown;
+                    final tempStatus = settings != null
+                        ? VitalityUtils.getTemperatureStatus(
+                            sensors?.temperature,
+                            settings,
+                          )
+                        : SensorStatus.unknown;
+                    final waterStatus = VitalityUtils.getWaterLevelStatus(
+                      sensors?.waterLevel,
+                    );
+
                     return Wrap(
                       spacing: 16,
                       runSpacing: 16,
                       children: [
-                        _SensorCard(
+                        AquaSensorCard(
                           width: cardWidth,
                           icon: 'water_ph',
-                          value: '6.2',
+                          value: ValueFormatter.formatDouble(sensors?.ph),
                           label: 'pH Level',
-                          status: 'OK',
-                          color: AquaColors.primary,
-                          bg: AquaColors.primary.withValues(alpha: 0.10),
+                          badgeText: VitalityUtils.getStatusLabel(phStatus),
+                          statusColor: VitalityUtils.getStatusColor(phStatus),
+                          iconColor: AquaColors.primary,
+                          iconBg: AquaColors.primary.withValues(alpha: 0.10),
                           onTap: () => onNavigate(AppScreen.monitoring),
+                          labelUppercase: true,
                         ),
-                        _SensorCard(
+                        AquaSensorCard(
                           width: cardWidth,
                           icon: 'bolt',
-                          value: '1.8',
+                          value: ValueFormatter.formatDouble(sensors?.ec),
                           label: 'EC (mS/cm)',
-                          status: 'OK',
-                          color: AquaColors.warning,
-                          bg: AquaColors.warning.withValues(alpha: 0.10),
+                          badgeText: VitalityUtils.getStatusLabel(ecStatus),
+                          statusColor: VitalityUtils.getStatusColor(ecStatus),
+                          iconColor: AquaColors.warning,
+                          iconBg: AquaColors.warning.withValues(alpha: 0.10),
                           onTap: () => onNavigate(AppScreen.monitoring),
+                          labelUppercase: true,
                         ),
-                        _SensorCard(
+                        AquaSensorCard(
                           width: cardWidth,
                           icon: 'device_thermostat',
-                          value: '24°C',
-                          label: 'Water Temp',
-                          status: 'OK',
-                          color: AquaColors.info,
-                          bg: AquaColors.info.withValues(alpha: 0.10),
+                          value: ValueFormatter.formatWithSuffix(
+                            sensors?.temperature,
+                            '°C',
+                          ),
+                          label: 'Temperature',
+                          badgeText: VitalityUtils.getStatusLabel(tempStatus),
+                          statusColor: VitalityUtils.getStatusColor(tempStatus),
+                          iconColor: AquaColors.info,
+                          iconBg: AquaColors.info.withValues(alpha: 0.10),
                           onTap: () => onNavigate(AppScreen.monitoring),
+                          labelUppercase: true,
                         ),
-                        _SensorCard(
+                        AquaSensorCard(
                           width: cardWidth,
                           icon: 'waves',
-                          value: '85%',
-                          label: 'Reservoir',
-                          status: 'OK',
-                          color: const Color(0xFF3B82F6),
-                          bg: const Color(0x1A3B82F6),
+                          value: ValueFormatter.formatPercent(
+                            sensors?.waterLevel,
+                          ),
+                          label: 'Water Level',
+                          badgeText: VitalityUtils.getStatusLabel(waterStatus),
+                          statusColor: VitalityUtils.getStatusColor(
+                            waterStatus,
+                          ),
+                          iconColor: const Color(0xFF3B82F6),
+                          iconBg: const Color(0x1A3B82F6),
                           onTap: () => onNavigate(AppScreen.monitoring),
+                          labelUppercase: true,
                         ),
                       ],
                     );
@@ -209,7 +258,7 @@ class _TopNav extends StatelessWidget {
                                 ),
                           ),
                           Text(
-                            'Grower Master',
+                            'Smith',
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w800),
                           ),
@@ -246,14 +295,29 @@ class _TopNav extends StatelessWidget {
 }
 
 class _VitalityRing extends StatelessWidget {
-  const _VitalityRing({required this.isDark});
+  const _VitalityRing({
+    required this.isDark,
+    required this.sensors,
+    required this.settings,
+  });
+
   final bool isDark;
+  final SensorsModel? sensors;
+  final SettingsModel? settings;
 
   @override
   Widget build(BuildContext context) {
     final borderBg = isDark
         ? Colors.white.withValues(alpha: 0.06)
         : AquaColors.slate200.withValues(alpha: 0.4);
+
+    // Calculate vitality score
+    double progressValue = 0.0;
+    if (sensors != null && settings != null) {
+      progressValue = VitalityUtils.calculateVitality(sensors!, settings!);
+    }
+
+    final displayValue = '${(progressValue * 100).toInt()}%';
 
     return SizedBox(
       width: 240,
@@ -270,12 +334,12 @@ class _VitalityRing extends StatelessWidget {
           ),
           // Progress arc with rounded cap, rotated so it starts at top
           Transform.rotate(
-            angle: -0.75, // ~ -43°
+            angle: 0.15, // -90 degrees (start from top)
             child: SizedBox(
-              width: 240,
-              height: 230,
+              width: 229,
+              height: 229,
               child: CircularProgressIndicator(
-                value: 0.94,
+                value: progressValue > 0 ? progressValue : null,
                 strokeWidth: 10,
                 backgroundColor: Colors.transparent,
                 color: AquaColors.nature,
@@ -292,13 +356,6 @@ class _VitalityRing extends StatelessWidget {
               color: isDark
                   ? AquaColors.backgroundDark
                   : AquaColors.backgroundLight,
-              // boxShadow: [
-              //   BoxShadow(
-              //     color: Colors.black.withValues(alpha: 0.35),
-              //     blurRadius: 24,
-              //     offset: const Offset(0, 12),
-              //   ),
-              // ],
             ),
           ),
           // Center label
@@ -306,7 +363,7 @@ class _VitalityRing extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               Text(
-                '94%',
+                displayValue,
                 style: Theme.of(context).textTheme.displaySmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   letterSpacing: -0.6,
@@ -324,118 +381,7 @@ class _VitalityRing extends StatelessWidget {
               ),
             ],
           ),
-
-          // Glowing progress dot sitting on the ring
         ],
-      ),
-    );
-  }
-}
-
-class _SensorCard extends StatelessWidget {
-  const _SensorCard({
-    required this.width,
-    required this.icon,
-    required this.value,
-    required this.label,
-    required this.status,
-    required this.color,
-    required this.bg,
-    required this.onTap,
-  });
-
-  final double width;
-  final String icon;
-  final String value;
-  final String label;
-  final String status;
-  final Color color;
-  final Color bg;
-  final VoidCallback onTap;
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return SizedBox(
-      width: width,
-      child: InkWell(
-        onTap: onTap,
-        borderRadius: BorderRadius.circular(16),
-        child: AnimatedContainer(
-          duration: const Duration(milliseconds: 150),
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isDark ? AquaColors.cardDark : Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : AquaColors.slate200,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.06),
-                blurRadius: 8,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Container(
-                    width: 40,
-                    height: 40,
-                    decoration: BoxDecoration(
-                      color: bg,
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                    child: Center(child: AquaSymbol(icon, color: color)),
-                  ),
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 8,
-                      vertical: 2,
-                    ),
-                    decoration: BoxDecoration(
-                      color: AquaColors.nature.withValues(alpha: 0.10),
-                      borderRadius: BorderRadius.circular(999),
-                    ),
-                    child: Text(
-                      status,
-                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: AquaColors.nature,
-                        fontWeight: FontWeight.w800,
-                        fontSize: 10,
-                        letterSpacing: 0.6,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                value,
-                style: Theme.of(
-                  context,
-                ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w800),
-              ),
-              const SizedBox(height: 2),
-              Text(
-                label.toUpperCase(),
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: isDark ? AquaColors.slate400 : AquaColors.slate500,
-                  fontWeight: FontWeight.w700,
-                  fontSize: 10,
-                  letterSpacing: 0.6,
-                ),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }

@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/screens.dart';
+import '../../../core/services/hydroponic_database_service.dart';
 import '../../../core/theme/aqua_colors.dart';
+import '../../../core/utils/value_formatter.dart';
 import '../../../core/widgets/aqua_header.dart';
 import '../../../core/widgets/aqua_page_scaffold.dart';
 import '../../../core/widgets/aqua_symbol.dart';
 
-class ControlsScreen extends StatefulWidget {
+class ControlsScreen extends ConsumerStatefulWidget {
   const ControlsScreen({
     super.key,
     required this.current,
@@ -17,25 +20,20 @@ class ControlsScreen extends StatefulWidget {
   final ValueChanged<AppScreen> onNavigate;
 
   @override
-  State<ControlsScreen> createState() => _ControlsScreenState();
+  ConsumerState<ControlsScreen> createState() => _ControlsScreenState();
 }
 
-class _ControlsScreenState extends State<ControlsScreen> {
-  String mode = 'manual';
-  final Map<String, bool> moduleStates = {
-    'Irrigation Pump': true,
-    'Ventilation Fan': false,
-    'Raise EC': true,
-    'Lower EC': false,
-    'Raise pH': false,
-    'Lower pH': true,
-    'UV Purifier': false,
-    'Heat Gen': true,
-  };
-
+class _ControlsScreenState extends ConsumerState<ControlsScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final controlsAsync = ref.watch(controlsStreamProvider);
+    final dbService = ref.read(hydroponicDatabaseServiceProvider);
+
+    final isLoading = controlsAsync.isLoading || controlsAsync.hasError;
+    final autoMode = controlsAsync.valueOrNull?.autoMode ?? false;
+    final ledLight = controlsAsync.valueOrNull?.ledLight ?? false;
+    final isManualMode = !autoMode;
 
     return AquaPageScaffold(
       currentScreen: widget.current,
@@ -63,198 +61,229 @@ class _ControlsScreenState extends State<ControlsScreen> {
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                Text(
-                  'System Operation Mode'.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: isDark ? AquaColors.slate400 : AquaColors.slate500,
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: 1.2,
-                    fontSize: 10,
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'System Operation Mode'.toUpperCase(),
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+                      fontWeight: FontWeight.w800,
+                      letterSpacing: 1.2,
+                      fontSize: 10,
+                    ),
                   ),
-                ),
-                const SizedBox(height: 8),
-                Container(
-                  padding: const EdgeInsets.all(4),
-                  decoration: BoxDecoration(
-                    color: isDark
-                        ? AquaColors.surfaceDark
-                        : AquaColors.slate200,
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Row(
-                    children: [
-                      _ModeButton(
-                        label: 'Smart Auto',
-                        active: mode == 'auto',
-                        onTap: () => setState(() => mode = 'auto'),
-                      ),
-                      _ModeButton(
-                        label: 'Manual Override',
-                        active: mode == 'manual',
-                        onTap: () => setState(() => mode = 'manual'),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'Hardware Modules',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w800,
-                      ),
-                    ),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 10,
-                        vertical: 6,
-                      ),
-                      decoration: BoxDecoration(
-                        color: AquaColors.nature.withValues(alpha: 0.10),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 6,
-                            height: 6,
-                            decoration: const BoxDecoration(
-                              color: AquaColors.nature,
-                              shape: BoxShape.circle,
-                            ),
-                          ),
-                          const SizedBox(width: 6),
-                          Text(
-                            'System Healthy',
-                            style: Theme.of(context).textTheme.labelSmall
-                                ?.copyWith(
-                                  color: AquaColors.nature,
-                                  fontWeight: FontWeight.w800,
-                                  fontSize: 10,
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                Wrap(
-                  spacing: 16,
-                  runSpacing: 16,
-                  children: [
-                    _ModuleCard(
-                      title: 'Irrigation Pump',
-                      sub: '2.4L/m',
-                      icon: 'water_drop',
-                      active: moduleStates['Irrigation Pump']!,
-                      isEnabled: mode == 'manual',
-                      onToggle: (value) => setState(
-                        () => moduleStates['Irrigation Pump'] = value,
-                      ),
-                    ),
-                    _ModuleCard(
-                      title: 'Ventilation Fan',
-                      icon: 'mode_fan',
-                      active: moduleStates['Ventilation Fan']!,
-                      isEnabled: mode == 'manual',
-                      onToggle: (value) => setState(
-                        () => moduleStates['Ventilation Fan'] = value,
-                      ),
-                    ),
-                    _ModuleCard(
-                      title: 'Raise EC',
-                      sub: 'Nutrient Pump',
-                      icon: 'science',
-                      active: moduleStates['Raise EC']!,
-                      isEnabled: mode == 'manual',
-                      onToggle: (value) =>
-                          setState(() => moduleStates['Raise EC'] = value),
-                    ),
-                    _ModuleCard(
-                      title: 'Lower EC',
-                      sub: 'Dilution Valve',
-                      icon: 'opacity',
-                      active: moduleStates['Lower EC']!,
-                      isEnabled: mode == 'manual',
-                      onToggle: (value) =>
-                          setState(() => moduleStates['Lower EC'] = value),
-                    ),
-                    _ModuleCard(
-                      title: 'Raise pH',
-                      sub: 'Base Doser',
-                      icon: 'keyboard_arrow_up',
-                      active: moduleStates['Raise pH']!,
-                      isEnabled: mode == 'manual',
-                      onToggle: (value) =>
-                          setState(() => moduleStates['Raise pH'] = value),
-                    ),
-                    _ModuleCard(
-                      title: 'Lower pH',
-                      sub: 'Acid Doser',
-                      icon: 'keyboard_arrow_down',
-                      active: moduleStates['Lower pH']!,
-                      isEnabled: mode == 'manual',
-                      onToggle: (value) =>
-                          setState(() => moduleStates['Lower pH'] = value),
-                    ),
-                    _ModuleCard(
-                      title: 'UV Purifier',
-                      icon: 'flare',
-                      active: moduleStates['UV Purifier']!,
-                      isEnabled: mode == 'manual',
-                      onToggle: (value) =>
-                          setState(() => moduleStates['UV Purifier'] = value),
-                    ),
-                    _ModuleCard(
-                      title: 'Heat Gen',
-                      sub: '24.5°C',
-                      icon: 'thermostat',
-                      active: moduleStates['Heat Gen']!,
-                      isEnabled: mode == 'manual',
-                      onToggle: (value) =>
-                          setState(() => moduleStates['Heat Gen'] = value),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                if (mode == 'manual')
+                  const SizedBox(height: 8),
                   Container(
-                    padding: const EdgeInsets.all(16),
+                    padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
-                      color: AquaColors.warning.withValues(alpha: 0.10),
-                      border: Border.all(
-                        color: AquaColors.warning.withValues(alpha: 0.20),
-                      ),
+                      color: isDark
+                          ? AquaColors.surfaceDark
+                          : AquaColors.slate200,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const AquaSymbol('warning', color: AquaColors.warning),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: Text(
-                            'Manual override is active. Smart nutrient balancing is paused to allow for user adjustment.',
-                            style: Theme.of(context).textTheme.bodySmall
-                                ?.copyWith(
-                                  color: AquaColors.warning.withValues(
-                                    alpha: 0.80,
-                                  ),
-                                  height: 1.4,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                          ),
+                        _ModeButton(
+                          label: 'Smart Auto',
+                          active: autoMode,
+                          isLoading: isLoading,
+                          onTap: () => dbService.toggleAutoMode(true),
+                        ),
+                        _ModeButton(
+                          label: 'Manual Override',
+                          active: isManualMode,
+                          isLoading: isLoading,
+                          onTap: () => dbService.toggleAutoMode(false),
                         ),
                       ],
                     ),
                   ),
-              ],
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Hardware Modules',
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                        decoration: BoxDecoration(
+                          color: AquaColors.nature.withValues(alpha: 0.10),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Row(
+                          children: [
+                            Container(
+                              width: 6,
+                              height: 6,
+                              decoration: const BoxDecoration(
+                                color: AquaColors.nature,
+                                shape: BoxShape.circle,
+                              ),
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'System Healthy',
+                              style: Theme.of(context).textTheme.labelSmall
+                                  ?.copyWith(
+                                    color: AquaColors.nature,
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 10,
+                                  ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    children: [
+                      _ModuleCard(
+                        title: 'Water Pump',
+                        sub: '2.4L/m',
+                        icon: 'water_drop',
+                        active: controlsAsync.valueOrNull?.waterPump ?? false,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.toggleWaterPump(value),
+                      ),
+                      _ModuleCard(
+                        title: 'Ventilation Fan',
+                        icon: 'mode_fan',
+                        active: controlsAsync.valueOrNull?.fan ?? false,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.toggleFan(value),
+                      ),
+                      _ModuleCard(
+                        title: 'Raise EC',
+                        sub: 'Nutrient Pump',
+                        icon: 'science',
+                        active: controlsAsync.valueOrNull?.pumpEcUp ?? false,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.togglePumpEcUp(value),
+                      ),
+                      _ModuleCard(
+                        title: 'Lower EC',
+                        sub: 'Dilution Valve',
+                        icon: 'opacity',
+                        active: controlsAsync.valueOrNull?.pumpEcDown ?? false,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.togglePumpEcDown(value),
+                      ),
+                      _ModuleCard(
+                        title: 'Raise pH',
+                        sub: 'Base Doser',
+                        icon: 'keyboard_arrow_up',
+                        active: controlsAsync.valueOrNull?.pumpPhUp ?? false,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.togglePumpPhUp(value),
+                      ),
+                      _ModuleCard(
+                        title: 'Lower pH',
+                        sub: 'Acid Doser',
+                        icon: 'keyboard_arrow_down',
+                        active: controlsAsync.valueOrNull?.pumpPhDown ?? false,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.togglePumpPhDown(value),
+                      ),
+                      _ModuleCard(
+                        title: 'UV Purifier',
+                        icon: 'flare',
+                        // Maps to ledLight as requested (UV Board)
+                        active: ledLight,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.toggleLedLight(value),
+                      ),
+                      _ModuleCard(
+                        title: 'Heat Gen',
+                        sub: '24.5°C',
+                        icon: 'thermostat',
+                        active: controlsAsync.valueOrNull?.heater ?? false,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.toggleHeater(value),
+                      ),
+                      // LED Light card removed as it is now UV Purifier
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  if (isManualMode)
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AquaColors.warning.withValues(alpha: 0.10),
+                        border: Border.all(
+                          color: AquaColors.warning.withValues(alpha: 0.20),
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const AquaSymbol(
+                            'warning',
+                            color: AquaColors.warning,
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Manual override is active. You control all modules at your own risk. Switch to Smart Auto for system-managed operation.',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: AquaColors.warning.withValues(
+                                      alpha: 0.80,
+                                    ),
+                                    height: 1.4,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  else
+                    Container(
+                      padding: const EdgeInsets.all(16),
+                      decoration: BoxDecoration(
+                        color: AquaColors.primary.withValues(alpha: 0.10),
+                        border: Border.all(
+                          color: AquaColors.primary.withValues(alpha: 0.20),
+                        ),
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const AquaSymbol('info', color: AquaColors.primary),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              'Smart Auto mode: System controls all modules automatically. Switch to Manual Override to take control.',
+                              style: Theme.of(context).textTheme.bodySmall
+                                  ?.copyWith(
+                                    color: AquaColors.primary.withValues(
+                                      alpha: 0.90,
+                                    ),
+                                    height: 1.4,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  const SizedBox(height: 24),
+                ],
+              ),
             ),
           ),
         ],
@@ -267,10 +296,12 @@ class _ModeButton extends StatelessWidget {
   const _ModeButton({
     required this.label,
     required this.active,
+    required this.isLoading,
     required this.onTap,
   });
   final String label;
   final bool active;
+  final bool isLoading;
   final VoidCallback onTap;
 
   @override
@@ -278,7 +309,7 @@ class _ModeButton extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Expanded(
       child: InkWell(
-        onTap: onTap,
+        onTap: isLoading ? null : onTap,
         borderRadius: BorderRadius.circular(10),
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
@@ -300,15 +331,23 @@ class _ModeButton extends StatelessWidget {
                 : null,
           ),
           child: Center(
-            child: Text(
-              label,
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: FontWeight.w800,
-                color: active
-                    ? (isDark ? Colors.white : AquaColors.slate900)
-                    : AquaColors.slate500,
-              ),
-            ),
+            child: isLoading && active
+                ? Text(
+                    ValueFormatter.nullPlaceholder,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: isDark ? Colors.white : AquaColors.slate900,
+                    ),
+                  )
+                : Text(
+                    label,
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                      color: active
+                          ? (isDark ? Colors.white : AquaColors.slate900)
+                          : AquaColors.slate500,
+                    ),
+                  ),
           ),
         ),
       ),
@@ -331,7 +370,7 @@ class _ModuleCard extends StatelessWidget {
   final String icon;
   final bool active;
   final bool isEnabled;
-  final Function(bool) onToggle;
+  final ValueChanged<bool> onToggle;
 
   @override
   Widget build(BuildContext context) {
@@ -398,73 +437,75 @@ class _ModuleCard extends StatelessWidget {
                         ),
                       ),
                     ),
-                  GestureDetector(
-                    onTap: isEnabled ? () => onToggle(!active) : null,
-                    child: Container(
-                      width: 40,
-                      height: 24,
-                      padding: const EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: active
-                            ? AquaColors.primary
-                            : (isDark
-                                  ? AquaColors.slate700
-                                  : AquaColors.slate300),
-                        borderRadius: BorderRadius.circular(999),
-                      ),
-                      child: Align(
-                        alignment: active
-                            ? Alignment.centerRight
-                            : Alignment.centerLeft,
-                        child: Container(
-                          width: 16,
-                          height: 16,
-                          decoration: const BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
+                    GestureDetector(
+                      onTap: isEnabled ? () => onToggle(!active) : null,
+                      child: Container(
+                        width: 40,
+                        height: 24,
+                        padding: const EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: active
+                              ? AquaColors.primary
+                              : (isDark
+                                    ? AquaColors.slate700
+                                    : AquaColors.slate300),
+                          borderRadius: BorderRadius.circular(999),
+                        ),
+                        child: Align(
+                          alignment: active
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
+                          child: Container(
+                            width: 16,
+                            height: 16,
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(height: 12),
-              Text(
-                title,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
-              ),
-              const SizedBox(height: 4),
-              Row(
-                children: [
-                  Text(
-                    status.toUpperCase(),
-                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      fontSize: 10,
-                      fontWeight: FontWeight.w800,
-                      color: active ? AquaColors.primary : AquaColors.slate400,
-                      letterSpacing: 0.8,
-                    ),
-                  ),
-                  if (sub != null) ...[
-                    const SizedBox(width: 6),
+                  ],
+                ),
+                const SizedBox(height: 12),
+                Text(
+                  title,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w800),
+                ),
+                const SizedBox(height: 4),
+                Row(
+                  children: [
                     Text(
-                      '• $sub',
+                      status.toUpperCase(),
                       style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         fontSize: 10,
-                        fontWeight: FontWeight.w700,
-                        color: AquaColors.slate400,
+                        fontWeight: FontWeight.w800,
+                        color: active
+                            ? AquaColors.primary
+                            : AquaColors.slate400,
+                        letterSpacing: 0.8,
                       ),
                     ),
+                    if (sub != null) ...[
+                      const SizedBox(width: 6),
+                      Text(
+                        '• $sub',
+                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                          fontSize: 10,
+                          fontWeight: FontWeight.w700,
+                          color: AquaColors.slate400,
+                        ),
+                      ),
+                    ],
                   ],
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           ),
         ),
-      ),
       ),
     );
   }
