@@ -109,7 +109,7 @@ class FirebaseInitializer {
   ///   'initialized': true,
   ///   'appName': '[DEFAULT]',
   ///   'options': {
-  ///     'projectId': 'test1-3abbc',
+  ///     'projectId': '....',
   ///     'databaseURL': 'https://...'
   ///   }
   /// }

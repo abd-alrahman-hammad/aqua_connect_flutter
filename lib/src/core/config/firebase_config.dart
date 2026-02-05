@@ -12,14 +12,14 @@ class FirebaseConfig {
   FirebaseConfig._();
 
   /// Firebase API Key from the credentials
-  static const String _apiKey = 'AIzaSyAIdSNHK6fMdIQ2ED_YB1RJng1fLiKxMXE';
+  static const String _apiKey = 'AIzaSyCYRXU04F7yUdSmGNrJ-mTvIlSjA4MN2PA';
 
   /// Firebase Realtime Database URL
   static const String _databaseUrl =
-      'https://test1-3abbc-default-rtdb.asia-southeast1.firebasedatabase.app/';
+      'https://rayyan-cf0b7-default-rtdb.asia-southeast1.firebasedatabase.app';
 
   /// Firebase project ID
-  static const String _projectId = 'test1-3abbc';
+  static const String _projectId = 'rayyan-cf0b7';
 
   /// Firebase Android app ID
   static const String _androidAppId = '1:YOUR_APP_ID:android:YOUR_ANDROID_ID';

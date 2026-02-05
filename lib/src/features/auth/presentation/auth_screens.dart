@@ -66,7 +66,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 24),
                       _AuthField(
                         label: 'Email Address',
-                        hint: 'smeth@gmail.com',
+                        hint: 'smith@gmail.com',
                         keyboardType: TextInputType.emailAddress,
                       ),
                       const SizedBox(height: 16),
@@ -201,7 +201,7 @@ class SignupScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   const _AuthField(
                     label: 'Email',
-                    hint: 'smeth@gmail.com',
+                    hint: 'smith@gmail.com',
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 12),
@@ -311,7 +311,7 @@ class ForgotPasswordScreen extends StatelessWidget {
                       const SizedBox(height: 24),
                       const _AuthField(
                         label: 'Email Address',
-                        hint: 'smeth@gmail.com',
+                        hint: 'smith@gmail.com',
                         keyboardType: TextInputType.emailAddress,
                         
                       ),
