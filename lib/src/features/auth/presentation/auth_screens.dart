@@ -72,7 +72,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       const SizedBox(height: 16),
                       _AuthPasswordField(
                         label: 'Password',
-                        hint: '••••••••',
+                        hint: 'Dd#1234',
                         visible: passwordVisible,
                         onToggleVisibility: () =>
                             setState(() => passwordVisible = !passwordVisible),
@@ -201,13 +201,13 @@ class SignupScreen extends StatelessWidget {
                   const SizedBox(height: 12),
                   const _AuthField(
                     label: 'Email',
-                    hint: 'alex@example.com',
+                    hint: 'smeth@gmail.com',
                     keyboardType: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 12),
                   const _AuthField(
                     label: 'Password',
-                    hint: '••••••••',
+                    hint: 'Dd#1234',
                     obscure: true,
                   ),
                   const SizedBox(height: 16),
@@ -232,7 +232,7 @@ class SignupScreen extends StatelessWidget {
                             child: GestureDetector(
                               onTap: () => onNavigate(AppScreen.login),
                               child: Text(
-                                'Login',
+                                'Sign In',
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
                                       color: AquaColors.primary,
