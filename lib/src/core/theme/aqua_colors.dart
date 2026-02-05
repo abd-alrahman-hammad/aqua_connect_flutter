@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class AquaColors {
   // Tailwind config from `index.html`
-  static const primary = Color(0xFF7AC043); // Nature Green
+  static const primary = Color(0xFF38A254); // Nature Green
   static const aqua = Color(0xFF00AEEF); // Aqua Blue
-  static const primaryDark = Color(0xFF5A962E);
+  static const primaryDark = Color(0xFF26703A);
 
   static const backgroundLight = Color(0xFFF7F8F6);
   static const backgroundDark = Color(0xFF182012);
