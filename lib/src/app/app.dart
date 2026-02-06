@@ -7,7 +7,7 @@ import '../features/auth/presentation/auth_screens.dart';
 import '../features/controls/presentation/controls_screen.dart';
 import '../features/dashboard/presentation/dashboard_screen.dart';
 import '../features/insights/presentation/insights_screen.dart';
-import '../features/monitoring/presentation/monitoring_screen.dart';
+
 import '../features/more/presentation/more_screen.dart';
 import '../features/profile/presentation/profile_screen.dart';
 import '../features/settings/presentation/settings_screen.dart';
@@ -63,11 +63,7 @@ class _AppRoot extends ConsumerWidget {
         );
       case AppScreen.alerts:
         page = AlertsScreen(current: screen, onNavigate: controller.navigate);
-      case AppScreen.monitoring:
-        page = MonitoringScreen(
-          current: screen,
-          onNavigate: controller.navigate,
-        );
+
       case AppScreen.controls:
         page = ControlsScreen(current: screen, onNavigate: controller.navigate);
       case AppScreen.analytics:
