@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,29 +12,105 @@ import '../../../core/widgets/aqua_header.dart';
 import '../../../core/widgets/aqua_page_scaffold.dart';
 import '../../../core/widgets/aqua_symbol.dart';
 
+import 'analytics_state.dart';
+
 class AnalyticsScreen extends ConsumerStatefulWidget {
   const AnalyticsScreen({
     super.key,
     required this.current,
     required this.onNavigate,
+    this.initialTab,
   });
 
   final AppScreen current;
   final ValueChanged<AppScreen> onNavigate;
+  final String? initialTab;
 
   @override
   ConsumerState<AnalyticsScreen> createState() => _AnalyticsScreenState();
 }
 
 class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
-  String tab = 'Water';
-  int activeBar = 5;
+  late String tab;
+  int activeBar = 3; // Default to a middle bar
+
+  @override
+  void initState() {
+    super.initState();
+    // Check provider for requested tab, otherwise use initialTab or default
+    final requestedTab = ref.read(analyticsTabProvider);
+
+    // Default to 'pH Level' if no initial tab or if it was 'Water Level' (which is removed)
+    tab = requestedTab ?? widget.initialTab ?? 'pH Level';
+    if (tab == 'Water Level') tab = 'pH Level';
+
+    // Clear the provider after reading it so subsequent navigations (e.g. from menu) don't get stuck
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(analyticsTabProvider.notifier).state = null;
+    });
+  }
+
+  // Helper to generate simulated history data based on current value
+  // logic: create a curve that ends at the current value
+  List<FlSpot> _generateSpots(double currentValue, double variance) {
+    final random = Random(42); // Fixed seed for consistent "history"
+    final spots = <FlSpot>[];
+    for (int i = 0; i <= 6; i++) {
+      // Generate a value that is within +/- variance of the current value
+      // The last point (i=6) should be exactly the current value
+      double value;
+      if (i == 6) {
+        value = currentValue;
+      } else {
+        final noise = (random.nextDouble() - 0.5) * 2 * variance;
+        value = currentValue + noise;
+      }
+      spots.add(FlSpot(i.toDouble(), value));
+    }
+    return spots;
+  }
+
+  Color _getTabColor(String tab) {
+    switch (tab) {
+      case 'pH Level':
+        return AquaColors.primary;
+      case 'EC Level':
+        return AquaColors.warning;
+      case 'Temperature':
+        return AquaColors.info;
+      default:
+        return AquaColors.primary;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final sensorsAsync = ref.watch(sensorsStreamProvider);
-    final waterLevel = sensorsAsync.valueOrNull?.waterLevel;
+    final sensors = sensorsAsync.valueOrNull;
+
+    // Determine current value and configuration based on selected tab
+    double currentValue = 0.0;
+    String unit = '';
+    double variance = 1.0;
+
+    // Only 'EC Level', 'pH Level', 'Temperature' are allowed
+    if (tab == 'pH Level') {
+      currentValue = sensors?.ph ?? 7.0;
+      unit = 'pH';
+      variance = 0.5;
+    } else if (tab == 'EC Level') {
+      currentValue = sensors?.ec ?? 1.5;
+      unit = 'mS/cm';
+      variance = 0.3;
+    } else if (tab == 'Temperature') {
+      currentValue = sensors?.temperature ?? 24.0;
+      unit = '°C';
+      variance = 2.0;
+    }
+
+    final chartColor = _getTabColor(tab);
+
     return AquaPageScaffold(
       currentScreen: widget.current,
       onNavigate: widget.onNavigate,
@@ -41,7 +119,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
           AquaHeader(
             title: 'Historical Analytics',
             onBack: () => widget.onNavigate(AppScreen.dashboard),
-            
           ),
           // Tabs
           Container(
@@ -58,39 +135,35 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                children: ['Water level', 'EC Level', 'pH Level', 'Temperature']
-                    .map((t) {
-                      final active = tab == t;
-                      return InkWell(
-                        onTap: () => setState(() => tab = t),
-                        child: Container(
-                          padding: const EdgeInsets.fromLTRB(0, 16, 24, 12),
-                          decoration: BoxDecoration(
-                            border: Border(
-                              bottom: BorderSide(
-                                color: active
-                                    ? AquaColors.primary
-                                    : Colors.transparent,
-                                width: 3,
-                              ),
-                            ),
-                          ),
-                          child: Text(
-                            t,
-                            style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(
-                                  fontWeight: FontWeight.w800,
-                                  color: active
-                                      ? AquaColors.primary
-                                      : (isDark
-                                            ? AquaColors.slate400
-                                            : AquaColors.slate500),
-                                ),
+                // Removed 'Water Level' as requested
+                children: ['pH Level', 'EC Level', 'Temperature'].map((t) {
+                  final active = tab == t;
+                  return InkWell(
+                    onTap: () => setState(() => tab = t),
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(0, 16, 24, 12),
+                      decoration: BoxDecoration(
+                        border: Border(
+                          bottom: BorderSide(
+                            color: active ? chartColor : Colors.transparent,
+                            width: 3,
                           ),
                         ),
-                      );
-                    })
-                    .toList(),
+                      ),
+                      child: Text(
+                        t,
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w800,
+                          color: active
+                              ? chartColor
+                              : (isDark
+                                    ? AquaColors.slate400
+                                    : AquaColors.slate500),
+                        ),
+                      ),
+                    ),
+                  );
+                }).toList(),
               ),
             ),
           ),
@@ -98,7 +171,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
             child: Column(
               children: [
-                // Toggle row (static like web; second selected)
+                // Time Range Toggle - Removed 'ALL'
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
@@ -108,10 +181,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
-                    children: ['24H', '7D', '30D', 'ALL'].asMap().entries.map((
-                      e,
-                    ) {
-                      final selected = e.key == 1;
+                    children: ['24H', '7D', '30D'].asMap().entries.map((e) {
+                      final selected = e.key == 0; // Default to 24H
                       return Expanded(
                         child: Container(
                           padding: const EdgeInsets.symmetric(vertical: 6),
@@ -152,6 +223,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   ),
                 ),
                 const SizedBox(height: 24),
+
+                // Main Chart Card
                 _Card(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -163,7 +236,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                'Water Level (Live)',
+                                '$tab (Live)',
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
                                       color: isDark
@@ -173,123 +246,18 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                ValueFormatter.formatPercent(waterLevel),
+                                '${ValueFormatter.formatDouble(currentValue)} $unit',
                                 style: Theme.of(context)
                                     .textTheme
                                     .headlineMedium
-                                    ?.copyWith(fontWeight: FontWeight.w900),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AquaColors.critical.withValues(
-                                alpha: 0.10,
-                              ),
-                              borderRadius: BorderRadius.circular(999),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const AquaSymbol(
-                                  'trending_down',
-                                  size: 16,
-                                  color: AquaColors.critical,
-                                ),
-                                const SizedBox(width: 4),
-                                Text(
-                                  '-5.2%',
-                                  style: Theme.of(context).textTheme.labelMedium
-                                      ?.copyWith(
-                                        color: AquaColors.critical,
-                                        fontWeight: FontWeight.w800,
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        height: 160,
-                        child: LineChart(
-                          LineChartData(
-                            borderData: FlBorderData(show: false),
-                            gridData: const FlGridData(show: false),
-                            titlesData: const FlTitlesData(show: false),
-                            lineBarsData: [
-                              LineChartBarData(
-                                isCurved: true,
-                                color: const Color(0xFF00B0F0),
-                                barWidth: 3,
-                                dotData: const FlDotData(show: false),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      const Color(
-                                        0xFF00B0F0,
-                                      ).withValues(alpha: 0.30),
-                                      const Color(
-                                        0xFF00B0F0,
-                                      ).withValues(alpha: 0.0),
-                                    ],
-                                  ),
-                                ),
-                                spots: const [
-                                  FlSpot(0, 40),
-                                  FlSpot(1, 70),
-                                  FlSpot(2, 50),
-                                  FlSpot(3, 90),
-                                  FlSpot(4, 60),
-                                  FlSpot(5, 30),
-                                  FlSpot(6, 80),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                _Card(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'Growth Efficiency',
-                                style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
-                                      color: isDark
-                                          ? AquaColors.slate400
-                                          : AquaColors.slate500,
+                                      fontWeight: FontWeight.w900,
+                                      color: chartColor,
                                     ),
                               ),
-                              const SizedBox(height: 4),
-                              Text(
-                                ValueFormatter.formatPercent(waterLevel),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(fontWeight: FontWeight.w900),
-                              ),
                             ],
                           ),
+                          // Simulated trend indicator
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 10,
@@ -309,7 +277,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  '+12%',
+                                  'Stable', // Simplified for now
                                   style: Theme.of(context).textTheme.labelMedium
                                       ?.copyWith(
                                         color: AquaColors.nature,
@@ -321,61 +289,99 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 12),
+                      const SizedBox(height: 24),
                       SizedBox(
-                        height: 160,
-                        child: BarChart(
-                          BarChartData(
-                            gridData: const FlGridData(show: false),
-                            titlesData: const FlTitlesData(show: false),
+                        height: 200,
+                        child: LineChart(
+                          LineChartData(
+                            minY: (currentValue - variance * 2) < 0
+                                ? 0
+                                : (currentValue - variance * 2),
+                            maxY: currentValue + variance * 2,
                             borderData: FlBorderData(show: false),
-                            barGroups: List.generate(7, (i) {
-                              final v = [
-                                45,
-                                60,
-                                35,
-                                70,
-                                50,
-                                85,
-                                65,
-                              ][i].toDouble();
-                              final isActive = i == activeBar;
-                              return BarChartGroupData(
-                                x: i,
-                                barRods: [
-                                  BarChartRodData(
-                                    toY: v,
-                                    width: 14,
-                                    borderRadius: const BorderRadius.only(
-                                      topLeft: Radius.circular(4),
-                                      topRight: Radius.circular(4),
-                                    ),
-                                    color: isActive
-                                        ? const Color(0xFF4E9B1A)
-                                        : const Color(0x334E9B1A),
+                            gridData: FlGridData(
+                              show: true,
+                              drawVerticalLine: false,
+                              horizontalInterval: variance,
+                              getDrawingHorizontalLine: (value) => FlLine(
+                                color: isDark ? Colors.white10 : Colors.black12,
+                                strokeWidth: 1,
+                              ),
+                            ),
+                            titlesData: const FlTitlesData(show: false),
+                            lineBarsData: [
+                              LineChartBarData(
+                                isCurved: true,
+                                color: chartColor,
+                                barWidth: 3,
+                                dotData: const FlDotData(show: false),
+                                belowBarData: BarAreaData(
+                                  show: true,
+                                  gradient: LinearGradient(
+                                    begin: Alignment.topCenter,
+                                    end: Alignment.bottomCenter,
+                                    colors: [
+                                      chartColor.withValues(alpha: 0.30),
+                                      chartColor.withValues(alpha: 0.0),
+                                    ],
                                   ),
-                                ],
-                              );
-                            }),
-                            barTouchData: BarTouchData(
-                              enabled: true,
-                              touchCallback: (event, resp) {
-                                if (event.isInterestedForInteractions &&
-                                    resp?.spot != null) {
-                                  setState(
-                                    () => activeBar =
-                                        resp!.spot!.touchedBarGroupIndex,
-                                  );
-                                }
-                              },
+                                ),
+                                spots: _generateSpots(currentValue, variance),
+                              ),
+                            ],
+                            lineTouchData: LineTouchData(
+                              touchTooltipData: LineTouchTooltipData(
+                                getTooltipColor: (touchedSpot) => isDark
+                                    ? AquaColors.surfaceDark
+                                    : Colors.white,
+                                tooltipBorderRadius: BorderRadius.circular(8),
+                                fitInsideHorizontally: true,
+                                fitInsideVertically: true,
+                              ),
                             ),
                           ),
                         ),
+                      ),
+                      const SizedBox(height: 12),
+                      // X-Axis Labels (Simulated 24H)
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: const [
+                          Text(
+                            '00:00',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                          Text(
+                            '04:00',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                          Text(
+                            '08:00',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                          Text(
+                            '12:00',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                          Text(
+                            '16:00',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                          Text(
+                            '20:00',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                          Text(
+                            'Now',
+                            style: TextStyle(fontSize: 10, color: Colors.grey),
+                          ),
+                        ],
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 24),
+
                 Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
@@ -391,21 +397,9 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   border: AquaColors.primary.withValues(alpha: 0.10),
                   iconBg: AquaColors.primary,
                   icon: 'lightbulb',
-                  title: 'Optimize Nutrient Mix',
-                  subtitle: 'Watering at 6 AM saved 15% resources this week.',
-                ),
-                const SizedBox(height: 12),
-                _InsightRow(
-                  bg: isDark
-                      ? Colors.white.withValues(alpha: 0.05)
-                      : AquaColors.slate100,
-                  border: isDark
-                      ? Colors.white.withValues(alpha: 0.10)
-                      : AquaColors.slate200,
-                  iconBg: AquaColors.warning,
-                  icon: 'warning',
-                  title: 'pH Variance Detected',
-                  subtitle: 'Slight spike on Wednesday due to heatwave.',
+                  title: 'System Optimal',
+                  subtitle:
+                      '$tab is within the healthy range for this growth stage.',
                 ),
               ],
             ),
