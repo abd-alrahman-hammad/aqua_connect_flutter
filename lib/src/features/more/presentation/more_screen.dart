@@ -28,12 +28,16 @@ class MoreScreen extends StatelessWidget {
         child: Column(
           children: [
             AquaHeader(
-            title: 'Menu',
-            onBack: () => onNavigate(AppScreen.dashboard),
-            
-          ),
+              title: 'Menu',
+              onBack: () => onNavigate(AppScreen.dashboard),
+            ),
             Padding(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 100), // مسافة سفلية إضافية عشان الشريط
+              padding: const EdgeInsets.fromLTRB(
+                16,
+                24,
+                16,
+                100,
+              ), // مسافة سفلية إضافية عشان الشريط
               child: Column(
                 children: [
                   // الكرت الأول
@@ -46,7 +50,6 @@ class MoreScreen extends StatelessWidget {
                     onTap: () => onNavigate(AppScreen.analytics),
                   ),
                   const SizedBox(height: 18), // مسافة بين الكروت
-                  
                   // الكرت الثاني
                   _MenuCard(
                     title: 'AI Insights',
@@ -59,15 +62,6 @@ class MoreScreen extends StatelessWidget {
                   const SizedBox(height: 18),
 
                   // الكرت الثالث
-                  _MenuCard(
-                    title: 'Monitoring',
-                    subtitle: 'Real-time Sensors',
-                    icon: 'speed',
-                    color: AquaColors.warning,
-                    bg: AquaColors.warning.withValues(alpha: 0.10),
-                    onTap: () => onNavigate(AppScreen.monitoring),
-                  ),
-                  const SizedBox(height: 18),
 
                   // الكرت الرابع
                   _MenuCard(
@@ -78,7 +72,6 @@ class MoreScreen extends StatelessWidget {
                     bg: AquaColors.nature.withValues(alpha: 0.10),
                     onTap: () => onNavigate(AppScreen.support),
                   ),
-                  
                 ],
               ),
             ),
@@ -109,10 +102,10 @@ class _MenuCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return SizedBox(
-      width: double.infinity, 
-      height: 128, 
+      width: double.infinity,
+      height: 128,
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
@@ -145,8 +138,7 @@ class _MenuCard extends StatelessWidget {
                   decoration: BoxDecoration(color: bg, shape: BoxShape.circle),
                 ),
               ),
-              
-              
+
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -180,7 +172,6 @@ class _MenuCard extends StatelessWidget {
                           fontWeight: FontWeight.w600,
                         ),
                       ),
-                      
                     ],
                   ),
                 ],

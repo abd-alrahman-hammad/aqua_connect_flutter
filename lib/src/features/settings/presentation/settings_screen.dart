@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/screens.dart';
+import '../../../core/services/auth_preferences_service.dart';
+import '../../../core/services/firebase_auth_service.dart';
 import '../../../core/theme/aqua_colors.dart';
 import '../../../core/widgets/aqua_page_scaffold.dart';
 import '../../../core/widgets/aqua_symbol.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({
     super.key,
     required this.current,
@@ -20,10 +23,10 @@ class SettingsScreen extends StatefulWidget {
   final VoidCallback onToggleLanguage;
 
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   String lang = 'EN';
 
   @override
@@ -101,7 +104,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     _MenuItem(
                       icon: 'lock',
                       title: 'Account Security',
-                      subtitle: 'Password & Multi-factor auth',
+                      subtitle: 'Change Password',
                       onTap: () => widget.onNavigate(AppScreen.accountSecurity),
                     ),
                     _Divider(),
@@ -263,7 +266,23 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 const SizedBox(height: 24),
                 InkWell(
-                  onTap: () => widget.onNavigate(AppScreen.login),
+                  onTap: () async {
+                    try {
+                      await ref.read(authPreferencesServiceProvider).clear();
+                      await ref.read(firebaseAuthServiceProvider).signOut();
+                      widget.onNavigate(AppScreen.login);
+                    } catch (e) {
+                      if (context.mounted) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Error signing out: $e'),
+                            backgroundColor: AquaColors.critical,
+                            behavior: SnackBarBehavior.floating,
+                          ),
+                        );
+                      }
+                    }
+                  },
                   borderRadius: BorderRadius.circular(12),
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 16),

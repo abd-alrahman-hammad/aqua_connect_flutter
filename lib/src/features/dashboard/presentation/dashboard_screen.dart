@@ -15,6 +15,8 @@ import '../../../core/widgets/aqua_symbol.dart';
 import '../../../core/models/hydroponic/sensors_model.dart'; // [NEW] - for type safety in builder
 import '../../../core/models/hydroponic/settings_model.dart'; // [NEW]
 
+import '../../analytics/presentation/analytics_state.dart'; // [NEW]
+
 class DashboardScreen extends ConsumerWidget {
   const DashboardScreen({
     super.key,
@@ -131,7 +133,11 @@ class DashboardScreen extends ConsumerWidget {
                           statusColor: VitalityUtils.getStatusColor(phStatus),
                           iconColor: AquaColors.primary,
                           iconBg: AquaColors.primary.withValues(alpha: 0.10),
-                          onTap: () => onNavigate(AppScreen.monitoring),
+                          onTap: () {
+                            ref.read(analyticsTabProvider.notifier).state =
+                                'pH Level';
+                            onNavigate(AppScreen.analytics);
+                          },
                           labelUppercase: true,
                         ),
                         AquaSensorCard(
@@ -143,7 +149,11 @@ class DashboardScreen extends ConsumerWidget {
                           statusColor: VitalityUtils.getStatusColor(ecStatus),
                           iconColor: AquaColors.warning,
                           iconBg: AquaColors.warning.withValues(alpha: 0.10),
-                          onTap: () => onNavigate(AppScreen.monitoring),
+                          onTap: () {
+                            ref.read(analyticsTabProvider.notifier).state =
+                                'EC Level';
+                            onNavigate(AppScreen.analytics);
+                          },
                           labelUppercase: true,
                         ),
                         AquaSensorCard(
@@ -158,7 +168,11 @@ class DashboardScreen extends ConsumerWidget {
                           statusColor: VitalityUtils.getStatusColor(tempStatus),
                           iconColor: AquaColors.info,
                           iconBg: AquaColors.info.withValues(alpha: 0.10),
-                          onTap: () => onNavigate(AppScreen.monitoring),
+                          onTap: () {
+                            ref.read(analyticsTabProvider.notifier).state =
+                                'Temperature';
+                            onNavigate(AppScreen.analytics);
+                          },
                           labelUppercase: true,
                         ),
                         AquaSensorCard(
@@ -174,7 +188,8 @@ class DashboardScreen extends ConsumerWidget {
                           ),
                           iconColor: const Color(0xFF3B82F6),
                           iconBg: const Color(0x1A3B82F6),
-                          onTap: () => onNavigate(AppScreen.monitoring),
+                          onTap:
+                              () {}, // Navigation removed as Monitoring screen is deleted
                           labelUppercase: true,
                         ),
                       ],

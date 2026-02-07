@@ -544,6 +544,83 @@ class HydroponicDatabaseService {
       throw DatabaseException('Failed to get sensors: $e', null, e);
     }
   }
+
+  /// Fetches historical data for a specific sensor over a given duration
+  ///
+  /// Returns a Map of timestamp (ms) -> value
+  /// Only fetches data points within the requested duration relative to now.
+  ///
+  /// [sensorType] options: 'ph', 'ec', 'temperature', 'water_level'
+  Future<Map<int, double>> getSensorHistory(
+    String sensorType,
+    Duration duration,
+  ) async {
+    try {
+      String path;
+      switch (sensorType.toLowerCase()) {
+        case 'ph':
+        case 'ph level':
+          path = FirebaseConfig.historyPhPath;
+          break;
+        case 'ec':
+        case 'ec level':
+          path = FirebaseConfig.historyEcPath;
+          break;
+        case 'temperature':
+          path = FirebaseConfig.historyTempPath;
+          break;
+        case 'water':
+        case 'water level':
+          path = FirebaseConfig.historyWaterLevelPath;
+          break;
+        default:
+          throw DatabaseException('Unknown sensor type: $sensorType');
+      }
+
+      final now = DateTime.now();
+      final startTime = now.subtract(duration).millisecondsSinceEpoch;
+
+      // Query by timestamp (key)
+      // Assuming keys are timestamps in milliseconds
+      final ref = _database
+          .child(path)
+          .orderByKey()
+          .startAt(startTime.toString());
+
+      final snapshot = await ref.get();
+
+      if (!snapshot.exists || snapshot.value == null) {
+        return {};
+      }
+
+      final data = snapshot.value;
+      if (data is! Map) {
+        return {};
+      }
+
+      final result = <int, double>{};
+
+      data.forEach((key, value) {
+        final timestamp = int.tryParse(key.toString());
+        final val = double.tryParse(value.toString());
+
+        if (timestamp != null && val != null) {
+          result[timestamp] = val;
+        }
+      });
+
+      // Sort by timestamp just in case
+      return Map.fromEntries(
+        result.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
+      );
+    } catch (e) {
+      throw DatabaseException(
+        'Failed to get history for $sensorType: $e',
+        null,
+        e,
+      );
+    }
+  }
 }
 
 // ============================================================================

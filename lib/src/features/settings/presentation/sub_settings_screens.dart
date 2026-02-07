@@ -3,15 +3,114 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
+import '../../../core/services/firebase_auth_service.dart';
 import '../../../core/services/hydroponic_database_service.dart';
 import '../../../core/theme/aqua_colors.dart';
 import '../../../core/utils/value_formatter.dart';
 import '../../../core/widgets/aqua_header.dart';
 import '../../../core/widgets/aqua_symbol.dart';
 
-class AccountSecurityScreen extends StatelessWidget {
+class AccountSecurityScreen extends ConsumerStatefulWidget {
   const AccountSecurityScreen({super.key, required this.onNavigate});
   final ValueChanged<AppScreen> onNavigate;
+
+  @override
+  ConsumerState<AccountSecurityScreen> createState() =>
+      _AccountSecurityScreenState();
+}
+
+class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final _currentPasswordController = TextEditingController();
+  final _newPasswordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  bool _isLoading = false;
+  bool _currentPasswordVisible = false;
+  bool _newPasswordVisible = false;
+  bool _confirmPasswordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentPasswordController.addListener(_onFieldChanged);
+    _newPasswordController.addListener(_onFieldChanged);
+    _confirmPasswordController.addListener(_onFieldChanged);
+  }
+
+  void _onFieldChanged() {
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    _currentPasswordController.dispose();
+    _newPasswordController.dispose();
+    _confirmPasswordController.dispose();
+    super.dispose();
+  }
+
+  bool get _isFormValid {
+    return _currentPasswordController.text.isNotEmpty &&
+        _newPasswordController.text.isNotEmpty &&
+        _confirmPasswordController.text.isNotEmpty;
+  }
+
+  Future<void> _updatePassword() async {
+    if (!_formKey.currentState!.validate()) return;
+
+    final current = _currentPasswordController.text;
+    final newPass = _newPasswordController.text;
+
+    setState(() => _isLoading = true);
+    try {
+      final authService = ref.read(firebaseAuthServiceProvider);
+      final user = authService.currentUser;
+      if (user != null && user.email != null) {
+        await authService.reauthenticateUser(user.email!, current);
+        await authService.updatePassword(newPass);
+
+        if (mounted) {
+          showDialog(
+            context: context,
+            builder: (context) => AlertDialog(
+              title: const Text('Success'),
+              content: const Text('Password updated successfully'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                    _currentPasswordController.clear();
+                    _newPasswordController.clear();
+                    _confirmPasswordController.clear();
+                  },
+                  child: const Text('OK'),
+                ),
+              ],
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      if (mounted) {
+        final message = e is AuthException ? e.message : 'Something went wrong';
+        showDialog(
+          context: context,
+          builder: (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text(message),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text('OK'),
+              ),
+            ],
+          ),
+        );
+      }
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,91 +119,119 @@ class AccountSecurityScreen extends StatelessWidget {
         children: [
           AquaHeader(
             title: 'Account Security',
-            onBack: () => onNavigate(AppScreen.settings),
+            onBack: () => widget.onNavigate(AppScreen.settings),
           ),
           Expanded(
             child: SingleChildScrollView(
               padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
               child: Column(
                 children: [
-                  _Card(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Change Password',
-                          style: Theme.of(context).textTheme.titleLarge
-                              ?.copyWith(fontWeight: FontWeight.w900),
-                        ),
-                        const SizedBox(height: 16),
-                        const _Field(label: 'Current Password', obscure: true),
-                        const SizedBox(height: 12),
-                        const _Field(label: 'New Password', obscure: true),
-                        const SizedBox(height: 12),
-                        const _Field(
-                          label: 'Confirm New Password',
-                          obscure: true,
-                        ),
-                        const SizedBox(height: 12),
-                        SizedBox(
-                          height: 48,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AquaColors.primary,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                            ),
-                            child: const Text('Update Password'),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
                   const SizedBox(height: 24),
                   _Card(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'Two-Factor Authentication',
-                              style: Theme.of(context).textTheme.titleMedium
-                                  ?.copyWith(fontWeight: FontWeight.w900),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Secure your account with 2FA',
-                              style: Theme.of(context).textTheme.bodySmall
-                                  ?.copyWith(color: AquaColors.slate500),
-                            ),
-                          ],
-                        ),
-                        Container(
-                          width: 48,
-                          height: 28,
-                          padding: const EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: AquaColors.slate200,
-                            borderRadius: BorderRadius.circular(999),
+                    child: Form(
+                      key: _formKey,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'Change Password',
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(fontWeight: FontWeight.w900),
                           ),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Container(
-                              width: 20,
-                              height: 20,
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
+                          const SizedBox(height: 16),
+                          _Field(
+                            label: 'Current Password',
+                            obscure: !_currentPasswordVisible,
+                            controller: _currentPasswordController,
+                            validator: (v) => (v == null || v.isEmpty)
+                                ? 'Please enter your current password'
+                                : null,
+                            suffixIcon: IconButton(
+                              onPressed: () => setState(
+                                () => _currentPasswordVisible =
+                                    !_currentPasswordVisible,
+                              ),
+                              icon: AquaSymbol(
+                                _currentPasswordVisible
+                                    ? 'visibility'
+                                    : 'visibility_off',
+                                color: AquaColors.slate400,
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                          const SizedBox(height: 12),
+                          _Field(
+                            label: 'New Password',
+                            obscure: !_newPasswordVisible,
+                            controller: _newPasswordController,
+                            validator: (v) {
+                              if (v == null || v.isEmpty) {
+                                return 'Please enter a new password';
+                              }
+                              if (v.length < 8) {
+                                return 'Password must be at least 8 characters';
+                              }
+                              return null;
+                            },
+                            suffixIcon: IconButton(
+                              onPressed: () => setState(
+                                () =>
+                                    _newPasswordVisible = !_newPasswordVisible,
+                              ),
+                              icon: AquaSymbol(
+                                _newPasswordVisible
+                                    ? 'visibility'
+                                    : 'visibility_off',
+                                color: AquaColors.slate400,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          _Field(
+                            label: 'Confirm New Password',
+                            obscure: !_confirmPasswordVisible,
+                            controller: _confirmPasswordController,
+                            validator: (v) {
+                              if (v == null || v.isEmpty) {
+                                return 'Please confirm your new password';
+                              }
+                              if (v != _newPasswordController.text) {
+                                return 'Passwords do not match';
+                              }
+                              return null;
+                            },
+                            suffixIcon: IconButton(
+                              onPressed: () => setState(
+                                () => _confirmPasswordVisible =
+                                    !_confirmPasswordVisible,
+                              ),
+                              icon: AquaSymbol(
+                                _confirmPasswordVisible
+                                    ? 'visibility'
+                                    : 'visibility_off',
+                                color: AquaColors.slate400,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(height: 12),
+                          SizedBox(
+                            height: 48,
+                            child: ElevatedButton(
+                              onPressed: _isLoading ? null : _updatePassword,
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: AquaColors.primary,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                              ),
+                              child: Text(
+                                _isLoading ? 'Updating...' : 'Update Password',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                 ],
@@ -1269,9 +1396,19 @@ class _Card extends StatelessWidget {
 }
 
 class _Field extends StatelessWidget {
-  const _Field({required this.label, this.obscure = false});
+  const _Field({
+    required this.label,
+    this.obscure = false,
+    this.controller,
+    this.validator,
+    this.suffixIcon,
+  });
   final String label;
   final bool obscure;
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final Widget? suffixIcon;
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -1287,12 +1424,29 @@ class _Field extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 6),
-        TextField(
+        TextFormField(
+          controller: controller,
           obscureText: obscure,
+          validator: validator,
           decoration: InputDecoration(
             hintText: '••••••••',
             filled: true,
             fillColor: isDark ? AquaColors.surfaceDark : AquaColors.slate100,
+            suffixIcon: suffixIcon,
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: AquaColors.critical,
+                width: 1.2,
+              ),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(12),
+              borderSide: const BorderSide(
+                color: AquaColors.critical,
+                width: 1.2,
+              ),
+            ),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(

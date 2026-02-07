@@ -97,6 +97,9 @@ class FirebaseConfig {
   /// Path for EC Down Pump (0=off, 1=on)
   static const String pumpEcDownPath = '$controlsPath/pump_ec_down';
 
+  /// Root path for users
+  static const String usersPath = '/Users';
+
   /// Root path for threshold settings
   /// Contains: temp_high, temp_low, ph_high, ec_low
   static const String settingsPath = '/Settings';
@@ -119,6 +122,21 @@ class FirebaseConfig {
 
   /// Path for water level sensor (Int 0-100%)
   static const String waterLevelPath = '$sensorsPath/water_level';
+
+  /// Root path for historical data
+  /// Structure:
+  /// /History
+  ///   /ph
+  ///     /$timestamp: value
+  ///   /ec
+  ///     /$timestamp: value
+  ///   /temperature
+  ///     /$timestamp: value
+  static const String historyPath = '/History';
+  static const String historyPhPath = '$historyPath/ph';
+  static const String historyEcPath = '$historyPath/ec';
+  static const String historyTempPath = '$historyPath/temperature';
+  static const String historyWaterLevelPath = '$historyPath/water_level';
 
   // ============================================================================
   // Helper Methods

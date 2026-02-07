@@ -32,42 +32,17 @@ class AnalyticsScreen extends ConsumerStatefulWidget {
 
 class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   late String tab;
-  int activeBar = 3; // Default to a middle bar
 
   @override
   void initState() {
     super.initState();
-    // Check provider for requested tab, otherwise use initialTab or default
     final requestedTab = ref.read(analyticsTabProvider);
-
-    // Default to 'pH Level' if no initial tab or if it was 'Water Level' (which is removed)
     tab = requestedTab ?? widget.initialTab ?? 'pH Level';
     if (tab == 'Water Level') tab = 'pH Level';
 
-    // Clear the provider after reading it so subsequent navigations (e.g. from menu) don't get stuck
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(analyticsTabProvider.notifier).state = null;
     });
-  }
-
-  // Helper to generate simulated history data based on current value
-  // logic: create a curve that ends at the current value
-  List<FlSpot> _generateSpots(double currentValue, double variance) {
-    final random = Random(42); // Fixed seed for consistent "history"
-    final spots = <FlSpot>[];
-    for (int i = 0; i <= 6; i++) {
-      // Generate a value that is within +/- variance of the current value
-      // The last point (i=6) should be exactly the current value
-      double value;
-      if (i == 6) {
-        value = currentValue;
-      } else {
-        final noise = (random.nextDouble() - 0.5) * 2 * variance;
-        value = currentValue + noise;
-      }
-      spots.add(FlSpot(i.toDouble(), value));
-    }
-    return spots;
   }
 
   Color _getTabColor(String tab) {
@@ -83,30 +58,52 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     }
   }
 
+  // Generate spots from history map
+  List<FlSpot> _getSpotsFromHistory(Map<int, double> history) {
+    if (history.isEmpty) return [];
+
+    final sortedKeys = history.keys.toList()..sort();
+    return sortedKeys.map((timestamp) {
+      return FlSpot(timestamp.toDouble(), history[timestamp]!);
+    }).toList();
+  }
+
+  // Get X-Axis title based on timestamp and range
+  String _getXAxisTitle(double value, AnalyticsTimeRange range) {
+    final date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+
+    if (range == AnalyticsTimeRange.h24) {
+      // Show time (HH:mm)
+      return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+    } else {
+      // Show date (MM/dd)
+      return '${date.month}/${date.day}';
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final sensorsAsync = ref.watch(sensorsStreamProvider);
     final sensors = sensorsAsync.valueOrNull;
 
-    // Determine current value and configuration based on selected tab
+    // Watch time range and history
+    final timeRange = ref.watch(analyticsTimeRangeProvider);
+    final historyAsync = ref.watch(analyticsHistoryProvider(tab));
+
+    // Determine current value configuration
     double currentValue = 0.0;
     String unit = '';
-    double variance = 1.0;
 
-    // Only 'EC Level', 'pH Level', 'Temperature' are allowed
     if (tab == 'pH Level') {
       currentValue = sensors?.ph ?? 7.0;
       unit = 'pH';
-      variance = 0.5;
     } else if (tab == 'EC Level') {
       currentValue = sensors?.ec ?? 1.5;
       unit = 'mS/cm';
-      variance = 0.3;
     } else if (tab == 'Temperature') {
       currentValue = sensors?.temperature ?? 24.0;
       unit = '°C';
-      variance = 2.0;
     }
 
     final chartColor = _getTabColor(tab);
@@ -135,7 +132,6 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                // Removed 'Water Level' as requested
                 children: ['pH Level', 'EC Level', 'Temperature'].map((t) {
                   final active = tab == t;
                   return InkWell(
@@ -171,7 +167,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
             child: Column(
               children: [
-                // Time Range Toggle - Removed 'ALL'
+                // Time Range Toggle
                 Container(
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
@@ -181,40 +177,48 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
-                    children: ['24H', '7D', '30D'].asMap().entries.map((e) {
-                      final selected = e.key == 0; // Default to 24H
+                    children: AnalyticsTimeRange.values.map((range) {
+                      final selected = timeRange == range;
                       return Expanded(
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(vertical: 6),
-                          decoration: BoxDecoration(
-                            color: selected
-                                ? (isDark
-                                      ? AquaColors.backgroundDark
-                                      : Colors.white)
-                                : Colors.transparent,
-                            borderRadius: BorderRadius.circular(10),
-                            boxShadow: selected
-                                ? [
-                                    BoxShadow(
-                                      color: Colors.black.withValues(
-                                        alpha: 0.10,
+                        child: GestureDetector(
+                          onTap: () {
+                            ref
+                                    .read(analyticsTimeRangeProvider.notifier)
+                                    .state =
+                                range;
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.symmetric(vertical: 6),
+                            decoration: BoxDecoration(
+                              color: selected
+                                  ? (isDark
+                                        ? AquaColors.backgroundDark
+                                        : Colors.white)
+                                  : Colors.transparent,
+                              borderRadius: BorderRadius.circular(10),
+                              boxShadow: selected
+                                  ? [
+                                      BoxShadow(
+                                        color: Colors.black.withValues(
+                                          alpha: 0.10,
+                                        ),
+                                        blurRadius: 8,
                                       ),
-                                      blurRadius: 8,
+                                    ]
+                                  : null,
+                            ),
+                            child: Center(
+                              child: Text(
+                                range.label,
+                                style: Theme.of(context).textTheme.labelLarge
+                                    ?.copyWith(
+                                      fontWeight: FontWeight.w800,
+                                      color: selected
+                                          ? AquaColors.primary
+                                          : AquaColors.slate500,
+                                      fontSize: 12,
                                     ),
-                                  ]
-                                : null,
-                          ),
-                          child: Center(
-                            child: Text(
-                              e.value,
-                              style: Theme.of(context).textTheme.labelLarge
-                                  ?.copyWith(
-                                    fontWeight: FontWeight.w800,
-                                    color: selected
-                                        ? AquaColors.primary
-                                        : AquaColors.slate500,
-                                    fontSize: 12,
-                                  ),
+                              ),
                             ),
                           ),
                         ),
@@ -257,7 +261,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               ),
                             ],
                           ),
-                          // Simulated trend indicator
+                          // Trend Indicator (Static for now, could be calculated)
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 10,
@@ -277,7 +281,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  'Stable', // Simplified for now
+                                  'Stable',
                                   style: Theme.of(context).textTheme.labelMedium
                                       ?.copyWith(
                                         color: AquaColors.nature,
@@ -292,90 +296,127 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                       const SizedBox(height: 24),
                       SizedBox(
                         height: 200,
-                        child: LineChart(
-                          LineChartData(
-                            minY: (currentValue - variance * 2) < 0
-                                ? 0
-                                : (currentValue - variance * 2),
-                            maxY: currentValue + variance * 2,
-                            borderData: FlBorderData(show: false),
-                            gridData: FlGridData(
-                              show: true,
-                              drawVerticalLine: false,
-                              horizontalInterval: variance,
-                              getDrawingHorizontalLine: (value) => FlLine(
-                                color: isDark ? Colors.white10 : Colors.black12,
-                                strokeWidth: 1,
-                              ),
-                            ),
-                            titlesData: const FlTitlesData(show: false),
-                            lineBarsData: [
-                              LineChartBarData(
-                                isCurved: true,
-                                color: chartColor,
-                                barWidth: 3,
-                                dotData: const FlDotData(show: false),
-                                belowBarData: BarAreaData(
+                        child: historyAsync.when(
+                          data: (history) {
+                            if (history.isEmpty) {
+                              return Center(
+                                child: Text(
+                                  'No data available for this period',
+                                  style: Theme.of(context).textTheme.bodySmall,
+                                ),
+                              );
+                            }
+
+                            final spots = _getSpotsFromHistory(history);
+                            final minY = spots.map((e) => e.y).reduce(min);
+                            final maxY = spots.map((e) => e.y).reduce(max);
+                            // Add some padding
+                            final rangeY = maxY - minY;
+                            final padding = rangeY == 0 ? 1.0 : rangeY * 0.2;
+
+                            return LineChart(
+                              LineChartData(
+                                minY: (minY - padding) < 0
+                                    ? 0
+                                    : (minY - padding),
+                                maxY: maxY + padding,
+                                borderData: FlBorderData(show: false),
+                                gridData: FlGridData(
                                   show: true,
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      chartColor.withValues(alpha: 0.30),
-                                      chartColor.withValues(alpha: 0.0),
-                                    ],
+                                  drawVerticalLine: false,
+                                  horizontalInterval: rangeY == 0
+                                      ? 1
+                                      : rangeY / 5,
+                                  getDrawingHorizontalLine: (value) => FlLine(
+                                    color: isDark
+                                        ? Colors.white10
+                                        : Colors.black12,
+                                    strokeWidth: 1,
                                   ),
                                 ),
-                                spots: _generateSpots(currentValue, variance),
+                                titlesData: FlTitlesData(
+                                  show: true,
+                                  rightTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  topTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  leftTitles: const AxisTitles(
+                                    sideTitles: SideTitles(showTitles: false),
+                                  ),
+                                  bottomTitles: AxisTitles(
+                                    sideTitles: SideTitles(
+                                      showTitles: true,
+                                      getTitlesWidget: (value, meta) {
+                                        // Simple decimation to avoid overlapping
+                                        // This basic logic displays a few labels based on index/interval
+                                        // Since X is timestamp, we need to be careful.
+
+                                        // TODO: Improve label distribution
+                                        // For now, only show start, middle, end
+                                        if (value == spots.first.x ||
+                                            value == spots.last.x ||
+                                            value ==
+                                                spots[spots.length ~/ 2].x) {
+                                          return Padding(
+                                            padding: const EdgeInsets.only(
+                                              top: 8,
+                                            ),
+                                            child: Text(
+                                              _getXAxisTitle(value, timeRange),
+                                              style: const TextStyle(
+                                                fontSize: 10,
+                                                color: Colors.grey,
+                                              ),
+                                            ),
+                                          );
+                                        }
+                                        return const SizedBox.shrink();
+                                      },
+                                    ),
+                                  ),
+                                ),
+                                lineBarsData: [
+                                  LineChartBarData(
+                                    isCurved: true,
+                                    color: chartColor,
+                                    barWidth: 3,
+                                    dotData: const FlDotData(show: false),
+                                    belowBarData: BarAreaData(
+                                      show: true,
+                                      gradient: LinearGradient(
+                                        begin: Alignment.topCenter,
+                                        end: Alignment.bottomCenter,
+                                        colors: [
+                                          chartColor.withValues(alpha: 0.30),
+                                          chartColor.withValues(alpha: 0.0),
+                                        ],
+                                      ),
+                                    ),
+                                    spots: spots,
+                                  ),
+                                ],
+                                lineTouchData: LineTouchData(
+                                  touchTooltipData: LineTouchTooltipData(
+                                    getTooltipColor: (touchedSpot) => isDark
+                                        ? AquaColors.surfaceDark
+                                        : Colors.white,
+                                    tooltipBorderRadius: BorderRadius.circular(
+                                      8,
+                                    ),
+                                    fitInsideHorizontally: true,
+                                    fitInsideVertically: true,
+                                  ),
+                                ),
                               ),
-                            ],
-                            lineTouchData: LineTouchData(
-                              touchTooltipData: LineTouchTooltipData(
-                                getTooltipColor: (touchedSpot) => isDark
-                                    ? AquaColors.surfaceDark
-                                    : Colors.white,
-                                tooltipBorderRadius: BorderRadius.circular(8),
-                                fitInsideHorizontally: true,
-                                fitInsideVertically: true,
-                              ),
-                            ),
-                          ),
+                            );
+                          },
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
+                          error: (err, stack) =>
+                              Center(child: Text('Error loading chart')),
                         ),
-                      ),
-                      const SizedBox(height: 12),
-                      // X-Axis Labels (Simulated 24H)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: const [
-                          Text(
-                            '00:00',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
-                          ),
-                          Text(
-                            '04:00',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
-                          ),
-                          Text(
-                            '08:00',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
-                          ),
-                          Text(
-                            '12:00',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
-                          ),
-                          Text(
-                            '16:00',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
-                          ),
-                          Text(
-                            '20:00',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
-                          ),
-                          Text(
-                            'Now',
-                            style: TextStyle(fontSize: 10, color: Colors.grey),
-                          ),
-                        ],
                       ),
                     ],
                   ),

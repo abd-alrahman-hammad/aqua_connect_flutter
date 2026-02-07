@@ -1,14 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-// import 'package:firebase_auth/firebase_auth.dart'; // Uncomment if using Firebase
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/screens.dart';
+import '../../../core/services/auth_preferences_service.dart';
+import '../../../core/services/firebase_auth_service.dart';
 import '../../../core/theme/aqua_colors.dart';
 import '../../../core/widgets/aqua_header.dart';
 import '../../../core/widgets/aqua_page_scaffold.dart';
 import '../../../core/widgets/aqua_symbol.dart';
 
-class ProfileScreen extends StatelessWidget {
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({
     super.key,
     required this.current,
@@ -18,32 +20,46 @@ class ProfileScreen extends StatelessWidget {
   final AppScreen current;
   final ValueChanged<AppScreen> onNavigate;
 
-  // --- دالة تأكيد تسجيل الخروج ---
-  void _confirmLogout(BuildContext context) {
+  void _confirmLogout(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
+      builder: (dialogContext) => AlertDialog(
         title: const Text('Sign Out'),
         content: const Text('Are you sure you want to logout?'),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         actions: [
           TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel', style: TextStyle(color: AquaColors.slate500)),
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text(
+              'Cancel',
+              style: TextStyle(color: AquaColors.slate500),
+            ),
           ),
           TextButton(
             onPressed: () async {
-              Navigator.pop(context); // إغلاق النافذة
-              
-              // 1. تسجيل الخروج الفعلي (إذا كنت تستخدم فايربيس)
-              // await FirebaseAuth.instance.signOut();
-              
-              // 2. الانتقال لشاشة تسجيل الدخول
-              onNavigate(AppScreen.login);
+              Navigator.pop(dialogContext);
+              try {
+                await ref.read(authPreferencesServiceProvider).clear();
+                await ref.read(firebaseAuthServiceProvider).signOut();
+                onNavigate(AppScreen.login);
+              } catch (e) {
+                if (context.mounted) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text('Error signing out: $e'),
+                      backgroundColor: AquaColors.critical,
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                }
+              }
             },
             child: const Text(
-              'sign Out',
-              style: TextStyle(color: AquaColors.critical, fontWeight: FontWeight.bold),
+              'Sign Out',
+              style: TextStyle(
+                color: AquaColors.critical,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ],
@@ -52,7 +68,7 @@ class ProfileScreen extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return AquaPageScaffold(
       currentScreen: current,
@@ -62,9 +78,8 @@ class ProfileScreen extends StatelessWidget {
           AquaHeader(
             title: 'Farm Profile',
             onBack: () => onNavigate(AppScreen.settings),
-            // --- زر تسجيل الخروج ---
             rightAction: IconButton(
-              onPressed: () => _confirmLogout(context), 
+              onPressed: () => _confirmLogout(context, ref),
               icon: const AquaSymbol('logout', color: AquaColors.critical),
             ),
           ),
@@ -284,19 +299,22 @@ class _DeviceRow extends StatelessWidget {
       decoration: BoxDecoration(
         color: dashed
             ? (isDark
-                ? Colors.white.withValues(alpha: 0.05)
-                : AquaColors.slate100)
+                  ? Colors.white.withValues(alpha: 0.05)
+                  : AquaColors.slate100)
             : (isDark ? AquaColors.cardDark : Colors.white),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: dashed
               ? (isDark
-                  ? Colors.white.withValues(alpha: 0.10)
-                  : AquaColors.slate300)
+                    ? Colors.white.withValues(alpha: 0.10)
+                    : AquaColors.slate300)
               : (isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : AquaColors.slate200),
-          style: dashed ? BorderStyle.solid : BorderStyle.solid, // Flutter doesn't support dashed borders natively without package, kept solid for now
+                    ? Colors.white.withValues(alpha: 0.05)
+                    : AquaColors.slate200),
+          style: dashed
+              ? BorderStyle.solid
+              : BorderStyle
+                    .solid, // Flutter doesn't support dashed borders natively without package, kept solid for now
         ),
       ),
       child: Row(
@@ -311,8 +329,8 @@ class _DeviceRow extends StatelessWidget {
                   color: online
                       ? AquaColors.primary.withValues(alpha: 0.05)
                       : (isDark
-                          ? Colors.white.withValues(alpha: 0.10)
-                          : AquaColors.slate200),
+                            ? Colors.white.withValues(alpha: 0.10)
+                            : AquaColors.slate200),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(

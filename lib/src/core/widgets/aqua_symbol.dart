@@ -155,6 +155,8 @@ class AquaSymbol extends StatelessWidget {
         return Symbols.add_rounded;
       case 'visibility':
         return Symbols.visibility_rounded;
+      case 'visibility_off':
+        return Symbols.visibility_off_rounded;
       case 'face':
         return Symbols.face_rounded;
       default:

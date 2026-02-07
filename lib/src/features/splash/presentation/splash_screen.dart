@@ -1,22 +1,24 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import '../../../core/theme/aqua_colors.dart';
-import '../../../app/screens.dart';
 
-class SplashScreen extends StatefulWidget {
-  const SplashScreen({
-    super.key,
-    required this.onNavigate,
-  });
+import '../../../app/screens.dart';
+import '../../../core/theme/aqua_colors.dart';
+import '../../../core/services/auth_preferences_service.dart';
+import '../../../core/services/firebase_auth_service.dart';
+
+class SplashScreen extends ConsumerStatefulWidget {
+  const SplashScreen({super.key, required this.onNavigate});
 
   final void Function(AppScreen) onNavigate;
 
   @override
-  State<SplashScreen> createState() => _SplashScreenState();
+  ConsumerState<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderStateMixin {
+class _SplashScreenState extends ConsumerState<SplashScreen>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
@@ -24,7 +26,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   @override
   void initState() {
     super.initState();
-    
+
     // إعداد الأنيميشن (مدة ثانية ونصف للظهور الناعم)
     _controller = AnimationController(
       vsync: this,
@@ -32,14 +34,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     );
 
     // تأثير الظهور (Fade In)
-    _fadeAnimation = Tween<double>(begin: 0.0, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeIn),
-    );
+    _fadeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
     // تأثير التكبير البسيط (Scale Up)
-    _scaleAnimation = Tween<double>(begin: 0.8, end: 1.0).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeOutBack),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 0.8,
+      end: 1.0,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
     // بدء الأنيميشن فوراً
     _controller.forward();
@@ -51,22 +55,58 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     super.dispose();
   }
 
+  Future<void> _handleNavigation() async {
+    final prefsService = ref.read(authPreferencesServiceProvider);
+    final authService = ref.read(firebaseAuthServiceProvider);
+
+    // 1. Check "Remember Me" preference
+    final rememberMe = await prefsService.getRememberMe();
+
+    if (!rememberMe) {
+      // If user chose not to be remembered, sign out just in case
+      await authService.signOut();
+      widget.onNavigate(AppScreen.login);
+      return;
+    }
+
+    // 2. Check Authentication State
+    final user = authService.currentUser;
+
+    if (user == null) {
+      widget.onNavigate(AppScreen.login);
+      return;
+    }
+
+    // 3. Require email verification for auto-login
+    if (!user.emailVerified) {
+      await authService.signOut();
+      widget.onNavigate(AppScreen.login);
+      return;
+    }
+
+    widget.onNavigate(AppScreen.dashboard);
+  }
+
   @override
   Widget build(BuildContext context) {
     final brightness = MediaQuery.of(context).platformBrightness;
     final isDark = brightness == Brightness.dark;
 
-    final backgroundColor = isDark ? AquaColors.backgroundDark : AquaColors.backgroundLight;
+    final backgroundColor = isDark
+        ? AquaColors.backgroundDark
+        : AquaColors.backgroundLight;
     final textColor = isDark ? Colors.white : AquaColors.slate900;
     // جعلنا لون الشريط أفتح قليلاً ليتناسب مع التصميم الحديث
-    final trackColor = isDark ? AquaColors.slate700.withOpacity(0.3) : AquaColors.slate200;
+    final trackColor = isDark
+        ? AquaColors.slate700.withOpacity(0.3)
+        : AquaColors.slate200;
 
     return Scaffold(
       backgroundColor: backgroundColor,
       body: Stack(
         children: [
           _buildBackgroundBlobs(isDark),
-          
+
           SafeArea(
             child: Center(
               child: Padding(
@@ -83,19 +123,20 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
                           children: [
                             // اللوجو مع ظل خفيف ليعطيه عمقاً
                             _buildLogo(),
-                            
+
                             const SizedBox(height: 32),
 
                             Text(
                               'Rayyan',
-                              style: GoogleFonts.manrope( // غيرت الخط لـ Manrope ليتناسب مع باقي التطبيق
+                              style: GoogleFonts.manrope(
+                                // غيرت الخط لـ Manrope ليتناسب مع باقي التطبيق
                                 fontSize: 36,
                                 fontWeight: FontWeight.w800,
                                 color: textColor,
                                 letterSpacing: -1.0,
                               ),
                             ),
-                            
+
                             const SizedBox(height: 12),
 
                             Text(
@@ -166,14 +207,16 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
         tween: Tween<double>(begin: 0.0, end: 1.0),
         duration: const Duration(seconds: 3),
         curve: Curves.easeInOutQuart, // حركة أنعم في البداية والنهاية
-        onEnd: () => widget.onNavigate(AppScreen.login),
+        onEnd: _handleNavigation,
         builder: (context, value, child) {
           return ClipRRect(
             borderRadius: BorderRadius.circular(10),
             child: LinearProgressIndicator(
               value: value,
               backgroundColor: trackColor,
-              valueColor: const AlwaysStoppedAnimation<Color>(AquaColors.primary),
+              valueColor: const AlwaysStoppedAnimation<Color>(
+                AquaColors.primary,
+              ),
               minHeight: 4, // جعلناه أنحف
             ),
           );
@@ -184,7 +227,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   Widget _buildBackgroundBlobs(bool isDark) {
     // تقليل الشفافية ليكون الخلفية هادئة أكثر
-    final primaryBlobColor = AquaColors.primary.withOpacity(isDark ? 0.08 : 0.05);
+    final primaryBlobColor = AquaColors.primary.withOpacity(
+      isDark ? 0.08 : 0.05,
+    );
     final aquaBlobColor = AquaColors.aqua.withOpacity(isDark ? 0.08 : 0.05);
 
     return Stack(
@@ -207,12 +252,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     return Container(
       width: size,
       height: size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: color,
-      ),
+      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
       child: BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80), // زيادة التغبيش لنعومة أكثر
+        filter: ImageFilter.blur(
+          sigmaX: 80,
+          sigmaY: 80,
+        ), // زيادة التغبيش لنعومة أكثر
         child: Container(
           decoration: const BoxDecoration(shape: BoxShape.circle),
         ),

@@ -125,8 +125,8 @@ class FirebaseAuthService {
 
   /// Signs in with custom email and password
   ///
-  /// This method allows authentication with any email/password combination,
-  /// useful for future expansion beyond the test user.
+  /// This method allows authentication with any email/password combination.
+  /// Caller must check [User.emailVerified] before granting access.
   ///
   /// Throws [AuthException] on failure.
   Future<User> signInWithEmailPassword(String email, String password) async {
@@ -142,9 +142,169 @@ class FirebaseAuthService {
 
       return userCredential.user!;
     } on FirebaseAuthException catch (e) {
-      throw AuthException('Authentication failed: ${e.message}', e.code);
+      throw AuthException(_mapSignInError(e.code), e.code);
     } catch (e) {
       throw AuthException('Unexpected error: $e');
+    }
+  }
+
+  /// Maps Firebase Auth error codes to user-friendly messages.
+  static String _mapSignInError(String code) {
+    switch (code) {
+      case 'wrong-password':
+        return 'Wrong password';
+      case 'user-not-found':
+        return 'No account found for this email';
+      case 'invalid-email':
+        return 'Invalid email format';
+      case 'user-disabled':
+        return 'This account has been disabled';
+      case 'network-request-failed':
+        return 'Network error. Please check your connection';
+      default:
+        return 'Login failed. Please try again';
+    }
+  }
+
+  /// Sends an email verification link to the given user.
+  Future<void> sendEmailVerification(User user) async {
+    try {
+      await user.sendEmailVerification();
+    } on FirebaseAuthException catch (e) {
+      throw AuthException(
+        'Failed to send verification email: ${e.message}',
+        e.code,
+      );
+    } catch (e) {
+      throw AuthException('Failed to send verification email: $e');
+    }
+  }
+
+  /// Creates a new user account with email and password
+  ///
+  /// Throws [AuthException] on failure (e.g., email already in use).
+  Future<User> createUserWithEmailAndPassword(
+    String email,
+    String password,
+  ) async {
+    try {
+      final userCredential = await _auth.createUserWithEmailAndPassword(
+        email: email,
+        password: password,
+      );
+
+      if (userCredential.user == null) {
+        throw const AuthException('User object is null after creation');
+      }
+
+      return userCredential.user!;
+    } on FirebaseAuthException catch (e) {
+      String message;
+      switch (e.code) {
+        case 'email-already-in-use':
+          message = 'This email is already registered';
+        case 'invalid-email':
+          message = 'Invalid email format';
+        case 'weak-password':
+          message = 'Password must be at least 8 characters';
+        default:
+          message = 'Registration failed. Please try again';
+      }
+      throw AuthException(message, e.code);
+    } catch (e) {
+      throw AuthException('Unexpected error during registration: $e');
+    }
+  }
+
+  /// Sends a password reset email to the specified address
+  Future<void> sendPasswordResetEmail(String email) async {
+    try {
+      await _auth.sendPasswordResetEmail(email: email);
+    } on FirebaseAuthException catch (e) {
+      String message;
+      switch (e.code) {
+        case 'user-not-found':
+          message = 'No account found for this email';
+        case 'invalid-email':
+          message = 'Invalid email format';
+        default:
+          message = 'Failed to send reset email. Please try again';
+      }
+      throw AuthException(message, e.code);
+    } catch (e) {
+      throw AuthException('Unexpected error: $e');
+    }
+  }
+
+  /// Re-authenticates the current user with email and password
+  ///
+  /// Required for sensitive operations like changing password.
+  Future<void> reauthenticateUser(String email, String password) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw const AuthException('No user currently signed in');
+    }
+
+    try {
+      final credential = EmailAuthProvider.credential(
+        email: email,
+        password: password,
+      );
+      await user.reauthenticateWithCredential(credential);
+    } on FirebaseAuthException catch (e) {
+      String message;
+      switch (e.code) {
+        case 'wrong-password':
+          message = 'Wrong password';
+        default:
+          message = 'Re-authentication failed. Please try again';
+      }
+      throw AuthException(message, e.code);
+    } catch (e) {
+      throw AuthException('Unexpected error: $e');
+    }
+  }
+
+  /// Updates the user's password
+  ///
+  /// [reauthenticateUser] should usually be called before this.
+  Future<void> updatePassword(String newPassword) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw const AuthException('No user currently signed in');
+    }
+
+    try {
+      await user.updatePassword(newPassword);
+    } on FirebaseAuthException catch (e) {
+      String message;
+      switch (e.code) {
+        case 'weak-password':
+          message = 'Password must be at least 8 characters';
+        case 'requires-recent-login':
+          message =
+              'Security verification required. Please sign out and sign in again.';
+        default:
+          message = 'Failed to update password. Please try again';
+      }
+      throw AuthException(message, e.code);
+    } catch (e) {
+      throw AuthException('Unexpected error: $e');
+    }
+  }
+
+  /// Updates the user's display name
+  Future<void> updateDisplayName(String name) async {
+    final user = _auth.currentUser;
+    if (user == null) {
+      throw const AuthException('No user currently signed in');
+    }
+
+    try {
+      await user.updateDisplayName(name);
+      await user.reload();
+    } catch (e) {
+      throw AuthException('Failed to update profile name: $e');
     }
   }
 
