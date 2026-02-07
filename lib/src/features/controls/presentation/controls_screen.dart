@@ -327,7 +327,6 @@ class _ModeButton extends StatelessWidget {
 class _ModuleCard extends StatelessWidget {
   const _ModuleCard({
     required this.title,
-    this.sub,
     required this.icon,
     required this.active,
     required this.isEnabled,
@@ -335,7 +334,7 @@ class _ModuleCard extends StatelessWidget {
   });
 
   final String title;
-  final String? sub;
+
   final String icon;
   final bool active;
   final bool isEnabled;
@@ -458,17 +457,7 @@ class _ModuleCard extends StatelessWidget {
                         letterSpacing: 0.8,
                       ),
                     ),
-                    if (sub != null) ...[
-                      const SizedBox(width: 6),
-                      Text(
-                        '• $sub',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700,
-                          color: AquaColors.slate400,
-                        ),
-                      ),
-                    ],
+                    
                   ],
                 ),
               ],
