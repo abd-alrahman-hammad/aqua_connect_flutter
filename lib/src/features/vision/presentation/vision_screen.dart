@@ -45,14 +45,8 @@ class VisionScreen extends StatelessWidget {
                       child: AquaHeader(
                         title: 'Plant Health AI Vision',
                         onBack: () => onNavigate(AppScreen.dashboard),
-                        rightAction: IconButton(
-                          onPressed: () => onNavigate(AppScreen.settings),
-                          icon: const AquaSymbol(
-                            'settings',
-                            color: Colors.white,
-                          ),
-                        ),
-                        forceDarkText: true,
+                        
+                        forceDarkText: false,
                       ),
                     ),
                     // Bounding box
@@ -195,6 +189,7 @@ class VisionScreen extends StatelessWidget {
                             ),
                           ),
                         ],
+                        
                       ),
                     ),
                   ],
@@ -239,71 +234,7 @@ class VisionScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    Container(
-                      padding: const EdgeInsets.all(16),
-                      decoration: BoxDecoration(
-                        color: AquaColors.info.withValues(alpha: 0.10),
-                        borderRadius: BorderRadius.circular(16),
-                        border: Border.all(
-                          color: AquaColors.info.withValues(alpha: 0.20),
-                        ),
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 40,
-                            height: 40,
-                            decoration: BoxDecoration(
-                              color: AquaColors.info,
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                            child: const Center(
-                              child: AquaSymbol('info', color: Colors.white),
-                            ),
-                          ),
-                          const SizedBox(width: 12),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Action Recommended',
-                                  style: Theme.of(context).textTheme.bodyMedium
-                                      ?.copyWith(fontWeight: FontWeight.w900),
-                                ),
-                                const SizedBox(height: 2),
-                                Text(
-                                  'Nutrient levels low for peak growth.',
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(color: AquaColors.slate500),
-                                ),
-                              ],
-                            ),
-                          ),
-                          ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: AquaColors.info,
-                              foregroundColor: Colors.white,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 14,
-                                vertical: 10,
-                              ),
-                            ),
-                            child: const Text(
-                              'Adjust',
-                              style: TextStyle(
-                                fontWeight: FontWeight.w900,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    
                     const SizedBox(height: 16),
                     Text(
                       'Hourly Snapshot History',
@@ -358,6 +289,7 @@ class VisionScreen extends StatelessWidget {
                                           fontWeight: FontWeight.w900,
                                         ),
                                   ),
+                                  const SizedBox(height: 80),
                                 ],
                               ),
                             ),
