@@ -1429,7 +1429,7 @@ class _Field extends StatelessWidget {
           obscureText: obscure,
           validator: validator,
           decoration: InputDecoration(
-            hintText: '••••••••',
+            hintText: '',
             filled: true,
             fillColor: isDark ? AquaColors.surfaceDark : AquaColors.slate100,
             suffixIcon: suffixIcon,

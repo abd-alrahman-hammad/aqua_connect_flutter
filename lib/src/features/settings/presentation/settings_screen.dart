@@ -267,10 +267,68 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 const SizedBox(height: 24),
                 InkWell(
                   onTap: () async {
+                    final shouldLogout = await showDialog<bool>(
+                      context: context,
+                      builder: (context) {
+                        final isDark =
+                            Theme.of(context).brightness == Brightness.dark;
+                        return AlertDialog(
+                          backgroundColor: isDark
+                              ? AquaColors.cardDark
+                              : Colors.white,
+                          title: Text(
+                            'Sign Out',
+                            style: Theme.of(context).textTheme.titleLarge
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w900,
+                                  color: isDark ? Colors.white : Colors.black,
+                                ),
+                          ),
+                          content: Text(
+                            'Are you sure you want to sign out?',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: isDark
+                                      ? AquaColors.slate400
+                                      : AquaColors.slate600,
+                                ),
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(false),
+                              child: Text(
+                                'Cancel',
+                                style: Theme.of(context).textTheme.labelLarge
+                                    ?.copyWith(
+                                      color: AquaColors.slate500,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(context).pop(true),
+                              child: Text(
+                                'Sign Out',
+                                style: Theme.of(context).textTheme.labelLarge
+                                    ?.copyWith(
+                                      color: AquaColors.critical,
+                                      fontWeight: FontWeight.w900,
+                                    ),
+                              ),
+                            ),
+                          ],
+                        );
+                      },
+                    );
+
+                    if (shouldLogout != true) return;
+
                     try {
-                      await ref.read(authPreferencesServiceProvider).clear();
-                      await ref.read(firebaseAuthServiceProvider).signOut();
-                      widget.onNavigate(AppScreen.login);
+                      if (context.mounted) {
+                        await ref.read(authPreferencesServiceProvider).clear();
+                        await ref.read(firebaseAuthServiceProvider).signOut();
+                        widget.onNavigate(AppScreen.login);
+                      }
                     } catch (e) {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(

@@ -672,3 +672,52 @@ final waterLevelStreamProvider = StreamProvider<int>((ref) {
   final dbService = ref.watch(hydroponicDatabaseServiceProvider);
   return dbService.watchWaterLevel();
 });
+
+/// Stream provider for connection status
+/// Returns true if connected to Firebase, false otherwise.
+final connectionStatusStreamProvider = StreamProvider<bool>((ref) {
+  return FirebaseDatabase.instance.ref('.info/connected').onValue.map((event) {
+    return (event.snapshot.value as bool?) ?? false;
+  });
+});
+
+/// Provider that tracks if the system is online based on data recency.
+/// Returns true if data was received within the last 30 seconds.
+final systemStatusProvider = StateNotifierProvider<SystemStatusNotifier, bool>((
+  ref,
+) {
+  return SystemStatusNotifier(ref);
+});
+
+class SystemStatusNotifier extends StateNotifier<bool> {
+  final Ref _ref;
+  Timer? _timer;
+  static const _timeout = Duration(seconds: 30);
+
+  SystemStatusNotifier(this._ref) : super(false) {
+    // Listen to sensor updates
+    _ref.listen<AsyncValue<SensorsModel>>(sensorsStreamProvider, (
+      previous,
+      next,
+    ) {
+      // If we get valid data, update heartbeat
+      if (next.hasValue && !next.hasError) {
+        _onDataReceived();
+      }
+    });
+  }
+
+  void _onDataReceived() {
+    if (!state) state = true; // Mark as online
+    _timer?.cancel();
+    _timer = Timer(_timeout, () {
+      if (mounted) state = false; // Mark as offline after timeout
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+}

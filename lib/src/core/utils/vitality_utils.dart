@@ -150,4 +150,53 @@ class VitalityUtils {
         return AquaColors.slate400; // Grey
     }
   }
+
+  /// Generates a descriptive message based on the system's current vitality.
+  static String getVitalityMessage(
+    SensorsModel? sensors,
+    SettingsModel? settings, {
+    bool isSystemOnline = true,
+  }) {
+    if (!isSystemOnline) {
+      return 'System Offline';
+    }
+
+    if (sensors == null || settings == null) {
+      return 'Waiting for data...';
+    }
+
+    final issues = <String>[];
+
+    // Check Water Level
+    final waterStatus = getWaterLevelStatus(sensors.waterLevel);
+    if (waterStatus == SensorStatus.critical) {
+      issues.add('Critical: Low Water');
+    } else if (waterStatus == SensorStatus.warning) {
+      issues.add('Low Water');
+    }
+
+    // Check Temperature
+    final tempStatus = getTemperatureStatus(sensors.temperature, settings);
+    if (tempStatus != SensorStatus.ok && tempStatus != SensorStatus.unknown) {
+      issues.add('Temp Unstable');
+    }
+
+    // Check pH
+    final phStatus = getPhStatus(sensors.ph, settings);
+    if (phStatus != SensorStatus.ok && phStatus != SensorStatus.unknown) {
+      issues.add('pH Unstable');
+    }
+
+    // Check EC
+    final ecStatus = getEcStatus(sensors.ec, settings);
+    if (ecStatus != SensorStatus.ok && ecStatus != SensorStatus.unknown) {
+      issues.add('Ec Unstable');
+    }
+
+    if (issues.isEmpty) {
+      return 'System Nominal';
+    } else {
+      return issues.join(" • ");
+    }
+  }
 }

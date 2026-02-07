@@ -15,6 +15,7 @@ import '../../../core/widgets/aqua_symbol.dart';
 import '../../../core/models/hydroponic/sensors_model.dart'; // [NEW] - for type safety in builder
 import '../../../core/models/hydroponic/settings_model.dart'; // [NEW]
 
+import '../../alerts/application/sensor_monitor_service.dart'; // [NEW]
 import '../../analytics/presentation/analytics_state.dart'; // [NEW]
 
 class DashboardScreen extends ConsumerWidget {
@@ -29,9 +30,13 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    // Initialize sensor monitor service to ensure alerts are generated
+    ref.watch(sensorMonitorServiceProvider);
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final sensorsAsync = ref.watch(sensorsStreamProvider);
     final settingsAsync = ref.watch(settingsStreamProvider);
+    final isConnected = ref.watch(systemStatusProvider);
 
     return AquaPageScaffold(
       currentScreen: current,
@@ -50,7 +55,11 @@ class DashboardScreen extends ConsumerWidget {
                 ),
                 const SizedBox(height: 24),
                 Text(
-                  'Your hydroponic system is performing optimally. All parameters within range.',
+                  VitalityUtils.getVitalityMessage(
+                    sensorsAsync.valueOrNull,
+                    settingsAsync.valueOrNull,
+                    isSystemOnline: isConnected,
+                  ),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                     color: isDark ? AquaColors.slate400 : AquaColors.slate500,
@@ -80,17 +89,37 @@ class DashboardScreen extends ConsumerWidget {
                         vertical: 4,
                       ),
                       decoration: BoxDecoration(
-                        color: AquaColors.primary.withValues(alpha: 0.10),
+                        color: isConnected
+                            ? AquaColors.success.withValues(alpha: 0.10)
+                            : AquaColors.slate400.withValues(alpha: 0.10),
                         borderRadius: BorderRadius.circular(6),
                       ),
-                      child: Text(
-                        'LIVE',
-                        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                          color: AquaColors.primary,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: 1.0,
-                          fontSize: 10,
-                        ),
+                      child: Row(
+                        children: [
+                          Container(
+                            width: 6,
+                            height: 6,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isConnected
+                                  ? AquaColors.success
+                                  : AquaColors.error,
+                            ),
+                          ),
+                          const SizedBox(width: 6),
+                          Text(
+                            isConnected ? 'ONLINE' : 'OFFLINE',
+                            style: Theme.of(context).textTheme.labelSmall
+                                ?.copyWith(
+                                  color: isConnected
+                                      ? AquaColors.success
+                                      : AquaColors.error,
+                                  fontWeight: FontWeight.w800,
+                                  letterSpacing: 1.0,
+                                  fontSize: 10,
+                                ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -273,7 +302,7 @@ class _TopNav extends StatelessWidget {
                                 ),
                           ),
                           Text(
-                            'Smith',
+                            'user name',
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w800),
                           ),

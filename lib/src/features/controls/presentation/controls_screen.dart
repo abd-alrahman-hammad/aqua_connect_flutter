@@ -115,32 +115,6 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                           horizontal: 10,
                           vertical: 6,
                         ),
-                        decoration: BoxDecoration(
-                          color: AquaColors.nature.withValues(alpha: 0.10),
-                          borderRadius: BorderRadius.circular(999),
-                        ),
-                        child: Row(
-                          children: [
-                            Container(
-                              width: 6,
-                              height: 6,
-                              decoration: const BoxDecoration(
-                                color: AquaColors.nature,
-                                shape: BoxShape.circle,
-                              ),
-                            ),
-                            const SizedBox(width: 6),
-                            Text(
-                              'System Healthy',
-                              style: Theme.of(context).textTheme.labelSmall
-                                  ?.copyWith(
-                                    color: AquaColors.nature,
-                                    fontWeight: FontWeight.w800,
-                                    fontSize: 10,
-                                  ),
-                            ),
-                          ],
-                        ),
                       ),
                     ],
                   ),
@@ -151,7 +125,6 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                     children: [
                       _ModuleCard(
                         title: 'Water Pump',
-                        sub: '2.4L/m',
                         icon: 'water_drop',
                         active: controlsAsync.valueOrNull?.waterPump ?? false,
                         isEnabled: isManualMode && !isLoading,
@@ -166,7 +139,6 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                       ),
                       _ModuleCard(
                         title: 'Raise EC',
-                        sub: 'Nutrient Pump',
                         icon: 'science',
                         active: controlsAsync.valueOrNull?.pumpEcUp ?? false,
                         isEnabled: isManualMode && !isLoading,
@@ -174,7 +146,6 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                       ),
                       _ModuleCard(
                         title: 'Lower EC',
-                        sub: 'Dilution Valve',
                         icon: 'opacity',
                         active: controlsAsync.valueOrNull?.pumpEcDown ?? false,
                         isEnabled: isManualMode && !isLoading,
@@ -182,7 +153,7 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                       ),
                       _ModuleCard(
                         title: 'Raise pH',
-                        sub: 'Base Doser',
+                        // sub: 'Base Doser',
                         icon: 'keyboard_arrow_up',
                         active: controlsAsync.valueOrNull?.pumpPhUp ?? false,
                         isEnabled: isManualMode && !isLoading,
@@ -190,14 +161,13 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                       ),
                       _ModuleCard(
                         title: 'Lower pH',
-                        sub: 'Acid Doser',
                         icon: 'keyboard_arrow_down',
                         active: controlsAsync.valueOrNull?.pumpPhDown ?? false,
                         isEnabled: isManualMode && !isLoading,
                         onToggle: (value) => dbService.togglePumpPhDown(value),
                       ),
                       _ModuleCard(
-                        title: 'UV Purifier',
+                        title: 'UV Light',
                         icon: 'flare',
                         // Maps to ledLight as requested (UV Board)
                         active: ledLight,
@@ -206,7 +176,6 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                       ),
                       _ModuleCard(
                         title: 'Heat Gen',
-                        sub: '24.5°C',
                         icon: 'thermostat',
                         active: controlsAsync.valueOrNull?.heater ?? false,
                         isEnabled: isManualMode && !isLoading,
@@ -381,7 +350,7 @@ class _ModuleCard extends StatelessWidget {
     final borderColor = active
         ? AquaColors.primary
         : (isDark ? Colors.white.withValues(alpha: 0.05) : AquaColors.slate200);
-    final status = active ? 'ACTIVE' : 'OFF';
+    final status = active ? 'ON' : 'OFF';
 
     return SizedBox(
       width: (MediaQuery.of(context).size.width - 16 * 2 - 16) / 2,

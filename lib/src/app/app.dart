@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:rayyan/src/features/alerts/presentation/alerts_screen.dart';
 
 import '../core/theme/aqua_theme.dart';
 import '../features/analytics/presentation/analytics_screen.dart';
