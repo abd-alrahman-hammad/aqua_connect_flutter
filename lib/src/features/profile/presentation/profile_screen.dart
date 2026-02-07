@@ -448,7 +448,7 @@ class _EditableFieldState extends State<_EditableField> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    // final isDark = Theme.of(context).brightness == Brightness.dark;
 
     // If not editing, show a clean row for read-only look inside the section
     if (!_isEditing) {
