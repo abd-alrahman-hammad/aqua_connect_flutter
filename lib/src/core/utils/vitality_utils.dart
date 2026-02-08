@@ -158,7 +158,7 @@ class VitalityUtils {
     bool isSystemOnline = true,
   }) {
     if (!isSystemOnline) {
-      return 'System Offline';
+      return 'System Offline\n This is the last data received. Please check your connection';
     }
 
     if (sensors == null || settings == null) {

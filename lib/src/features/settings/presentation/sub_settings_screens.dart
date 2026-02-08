@@ -347,6 +347,8 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
   late final TextEditingController _tempHighController;
   late final TextEditingController _tempLowController;
   late final TextEditingController _phHighController;
+  late final TextEditingController _phLowController;
+  late final TextEditingController _ecHighController;
   late final TextEditingController _ecLowController;
   bool _hasPopulated = false;
 
@@ -356,6 +358,8 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
     _tempHighController = TextEditingController();
     _tempLowController = TextEditingController();
     _phHighController = TextEditingController();
+    _phLowController = TextEditingController();
+    _ecHighController = TextEditingController();
     _ecLowController = TextEditingController();
   }
 
@@ -364,6 +368,8 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
     _tempHighController.dispose();
     _tempLowController.dispose();
     _phHighController.dispose();
+    _phLowController.dispose();
+    _ecHighController.dispose();
     _ecLowController.dispose();
     super.dispose();
   }
@@ -374,6 +380,8 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
     _tempHighController.text = (settings.tempHigh ?? 26.0).toStringAsFixed(1);
     _tempLowController.text = (settings.tempLow ?? 18.0).toStringAsFixed(1);
     _phHighController.text = (settings.phHigh ?? 6.5).toStringAsFixed(1);
+    _phLowController.text = (settings.phLow ?? 5.5).toStringAsFixed(1);
+    _ecHighController.text = (settings.ecHigh ?? 2.5).toStringAsFixed(1);
     _ecLowController.text = (settings.ecLow ?? 1.2).toStringAsFixed(1);
   }
 
@@ -434,6 +442,8 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
                         tempHighController: _tempHighController,
                         tempLowController: _tempLowController,
                         phHighController: _phHighController,
+                        phLowController: _phLowController,
+                        ecHighController: _ecHighController,
                         ecLowController: _ecLowController,
                         onSave: () async {
                           final messenger = ScaffoldMessenger.maybeOf(context);
@@ -446,11 +456,17 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
                           final phHigh = double.tryParse(
                             _phHighController.text,
                           );
+                          final phLow = double.tryParse(_phLowController.text);
+                          final ecHigh = double.tryParse(
+                            _ecHighController.text,
+                          );
                           final ecLow = double.tryParse(_ecLowController.text);
                           final model = SettingsModel(
                             tempHigh: tempHigh ?? 26.0,
                             tempLow: tempLow ?? 18.0,
                             phHigh: phHigh ?? 6.5,
+                            phLow: phLow ?? 5.5,
+                            ecHigh: ecHigh ?? 2.5,
                             ecLow: ecLow ?? 1.2,
                           );
                           await dbService.updateSettings(model);
@@ -468,6 +484,8 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
                       tempHighController: _tempHighController,
                       tempLowController: _tempLowController,
                       phHighController: _phHighController,
+                      phLowController: _phLowController,
+                      ecHighController: _ecHighController,
                       ecLowController: _ecLowController,
                       isLoading: true,
                       onSave: () {},
@@ -476,6 +494,8 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
                       tempHighController: _tempHighController,
                       tempLowController: _tempLowController,
                       phHighController: _phHighController,
+                      phLowController: _phLowController,
+                      ecHighController: _ecHighController,
                       ecLowController: _ecLowController,
                       isLoading: true,
                       onSave: () {},
@@ -496,6 +516,8 @@ class _ThresholdsForm extends StatelessWidget {
     required this.tempHighController,
     required this.tempLowController,
     required this.phHighController,
+    required this.phLowController,
+    required this.ecHighController,
     required this.ecLowController,
     this.isLoading = false,
     required this.onSave,
@@ -504,6 +526,8 @@ class _ThresholdsForm extends StatelessWidget {
   final TextEditingController tempHighController;
   final TextEditingController tempLowController;
   final TextEditingController phHighController;
+  final TextEditingController phLowController;
+  final TextEditingController ecHighController;
   final TextEditingController ecLowController;
   final bool isLoading;
   final VoidCallback onSave;
@@ -534,6 +558,22 @@ class _ThresholdsForm extends StatelessWidget {
             label: 'pH Pump Limit (ph_high)',
             hint: 'pH - pH pump operating limit',
             controller: phHighController,
+            enabled: !isLoading,
+            placeholder: ValueFormatter.nullPlaceholder,
+          ),
+          const SizedBox(height: 16),
+          _ThresholdField(
+            label: 'pH Pump Limit (ph_low)',
+            hint: 'pH - pH lower bound',
+            controller: phLowController,
+            enabled: !isLoading,
+            placeholder: ValueFormatter.nullPlaceholder,
+          ),
+          const SizedBox(height: 16),
+          _ThresholdField(
+            label: 'Feeding Pump Limit (ec_high)',
+            hint: 'mS/cm - Feeding pump off limit',
+            controller: ecHighController,
             enabled: !isLoading,
             placeholder: ValueFormatter.nullPlaceholder,
           ),
