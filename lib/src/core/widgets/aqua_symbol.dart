@@ -123,6 +123,8 @@ class AquaSymbol extends StatelessWidget {
         return Symbols.trending_up_rounded;
       case 'lightbulb':
         return Symbols.lightbulb_rounded;
+      case 'cancel':
+        return Symbols.cancel_rounded;
       case 'check_circle':
         return Symbols.check_circle_rounded;
       case 'info':

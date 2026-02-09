@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/screens.dart';
+import '../../../core/models/user_model.dart';
+import '../../../core/services/user_database_service.dart';
 import '../../../core/services/hydroponic_database_service.dart';
 import '../../../core/theme/aqua_colors.dart';
 import '../../../core/utils/value_formatter.dart';
@@ -36,6 +38,7 @@ class DashboardScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final sensorsAsync = ref.watch(sensorsStreamProvider);
     final settingsAsync = ref.watch(settingsStreamProvider);
+    final userAsync = ref.watch(realtimeUserProfileStreamProvider);
     final isConnected = ref.watch(systemStatusProvider);
 
     return AquaPageScaffold(
@@ -43,7 +46,10 @@ class DashboardScreen extends ConsumerWidget {
       onNavigate: onNavigate,
       child: Column(
         children: [
-          _TopNav(onAlerts: () => onNavigate(AppScreen.alerts)),
+          _TopNav(
+            onAlerts: () => onNavigate(AppScreen.alerts),
+            user: userAsync.valueOrNull,
+          ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 32),
             child: Column(
@@ -236,8 +242,10 @@ class DashboardScreen extends ConsumerWidget {
 }
 
 class _TopNav extends StatelessWidget {
-  const _TopNav({required this.onAlerts});
+  const _TopNav({required this.onAlerts, this.user});
+
   final VoidCallback onAlerts;
+  final UserModel? user;
 
   @override
   Widget build(BuildContext context) {
@@ -281,8 +289,12 @@ class _TopNav extends StatelessWidget {
                         ),
                         clipBehavior: Clip.antiAlias,
                         child: CachedNetworkImage(
-                          imageUrl: 'https://picsum.photos/100',
+                          imageUrl:
+                              user?.photoUrl ??
+                              'https://picsum.photos/100', // Fallback to placeholder
                           fit: BoxFit.cover,
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.person),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -302,7 +314,7 @@ class _TopNav extends StatelessWidget {
                                 ),
                           ),
                           Text(
-                            'user name',
+                            user?.displayName ?? 'User',
                             style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.w800),
                           ),

@@ -9,6 +9,7 @@ import '../../../core/theme/aqua_colors.dart';
 import '../../../core/utils/value_formatter.dart';
 import '../../../core/widgets/aqua_header.dart';
 import '../../../core/widgets/aqua_symbol.dart';
+import '../domain/notification_preferences.dart';
 
 class AccountSecurityScreen extends ConsumerStatefulWidget {
   const AccountSecurityScreen({super.key, required this.onNavigate});
@@ -1263,9 +1264,30 @@ class FirmwareUpdateScreen extends StatelessWidget {
   }
 }
 
-class NotificationSettingsScreen extends StatelessWidget {
+class NotificationSettingsScreen extends StatefulWidget {
   const NotificationSettingsScreen({super.key, required this.onNavigate});
   final ValueChanged<AppScreen> onNavigate;
+
+  @override
+  State<NotificationSettingsScreen> createState() =>
+      _NotificationSettingsScreenState();
+}
+
+class _NotificationSettingsScreenState
+    extends State<NotificationSettingsScreen> {
+  // Initialize with default values (Critical Alerts ON by default)
+  NotificationPreferences _prefs = const NotificationPreferences(
+    pushEnabled: true,
+    criticalAlertsEnabled: true, // ALWAYS ON DEFAULT (Requirement)
+    parameterWarningsEnabled: true,
+  );
+
+  void _updatePrefs(NotificationPreferences newPrefs) {
+    setState(() {
+      _prefs = newPrefs;
+    });
+    // TODO: Connect to backend API or local storage here
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1274,140 +1296,107 @@ class NotificationSettingsScreen extends StatelessWidget {
         children: [
           AquaHeader(
             title: 'Notification Settings',
-            onBack: () => onNavigate(AppScreen.settings),
+            onBack: () => widget.onNavigate(AppScreen.settings),
           ),
           Expanded(
-            child: SingleChildScrollView(
-              padding: const EdgeInsets.fromLTRB(16, 24, 16, 24),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: [
-                  _Section('Delivery Methods'),
-                  _Card(
-                    child: Column(
-                      children: const [
-                        _ToggleItem(
-                          title: 'Push Notifications',
-                          subtitle: 'Receive alerts on this device',
-                          initial: true,
-                        ),
-                        _DividerLine(),
-                        _ToggleItem(
-                          title: 'Email Notifications',
-                          subtitle: 'Send summaries to registered email',
-                          initial: false,
-                        ),
-                        _DividerLine(),
-                        _ToggleItem(
-                          title: 'SMS Alerts',
-                          subtitle: 'Critical alerts via text message',
-                          initial: true,
-                        ),
-                      ],
+            child: ListView(
+              padding: const EdgeInsets.all(16),
+              children: [
+                // Master Toggle
+                _buildSwitchTile(
+                  title: 'Push Notifications',
+                  subtitle: 'Enable or disable all notifications',
+                  value: _prefs.pushEnabled,
+                  onChanged: (v) =>
+                      _updatePrefs(_prefs.copyWith(pushEnabled: v)),
+                ),
+                const SizedBox(height: 24),
+
+                // Section Title
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: Text(
+                    'ALERTS & WARNINGS',
+                    style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                      color: AquaColors.slate400,
+                      fontWeight: FontWeight.bold,
+                      letterSpacing: 1.2,
                     ),
                   ),
-                  const SizedBox(height: 24),
-                  _Section('Alert Types'),
-                  _Card(
-                    child: Column(
-                      children: const [
-                        _ToggleItem(
-                          title: 'Critical System Failures',
-                          subtitle: 'Pump failure, leak detection, power loss',
-                          initial: true,
-                        ),
-                        _DividerLine(),
-                        _ToggleItem(
-                          title: 'Parameter Warnings',
-                          subtitle: 'pH or EC deviation outside safe range',
-                          initial: true,
-                        ),
-                        _DividerLine(),
-                        _ToggleItem(
-                          title: 'Harvest Reminders',
-                          subtitle: 'Scheduled maintenance and harvest time',
-                          initial: true,
-                        ),
-                        _DividerLine(),
-                        _ToggleItem(
-                          title: 'AI Insights',
-                          subtitle: 'Daily growth tips and predictions',
-                          initial: false,
-                        ),
-                      ],
-                    ),
-                  ),
-                  const SizedBox(height: 24),
-                  _Section('Schedule'),
-                  _Card(
-                    child: Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Quiet Hours',
-                                  style: Theme.of(context).textTheme.bodyMedium
-                                      ?.copyWith(fontWeight: FontWeight.w900),
-                                ),
-                                Text(
-                                  'Mute non-critical alerts',
-                                  style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(color: AquaColors.slate500),
-                                ),
-                              ],
-                            ),
-                            Container(
-                              width: 48,
-                              height: 28,
-                              padding: const EdgeInsets.all(4),
-                              decoration: BoxDecoration(
-                                color: AquaColors.primary,
-                                borderRadius: BorderRadius.circular(999),
-                              ),
-                              child: Align(
-                                alignment: Alignment.centerRight,
-                                child: Container(
-                                  width: 20,
-                                  height: 20,
-                                  decoration: const BoxDecoration(
-                                    color: Colors.white,
-                                    shape: BoxShape.circle,
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 16),
-                        Row(
-                          children: const [
-                            Expanded(
-                              child: _TimeBox(
-                                label: 'Start Time',
-                                value: '10:00 PM',
-                              ),
-                            ),
-                            SizedBox(width: 16),
-                            Expanded(
-                              child: _TimeBox(
-                                label: 'End Time',
-                                value: '07:00 AM',
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
+                ),
+
+                // Critical Alerts
+                _buildSwitchTile(
+                  title: 'Critical System Failures',
+                  subtitle: 'Pump failure, leak detection, power loss',
+                  value: _prefs.criticalAlertsEnabled,
+                  // If master toggle is off, these should visually look disabled or handle logic
+                  // But for now, we just update the specific preference
+                  onChanged: _prefs.pushEnabled
+                      ? (v) => _updatePrefs(
+                          _prefs.copyWith(criticalAlertsEnabled: v),
+                        )
+                      : null,
+                ),
+
+                const SizedBox(height: 8), // Spacing between tiles
+                // Warnings
+                _buildSwitchTile(
+                  title: 'Parameter Warnings',
+                  subtitle: 'pH or EC deviation outside safe range',
+                  value: _prefs.parameterWarningsEnabled,
+                  onChanged: _prefs.pushEnabled
+                      ? (v) => _updatePrefs(
+                          _prefs.copyWith(parameterWarningsEnabled: v),
+                        )
+                      : null,
+                ),
+              ],
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  Widget _buildSwitchTile({
+    required String title,
+    required String subtitle,
+    required bool value,
+    required ValueChanged<bool>? onChanged,
+  }) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Container(
+      margin: const EdgeInsets.only(bottom: 8),
+      decoration: BoxDecoration(
+        color: isDark ? AquaColors.cardDark : Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: isDark
+              ? Colors.white.withValues(alpha: 0.05)
+              : AquaColors.slate200,
+        ),
+      ),
+      child: SwitchListTile(
+        title: Text(
+          title,
+          style: Theme.of(
+            context,
+          ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w900),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: Theme.of(
+            context,
+          ).textTheme.bodySmall?.copyWith(color: AquaColors.slate500),
+        ),
+        value: value,
+        activeColor: AquaColors.primary,
+        contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+        onChanged: onChanged,
       ),
     );
   }
@@ -1416,6 +1405,7 @@ class NotificationSettingsScreen extends StatelessWidget {
 class _Card extends StatelessWidget {
   const _Card({required this.child});
   final Widget child;
+
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -1809,144 +1799,6 @@ class _Bullet extends StatelessWidget {
           ),
         ],
       ),
-    );
-  }
-}
-
-class _ToggleItem extends StatefulWidget {
-  const _ToggleItem({
-    required this.title,
-    required this.subtitle,
-    required this.initial,
-  });
-  final String title;
-  final String subtitle;
-  final bool initial;
-  @override
-  State<_ToggleItem> createState() => _ToggleItemState();
-}
-
-class _ToggleItemState extends State<_ToggleItem> {
-  late bool isOn = widget.initial;
-  @override
-  Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () => setState(() => isOn = !isOn),
-      child: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    widget.title,
-                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w900,
-                    ),
-                  ),
-                  const SizedBox(height: 2),
-                  Text(
-                    widget.subtitle,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: AquaColors.slate500),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              width: 48,
-              height: 28,
-              padding: const EdgeInsets.all(4),
-              decoration: BoxDecoration(
-                color: isOn ? AquaColors.primary : AquaColors.slate200,
-                borderRadius: BorderRadius.circular(999),
-              ),
-              child: Align(
-                alignment: isOn ? Alignment.centerRight : Alignment.centerLeft,
-                child: Container(
-                  width: 20,
-                  height: 20,
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _DividerLine extends StatelessWidget {
-  const _DividerLine();
-  @override
-  Widget build(BuildContext context) =>
-      const Divider(height: 1, thickness: 1, color: Color(0x11FFFFFF));
-}
-
-class _Section extends StatelessWidget {
-  const _Section(this.title);
-  final String title;
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(left: 8, bottom: 8),
-      child: Text(
-        title.toUpperCase(),
-        style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: AquaColors.slate400,
-          fontWeight: FontWeight.w900,
-          letterSpacing: 2,
-        ),
-      ),
-    );
-  }
-}
-
-class _TimeBox extends StatelessWidget {
-  const _TimeBox({required this.label, required this.value});
-  final String label;
-  final String value;
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          label.toUpperCase(),
-          style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: AquaColors.slate400,
-            fontWeight: FontWeight.w900,
-            letterSpacing: 1.2,
-          ),
-        ),
-        const SizedBox(height: 6),
-        Container(
-          height: 40,
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          decoration: BoxDecoration(
-            color: isDark ? AquaColors.surfaceDark : AquaColors.slate100,
-            borderRadius: BorderRadius.circular(10),
-          ),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: Text(
-              value,
-              style: Theme.of(
-                context,
-              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w900),
-            ),
-          ),
-        ),
-      ],
     );
   }
 }

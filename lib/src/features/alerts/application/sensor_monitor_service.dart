@@ -4,6 +4,7 @@ import '../../../core/services/hydroponic_database_service.dart';
 import '../../../core/models/hydroponic/sensors_model.dart';
 import '../domain/alert_model.dart';
 import '../data/notification_service.dart';
+import 'sensor_watcher.dart';
 
 enum _SystemState { optimal, warning, critical }
 
@@ -15,26 +16,30 @@ final alertsProvider = StateNotifierProvider<AlertsNotifier, List<AlertModel>>((
   return AlertsNotifier(notificationService);
 });
 
-/// Service that monitors sensors and triggers alerts
-final sensorMonitorServiceProvider = Provider<SensorMonitorService>((ref) {
+/// Provider that efficiently watches sensors and settings to trigger alerts
+final sensorMonitorServiceProvider = Provider<SensorWatcher>((ref) {
   final notificationService = ref.read(notificationServiceProvider);
   final alertsNotifier = ref.read(alertsProvider.notifier);
 
-  final service = SensorMonitorService(notificationService, alertsNotifier);
+  // Instantiate the optimized logic layer
+  final watcher = SensorWatcher(notificationService, alertsNotifier, ref);
 
-  // Check initial state if available
-  ref.read(sensorsStreamProvider).whenData((sensors) {
-    service.checkSensors(sensors);
-  });
+  // Combine latest values of Sensors and Settings
+  // We use `listen` to react to changes, but we need both values.
+  // A cleaner way is to listen to a stream of combined values,
+  // or just listen to sensors and read latest settings (or vice versa).
+  // For robustness:
 
-  // Watch sensor data changes
-  ref.listen<AsyncValue<SensorsModel>>(sensorsStreamProvider, (previous, next) {
+  ref.listen<AsyncValue<SensorsModel>>(sensorsStreamProvider, (prev, next) {
     next.whenData((sensors) {
-      service.checkSensors(sensors);
+      final settings = ref.read(settingsStreamProvider).valueOrNull;
+      if (settings != null) {
+        watcher.checkSensors(sensors, settings);
+      }
     });
   });
 
-  return service;
+  return watcher;
 });
 
 class AlertsNotifier extends StateNotifier<List<AlertModel>> {
@@ -56,6 +61,8 @@ class AlertsNotifier extends StateNotifier<List<AlertModel>> {
 }
 
 class SensorMonitorService {
+  // DEPRECATED: Replaced by SensorWatcher
+  // Kept temporarily if referenced elsewhere, but logic moved to SensorWatcher.
   final NotificationService _notificationService;
   final AlertsNotifier _alertsNotifier;
 
