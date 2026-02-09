@@ -123,6 +123,7 @@ class SensorWatcher {
           id: DateTime.now().millisecondsSinceEpoch % 100000, // Unique ID
           title: alert.title,
           body: alert.message,
+          isCritical: alert.type == AlertType.critical,
         );
       }
     }

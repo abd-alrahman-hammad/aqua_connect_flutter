@@ -80,6 +80,7 @@ class ProfileScreen extends ConsumerWidget {
     return AquaPageScaffold(
       currentScreen: current,
       onNavigate: onNavigate,
+      includeBottomNav: false, // Hide bottom nav on Profile screen
       child: Column(
         children: [
           AquaHeader(

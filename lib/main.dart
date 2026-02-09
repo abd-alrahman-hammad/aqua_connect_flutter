@@ -4,9 +4,20 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'src/app/app.dart';
 import 'src/core/config/firebase_initializer.dart';
 
+import 'src/features/alerts/data/notification_service.dart';
+
 Future<void> main() async {
   // Ensure Flutter is initialized before Firebase
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Initialize Notifications
+  final notificationService = NotificationService();
+  await notificationService.initialize();
+
+  // Request permissions immediately for this local-only implementation
+  // In a real user flow, you might want to ask this on a specific screen,
+  // but for "consistent delivery", ensuring we have permissions early is good.
+  await notificationService.requestPermissions();
 
   // Initialize Firebase with platform-specific configuration
   try {
