@@ -12,17 +12,20 @@ class NotificationPreferences {
   final bool pushEnabled;
   final bool criticalAlertsEnabled;
   final bool parameterWarningsEnabled;
+  final bool waterLevelNotificationsEnabled;
 
   const NotificationPreferences({
     this.pushEnabled = true,
     this.criticalAlertsEnabled = true,
     this.parameterWarningsEnabled = true,
+    this.waterLevelNotificationsEnabled = true,
   });
 
   NotificationPreferences copyWith({
     bool? pushEnabled,
     bool? criticalAlertsEnabled,
     bool? parameterWarningsEnabled,
+    bool? waterLevelNotificationsEnabled,
   }) {
     return NotificationPreferences(
       pushEnabled: pushEnabled ?? this.pushEnabled,
@@ -30,6 +33,8 @@ class NotificationPreferences {
           criticalAlertsEnabled ?? this.criticalAlertsEnabled,
       parameterWarningsEnabled:
           parameterWarningsEnabled ?? this.parameterWarningsEnabled,
+      waterLevelNotificationsEnabled:
+          waterLevelNotificationsEnabled ?? this.waterLevelNotificationsEnabled,
     );
   }
 }

@@ -83,7 +83,9 @@ class SensorWatcher {
     }
 
     // Case 2 & 3: Filter based on specific toggles
-    if (status == SensorStatus.critical) {
+    if (label == 'Water Level') {
+      if (!prefs.waterLevelNotificationsEnabled) shouldSendPush = false;
+    } else if (status == SensorStatus.critical) {
       if (!prefs.criticalAlertsEnabled) shouldSendPush = false;
     } else if (status == SensorStatus.warning) {
       if (!prefs.parameterWarningsEnabled) shouldSendPush = false;
