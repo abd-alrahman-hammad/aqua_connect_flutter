@@ -28,7 +28,7 @@ class SupportScreen extends StatelessWidget {
               children: [
                 AquaHeader(
                   title: 'Support & Learning',
-                  onBack: () => onNavigate(AppScreen.dashboard),
+                  onBack: () => onNavigate(AppScreen.more),
                   rightAction: IconButton(
                     onPressed: () {},
                     icon: const AquaSymbol('search'),

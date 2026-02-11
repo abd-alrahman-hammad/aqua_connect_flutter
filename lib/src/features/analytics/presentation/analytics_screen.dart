@@ -109,6 +109,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
     final chartColor = _getTabColor(tab);
 
     return AquaPageScaffold(
+      includeBottomNav: false,
       currentScreen: widget.current,
       onNavigate: widget.onNavigate,
       child: Column(
@@ -423,25 +424,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 ),
                 const SizedBox(height: 24),
 
-                Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Key Insights',
-                    style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.w800,
-                    ),
-                  ),
-                ),
-                const SizedBox(height: 16),
-                _InsightRow(
-                  bg: AquaColors.primary.withValues(alpha: 0.05),
-                  border: AquaColors.primary.withValues(alpha: 0.10),
-                  iconBg: AquaColors.primary,
-                  icon: 'lightbulb',
-                  title: 'System Optimal',
-                  subtitle:
-                      '$tab is within the healthy range for this growth stage.',
-                ),
+                
               ],
             ),
           ),

@@ -22,13 +22,14 @@ class InsightsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return AquaPageScaffold(
+      includeBottomNav: false,
       currentScreen: current,
       onNavigate: onNavigate,
       child: Column(
         children: [
           AquaHeader(
             title: 'AI Insights',
-            onBack: () => onNavigate(AppScreen.dashboard),
+            onBack: () => onNavigate(AppScreen.more),
             rightAction: const AquaSymbol('sync'),
           ),
           Padding(
