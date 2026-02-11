@@ -50,11 +50,6 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
     super.dispose();
   }
 
-  bool get _isFormValid {
-    return _currentPasswordController.text.isNotEmpty &&
-        _newPasswordController.text.isNotEmpty &&
-        _confirmPasswordController.text.isNotEmpty;
-  }
 
   Future<void> _updatePassword() async {
     if (!_formKey.currentState!.validate()) return;
@@ -1338,6 +1333,20 @@ class _NotificationSettingsScreenState
                   onChanged: _prefs.pushEnabled
                       ? (v) => _updatePrefs(
                           _prefs.copyWith(criticalAlertsEnabled: v),
+                        )
+                      : null,
+                ),
+
+                const SizedBox(height: 8),
+
+                // Water Level Alerts (NEW)
+                _buildSwitchTile(
+                  title: 'Water Level Alerts',
+                  subtitle: 'Low water level, refilling required',
+                  value: _prefs.waterLevelNotificationsEnabled,
+                  onChanged: _prefs.pushEnabled
+                      ? (v) => _updatePrefs(
+                          _prefs.copyWith(waterLevelNotificationsEnabled: v),
                         )
                       : null,
                 ),

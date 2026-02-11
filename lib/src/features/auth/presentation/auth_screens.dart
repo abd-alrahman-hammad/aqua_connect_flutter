@@ -49,10 +49,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     super.dispose();
   }
 
-  bool get _isFormValid {
-    return _emailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty;
-  }
+
 
   Future<void> _handleLogin() async {
     setState(() {
@@ -384,11 +381,11 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     super.dispose();
   }
 
-  bool get _isFormValid {
-    return _emailController.text.isNotEmpty &&
-        _passwordController.text.isNotEmpty &&
-        _nameController.text.isNotEmpty;
-  }
+  // bool get _isFormValid {
+  //   return _emailController.text.isNotEmpty &&
+  //       _passwordController.text.isNotEmpty &&
+  //       _nameController.text.isNotEmpty;
+  // }
 
   Future<void> _handleSignup() async {
     if (!_formKey.currentState!.validate()) return;
@@ -623,9 +620,9 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     super.dispose();
   }
 
-  bool get _isFormValid {
-    return _emailController.text.isNotEmpty;
-  }
+  // bool get _isFormValid {
+  //   return _emailController.text.isNotEmpty;
+  // }
 
   Future<void> _handleReset() async {
     setState(() => _emailError = null);
