@@ -1,14 +1,19 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../app/app_controller.dart';
 import '../../../app/screens.dart';
+import '../../../core/models/hydroponic/sensors_model.dart';
+import '../../../core/models/hydroponic/settings_model.dart';
+import '../../../core/services/hydroponic_database_service.dart';
 import '../../../core/theme/aqua_colors.dart';
+import '../../../core/utils/vitality_utils.dart';
 import '../../../core/widgets/aqua_header.dart';
 import '../../../core/widgets/aqua_page_scaffold.dart';
 import '../../../core/widgets/aqua_symbol.dart';
+import '../../insights/presentation/insights_state.dart';
 
-class InsightsScreen extends StatelessWidget {
+class InsightsScreen extends ConsumerStatefulWidget {
   const InsightsScreen({
     super.key,
     required this.current,
@@ -19,392 +24,425 @@ class InsightsScreen extends StatelessWidget {
   final ValueChanged<AppScreen> onNavigate;
 
   @override
+  ConsumerState<InsightsScreen> createState() => _InsightsScreenState();
+}
+
+class _InsightsScreenState extends ConsumerState<InsightsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final sensors = ref.read(sensorsStreamProvider).valueOrNull;
+      final settings = ref.read(settingsStreamProvider).valueOrNull;
+      _checkAndFetchInsights(sensors, settings);
+    });
+  }
+
+  void _checkAndFetchInsights(SensorsModel? sensors, SettingsModel? settings) {
+    if (sensors == null || settings == null) return;
+
+    final notifier = ref.read(insightsProvider.notifier);
+    final appState = ref.read(appControllerProvider);
+
+    if (notifier.shouldAutoRefresh(sensors, settings)) {
+      notifier.fetchInsight(
+        sensors: sensors,
+        settings: settings,
+        languageCode: appState.languageCode,
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final appState = ref.watch(appControllerProvider);
+    final isDark = appState.isDark;
+
+    final sensorsAsync = ref.watch(sensorsStreamProvider);
+    final settingsAsync = ref.watch(settingsStreamProvider);
+    final insightsState = ref.watch(insightsProvider);
+
+    // Listen to sensors for auto-refresh logic
+    ref.listen<AsyncValue<SensorsModel>>(sensorsStreamProvider, (prev, next) {
+      next.whenData((sensors) {
+        settingsAsync.whenData((settings) {
+          _checkAndFetchInsights(sensors, settings);
+        });
+      });
+    });
+
+    // Also listen to settings to trigger initial fetch if sensors are already ready
+    ref.listen<AsyncValue<SettingsModel>>(settingsStreamProvider, (prev, next) {
+      next.whenData((settings) {
+        sensorsAsync.whenData((sensors) {
+          _checkAndFetchInsights(sensors, settings);
+        });
+      });
+    });
+
+    final sensors = sensorsAsync.valueOrNull;
+    final settings = settingsAsync.valueOrNull;
+
+    // Determine overall status
+    SensorStatus overallStatus = SensorStatus.ok;
+    IconData statusIcon = Icons.check_circle_rounded;
+
+    if (sensors != null && settings != null) {
+      final statuses = [
+        VitalityUtils.getWaterLevelStatus(sensors.waterLevel),
+        VitalityUtils.getTemperatureStatus(sensors.temperature, settings),
+        VitalityUtils.getPhStatus(sensors.ph, settings),
+        VitalityUtils.getEcStatus(sensors.ec, settings),
+      ];
+
+      if (statuses.contains(SensorStatus.critical)) {
+        overallStatus = SensorStatus.critical;
+      } else if (statuses.contains(SensorStatus.warning)) {
+        overallStatus = SensorStatus.warning;
+      }
+
+      // Determine specific icon based on priority
+      if (VitalityUtils.getWaterLevelStatus(sensors.waterLevel) ==
+          SensorStatus.critical) {
+        statusIcon = Icons.water_drop;
+      } else if (VitalityUtils.getTemperatureStatus(
+                sensors.temperature,
+                settings,
+              ) !=
+              SensorStatus.ok &&
+          VitalityUtils.getTemperatureStatus(sensors.temperature, settings) !=
+              SensorStatus.unknown) {
+        statusIcon = Icons.thermostat;
+      } else if ((VitalityUtils.getPhStatus(sensors.ph, settings) !=
+                  SensorStatus.ok &&
+              VitalityUtils.getPhStatus(sensors.ph, settings) !=
+                  SensorStatus.unknown) ||
+          (VitalityUtils.getEcStatus(sensors.ec, settings) != SensorStatus.ok &&
+              VitalityUtils.getEcStatus(sensors.ec, settings) !=
+                  SensorStatus.unknown)) {
+        statusIcon = Icons.science;
+      } else if (overallStatus != SensorStatus.ok) {
+        statusIcon = Icons.warning_rounded;
+      }
+    }
+
+    final statusColor = VitalityUtils.getStatusColor(overallStatus);
+    final systemStatusMessage = overallStatus == SensorStatus.critical
+        ? 'System Critical'
+        : overallStatus == SensorStatus.warning
+        ? 'System Warning'
+        : 'System Optimal';
+
+    final systemStatusDescription = overallStatus == SensorStatus.critical
+        ? 'Low water levels detected. Nutrient balance is severely compromised.'
+        : overallStatus == SensorStatus.warning
+        ? 'Some readings are out of optimal range. Check sensors.'
+        : 'All systems are functioning within optimal parameters.';
+
     return AquaPageScaffold(
       includeBottomNav: false,
-      currentScreen: current,
-      onNavigate: onNavigate,
+      currentScreen: widget.current,
+      onNavigate: widget.onNavigate,
       child: Column(
         children: [
           AquaHeader(
             title: 'AI Insights',
-            onBack: () => onNavigate(AppScreen.more),
-            rightAction: const AquaSymbol('sync'),
+            onBack: () => widget.onNavigate(AppScreen.more),
+            rightAction: IconButton(
+              icon: const AquaSymbol('sync', color: AquaColors.primary),
+              onPressed: () {
+                if (sensors != null && settings != null) {
+                  ref
+                      .read(insightsProvider.notifier)
+                      .fetchInsight(
+                        sensors: sensors,
+                        settings: settings,
+                        languageCode: appState.languageCode,
+                      );
+                }
+              },
+            ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 24),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Container(
-                  decoration: BoxDecoration(
-                    color: isDark ? AquaColors.cardDark : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.05)
-                          : AquaColors.slate200,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.12),
-                        blurRadius: 16,
-                        offset: const Offset(0, 6),
-                      ),
-                    ],
-                  ),
-                  clipBehavior: Clip.antiAlias,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 160,
-                        child: Stack(
-                          fit: StackFit.expand,
-                          children: [
-                            CachedNetworkImage(
-                              imageUrl:
-                                  'https://picsum.photos/800/400?grayscale',
-                              fit: BoxFit.cover,
-                            ),
-                            Container(
-                              color: AquaColors.primary.withValues(alpha: 0.20),
-                            ),
-                            Positioned(
-                              left: 16,
-                              bottom: 12,
-                              child: Container(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 10,
-                                  vertical: 6,
-                                ),
-                                decoration: BoxDecoration(
-                                  color: AquaColors.primary,
-                                  borderRadius: BorderRadius.circular(6),
-                                ),
-                                child: Text(
-                                  'AI PRIORITY',
-                                  style: Theme.of(context).textTheme.labelSmall
-                                      ?.copyWith(
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w900,
-                                        fontSize: 10,
-                                        letterSpacing: 1.2,
-                                      ),
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(20),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.stretch,
-                          children: [
-                            Text(
-                              'Daily Recommendation',
-                              style: Theme.of(context).textTheme.titleLarge
-                                  ?.copyWith(fontWeight: FontWeight.w800),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              'Increase light intensity by 10% between 2 PM - 4 PM. Your current leaf density suggests plants can handle higher PPFD for optimal photosynthesis.',
-                              style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(
-                                    color: isDark
-                                        ? AquaColors.slate300
-                                        : AquaColors.slate600,
-                                    height: 1.45,
-                                  ),
-                            ),
-                            const SizedBox(height: 16),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Row(
-                                  children: [
-                                    const AquaSymbol(
-                                      'smart_toy',
-                                      color: AquaColors.primary,
-                                      size: 18,
-                                    ),
-                                    const SizedBox(width: 8),
-                                    Text(
-                                      'AQUAAI ANALYSIS',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .labelSmall
-                                          ?.copyWith(
-                                            color: AquaColors.primary,
-                                            fontWeight: FontWeight.w900,
-                                            letterSpacing: 1.2,
-                                          ),
-                                    ),
-                                  ],
-                                ),
-                                ElevatedButton(
-                                  onPressed: () {},
-                                  style: ElevatedButton.styleFrom(
-                                    backgroundColor: AquaColors.primary,
-                                    foregroundColor: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(10),
-                                    ),
-                                    elevation: 0,
-                                    padding: const EdgeInsets.symmetric(
-                                      horizontal: 16,
-                                      vertical: 10,
-                                    ),
-                                    textStyle: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(fontWeight: FontWeight.w900),
-                                  ),
-                                  child: const Text('Apply Changes'),
-                                ),
-                              ],
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  ),
+                // 1. Status Hero Section
+                _StatusHero(
+                  status: overallStatus,
+                  statusIcon: statusIcon,
+                  title: systemStatusMessage,
+                  description: systemStatusDescription,
+                  color: statusColor,
+                  isDark: isDark,
                 ),
-                const SizedBox(height: 24),
-                Text(
-                  'Model Performance'.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AquaColors.slate400,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.8,
+                const SizedBox(height: 32),
+
+                // 2. Sensor Grid (2x2)
+                if (sensors != null && settings != null)
+                  _SensorGrid(
+                    sensors: sensors,
+                    settings: settings,
+                    isDark: isDark,
                   ),
+                const SizedBox(height: 32),
+
+                // Error State
+                if (insightsState.error != null) ...[
+                  Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: AquaColors.error.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(12),
+                      border: Border.all(
+                        color: AquaColors.error.withValues(alpha: 0.3),
+                      ),
+                    ),
+                    child: Text(
+                      insightsState.error!,
+                      style: const TextStyle(color: AquaColors.error),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  const SizedBox(height: 24),
+                ],
+
+                // 3. Analysis Section
+                _SectionHeader(
+                  icon: 'analytics',
+                  title: 'ANALYSIS',
+                  isDark: isDark,
                 ),
                 const SizedBox(height: 12),
-                Wrap(
-                  spacing: 16,
-                  runSpacing: 16,
-                  children: const [
-                    _StatCard(
-                      label: 'ML Accuracy',
-                      value: '98.2%',
-                      icon: 'verified',
-                      footer: '+0.4%',
-                      footerIcon: 'trending_up',
-                    ),
-                    _StatCard(
-                      label: 'Sensor Sync',
-                      value: '100%',
-                      icon: 'sensors',
-                      footer: 'Stable',
-                    ),
-                  ],
+                _ContentCard(
+                  content: insightsState.insight?.analysis,
+                  isLoading: insightsState.isLoading,
+                  isDark: isDark,
                 ),
-                const SizedBox(height: 24),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: BoxDecoration(
-                    color: isDark ? AquaColors.cardDark : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.05)
-                          : AquaColors.slate200,
-                    ),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                'GROWTH TREND ANALYSIS',
-                                style: Theme.of(context).textTheme.labelSmall
-                                    ?.copyWith(
-                                      color: AquaColors.slate400,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 1.4,
-                                    ),
-                              ),
-                              const SizedBox(height: 4),
-                              Text(
-                                '+12.4%',
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .headlineMedium
-                                    ?.copyWith(fontWeight: FontWeight.w900),
-                              ),
-                            ],
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 10,
-                              vertical: 6,
-                            ),
-                            decoration: BoxDecoration(
-                              color: AquaColors.primary.withValues(alpha: 0.05),
-                              borderRadius: BorderRadius.circular(6),
-                              border: Border.all(
-                                color: AquaColors.primary.withValues(
-                                  alpha: 0.20,
-                                ),
-                              ),
-                            ),
-                            child: Text(
-                              'PROJECTED',
-                              style: Theme.of(context).textTheme.labelSmall
-                                  ?.copyWith(
-                                    color: AquaColors.primary,
-                                    fontWeight: FontWeight.w900,
-                                    fontSize: 10,
-                                    letterSpacing: 1.2,
-                                  ),
-                            ),
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 12),
-                      SizedBox(
-                        height: 128,
-                        child: LineChart(
-                          LineChartData(
-                            borderData: FlBorderData(show: false),
-                            gridData: const FlGridData(show: false),
-                            titlesData: const FlTitlesData(show: false),
-                            lineBarsData: [
-                              LineChartBarData(
-                                isCurved: true,
-                                color: const Color(0xFF00B0F0),
-                                barWidth: 3,
-                                dotData: const FlDotData(show: false),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      const Color(
-                                        0xFF00B0F0,
-                                      ).withValues(alpha: 0.30),
-                                      const Color(
-                                        0xFF00B0F0,
-                                      ).withValues(alpha: 0.0),
-                                    ],
-                                  ),
-                                ),
-                                spots: const [
-                                  FlSpot(0, 20),
-                                  FlSpot(1, 40),
-                                  FlSpot(2, 35),
-                                  FlSpot(3, 50),
-                                  FlSpot(4, 45),
-                                  FlSpot(5, 70),
-                                  FlSpot(6, 60),
-                                  FlSpot(7, 80),
-                                  FlSpot(8, 75),
-                                  FlSpot(9, 90),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Divider(
-                        color: isDark
-                            ? Colors.white.withValues(alpha: 0.05)
-                            : AquaColors.slate100,
-                        height: 1,
-                      ),
-                      const SizedBox(height: 12),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Row(
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: const BoxDecoration(
-                                  color: AquaColors.primary,
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'HISTORICAL',
-                                style: Theme.of(context).textTheme.labelSmall
-                                    ?.copyWith(
-                                      color: AquaColors.slate400,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 1.2,
-                                    ),
-                              ),
-                            ],
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                width: 8,
-                                height: 8,
-                                decoration: BoxDecoration(
-                                  color: AquaColors.primary.withValues(
-                                    alpha: 0.30,
-                                  ),
-                                  shape: BoxShape.circle,
-                                ),
-                              ),
-                              const SizedBox(width: 8),
-                              Text(
-                                'PREDICTIVE',
-                                style: Theme.of(context).textTheme.labelSmall
-                                    ?.copyWith(
-                                      color: AquaColors.slate400,
-                                      fontWeight: FontWeight.w900,
-                                      letterSpacing: 1.2,
-                                    ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 24),
-                Text(
-                  'Sub-System Insights'.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AquaColors.slate400,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.8,
-                  ),
+                const SizedBox(height: 32),
+
+                // 4. Action Required Section
+                _SectionHeader(
+                  icon: 'error', // explicit error icon for Action Required
+                  title: 'ACTION REQUIRED',
+                  color: AquaColors.critical,
+                  isDark: isDark,
                 ),
                 const SizedBox(height: 12),
-                const _SubsystemRow(
-                  icon: 'water_drop',
-                  iconBg: Color(0x1A7AC043),
-                  iconColor: AquaColors.primary,
-                  title: 'Nutrient Balance',
-                  subtitle: 'EC levels optimal',
-                  value: '1.2 mS/cm',
-                  status: 'Stable',
-                  statusColor: AquaColors.nature,
+                _ContentCard(
+                  content: insightsState.insight?.actionRequired,
+                  isLoading: insightsState.isLoading,
+                  isDark: isDark,
+                  bulletPoints: true, // Use bullet point formatting
                 ),
-                const SizedBox(height: 12),
-                const _SubsystemRow(
-                  icon: 'thermostat',
-                  iconBg: Color(0x1AFFA500),
-                  iconColor: AquaColors.warning,
-                  title: 'Root Zone Temp',
-                  subtitle: 'Slightly above ideal',
-                  value: '24.5°C',
-                  status: 'Warn',
-                  statusColor: AquaColors.warning,
+                const SizedBox(height: 32),
+
+                // 5. Daily Tip Section
+                _DailyTipCard(
+                  content: insightsState.insight?.dailyTip,
+                  isLoading: insightsState.isLoading,
+                  isDark: isDark,
+                ),
+
+                const SizedBox(height: 48),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _StatusHero extends StatelessWidget {
+  const _StatusHero({
+    required this.status,
+    required this.statusIcon,
+    required this.title,
+    required this.description,
+    required this.color,
+    required this.isDark,
+  });
+
+  final SensorStatus status;
+  final IconData statusIcon;
+  final String title;
+  final String description;
+  final Color color;
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: color.withValues(alpha: 0.1),
+          ),
+          child: Center(child: Icon(statusIcon, color: color, size: 40)),
+        ),
+        const SizedBox(height: 16),
+        Text(
+          title,
+          style: TextStyle(
+            color: color,
+            fontSize: 28, // Increased from 24
+            fontWeight: FontWeight.bold,
+          ),
+          textAlign: TextAlign.center,
+        ),
+        const SizedBox(height: 8),
+        Text(
+          description,
+          style: TextStyle(
+            color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+            fontSize: 16, // Increased from 14
+            height: 1.5,
+          ),
+          textAlign: TextAlign.center,
+        ),
+      ],
+    );
+  }
+}
+
+class _SensorGrid extends StatelessWidget {
+  const _SensorGrid({
+    required this.sensors,
+    required this.settings,
+    required this.isDark,
+  });
+
+  final SensorsModel sensors;
+  final SettingsModel settings;
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: _SensorCard(
+                label: 'PH LEVEL',
+                value: sensors.ph?.toStringAsFixed(1) ?? '--',
+                unit: ' pH',
+                status: VitalityUtils.getPhStatus(sensors.ph, settings),
+                isDark: isDark,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _SensorCard(
+                label: 'EC',
+                value: sensors.ec?.toStringAsFixed(1) ?? '--',
+                unit: ' µs',
+                status: VitalityUtils.getEcStatus(sensors.ec, settings),
+                isDark: isDark,
+              ),
+            ),
+          ],
+        ),
+        const SizedBox(height: 16),
+        Row(
+          children: [
+            Expanded(
+              child: _SensorCard(
+                label: 'TEMPERATURE',
+                value: sensors.temperature?.toStringAsFixed(1) ?? '--',
+                unit: '°C',
+                status: VitalityUtils.getTemperatureStatus(
+                  sensors.temperature,
+                  settings,
+                ),
+                isDark: isDark,
+              ),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: _SensorCard(
+                label: 'WATER LEVEL',
+                value: '${sensors.waterLevel ?? '--'}',
+                unit: '%',
+                status: VitalityUtils.getWaterLevelStatus(sensors.waterLevel),
+                isDark: isDark,
+              ),
+            ),
+          ],
+        ),
+      ],
+    );
+  }
+}
+
+class _SensorCard extends StatelessWidget {
+  const _SensorCard({
+    required this.label,
+    required this.value,
+    this.unit = '',
+    required this.status,
+    required this.isDark,
+  });
+
+  final String label;
+  final String value;
+  final String unit;
+  final SensorStatus status;
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    final color = VitalityUtils.getStatusColor(status);
+    final isCriticalOrWarning =
+        status == SensorStatus.critical || status == SensorStatus.warning;
+
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: isDark ? AquaColors.cardDark : Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: isDark ? const Color(0xFF2C2C2C) : AquaColors.slate200,
+        ),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontSize: 13, // Increased from 12
+              fontWeight: FontWeight.w600,
+              color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+              letterSpacing: 0.5,
+            ),
+          ),
+          const SizedBox(height: 8),
+          RichText(
+            text: TextSpan(
+              children: [
+                TextSpan(
+                  text: value,
+                  style: TextStyle(
+                    fontSize: 28, // Increased from 24
+                    fontWeight: FontWeight.bold,
+                    color: isCriticalOrWarning
+                        ? color
+                        : (isDark ? Colors.white : AquaColors.slate900),
+                  ),
+                ),
+                TextSpan(
+                  text: unit,
+                  style: TextStyle(
+                    fontSize: 16, // Increased from 14
+                    fontWeight: FontWeight.w500,
+                    color: isDark ? AquaColors.slate500 : AquaColors.slate400,
+                  ),
                 ),
               ],
             ),
@@ -415,173 +453,276 @@ class InsightsScreen extends StatelessWidget {
   }
 }
 
-class _StatCard extends StatelessWidget {
-  const _StatCard({
-    required this.label,
-    required this.value,
+class _SectionHeader extends StatelessWidget {
+  const _SectionHeader({
     required this.icon,
-    required this.footer,
-    this.footerIcon,
+    required this.title,
+    this.color,
+    required this.isDark,
   });
 
-  final String label;
-  final String value;
   final String icon;
-  final String footer;
-  final String? footerIcon;
+  final String title;
+  final Color? color;
+  final bool isDark;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final width = (MediaQuery.of(context).size.width - 16 * 2 - 16) / 2;
-    return SizedBox(
-      width: width,
-      child: Container(
-        padding: const EdgeInsets.all(16),
-        decoration: BoxDecoration(
-          color: isDark ? AquaColors.cardDark : Colors.white,
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: isDark
-                ? Colors.white.withValues(alpha: 0.05)
-                : AquaColors.slate200,
+    // If it's a standard material icon name for now, but wrapper considers using AquaSymbol or Icon.
+    // The design uses a small circle icon with text.
+    return Row(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(6),
+          decoration: BoxDecoration(
+            color: (color ?? AquaColors.slate500).withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: Icon(
+            icon == 'analytics'
+                ? Icons.analytics_outlined
+                : icon == 'error'
+                ? Icons.warning_amber_rounded
+                : Icons.circle,
+            size: 16,
+            color: color ?? AquaColors.slate500,
           ),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  label.toUpperCase(),
-                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AquaColors.slate400,
-                    fontWeight: FontWeight.w900,
-                    letterSpacing: 1.2,
-                  ),
-                ),
-                AquaSymbol(icon, color: AquaColors.primary, size: 16),
-              ],
-            ),
-            const SizedBox(height: 8),
-            Text(
-              value,
-              style: Theme.of(
-                context,
-              ).textTheme.headlineMedium?.copyWith(fontWeight: FontWeight.w900),
-            ),
-            const SizedBox(height: 4),
-            Row(
-              children: [
-                if (footerIcon != null) ...[
-                  AquaSymbol(footerIcon!, size: 12, color: AquaColors.nature),
-                  const SizedBox(width: 4),
-                ],
-                Text(
-                  footer,
-                  style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                    color: AquaColors.nature,
-                    fontWeight: FontWeight.w900,
-                  ),
-                ),
-              ],
-            ),
-          ],
+        const SizedBox(width: 12),
+        Text(
+          title,
+          style: TextStyle(
+            fontSize: 14, // Increased from 12
+            fontWeight: FontWeight.w700,
+            letterSpacing: 1.5,
+            color: isDark ? AquaColors.slate300 : AquaColors.slate600,
+          ),
         ),
-      ),
+      ],
     );
   }
 }
 
-class _SubsystemRow extends StatelessWidget {
-  const _SubsystemRow({
-    required this.icon,
-    required this.iconBg,
-    required this.iconColor,
-    required this.title,
-    required this.subtitle,
-    required this.value,
-    required this.status,
-    required this.statusColor,
+class _ContentCard extends StatelessWidget {
+  const _ContentCard({
+    required this.content,
+    required this.isLoading,
+    required this.isDark,
+    this.bulletPoints = false,
   });
 
-  final String icon;
-  final Color iconBg;
-  final Color iconColor;
-  final String title;
-  final String subtitle;
-  final String value;
-  final String status;
-  final Color statusColor;
+  final String? content;
+  final bool isLoading;
+  final bool isDark;
+  final bool bulletPoints;
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    if (isLoading) {
+      return _LoadingShimmer(isDark: isDark);
+    }
+
+    if (content == null) {
+      return Container(
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: isDark ? AquaColors.cardDark : Colors.white,
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Text(
+          'Waiting for insights...',
+          style: TextStyle(
+            color: isDark ? AquaColors.slate500 : AquaColors.slate400,
+          ),
+        ),
+      );
+    }
+
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
         color: isDark ? AquaColors.cardDark : Colors.white,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(
-          color: isDark
-              ? Colors.white.withValues(alpha: 0.05)
-              : AquaColors.slate200,
-        ),
+        borderRadius: BorderRadius.circular(20),
       ),
-      child: Row(
-        children: [
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: iconBg,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Center(child: AquaSymbol(icon, color: iconColor)),
-          ),
-          const SizedBox(width: 16),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w900),
-                ),
-                const SizedBox(height: 2),
-                Text(
-                  subtitle,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodySmall?.copyWith(color: AquaColors.slate500),
-                ),
-              ],
-            ),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                value,
-                style: Theme.of(
-                  context,
-                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w900),
+      child: bulletPoints
+          ? _buildBulletPoints(content!)
+          : Text(
+              content!,
+              style: TextStyle(
+                fontSize: 16, // Increased from 15
+                height: 1.6,
+                color: isDark ? AquaColors.slate300 : AquaColors.slate700,
               ),
-              const SizedBox(height: 2),
-              Text(
-                status.toUpperCase(),
-                style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: statusColor,
-                  fontWeight: FontWeight.w900,
+            ),
+    );
+  }
+
+  Widget _buildBulletPoints(String text) {
+    // Split by newlines and filter empty
+    final lines = text.split('\n').where((l) => l.trim().isNotEmpty).toList();
+
+    // Very basic heuristic to check if backend already sends bullets or not.
+    // If not, we just treat each line as a bullet item.
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: lines.map((line) {
+        final cleanLine = line.trim().replaceAll(RegExp(r'^[-*]\s*'), '');
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 12),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 6),
+                child: Icon(Icons.circle, size: 6, color: AquaColors.critical),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: Text(
+                  cleanLine,
+                  style: TextStyle(
+                    fontSize: 16, // Increased from 15
+                    height: 1.5,
+                    color: isDark ? AquaColors.slate300 : AquaColors.slate700,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        );
+      }).toList(),
+    );
+  }
+}
+
+class _DailyTipCard extends StatelessWidget {
+  const _DailyTipCard({
+    required this.content,
+    required this.isLoading,
+    required this.isDark,
+  });
+
+  final String? content;
+  final bool isLoading;
+  final bool isDark;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: isDark
+            ? const Color(0xFF0F291E) // Darker green for dark mode
+            : const Color(0xFFE8F5E9), // Light green for light mode
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AquaColors.primary.withValues(alpha: 0.3)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: const BoxDecoration(
+                  color: AquaColors.primary,
+                  shape: BoxShape.circle,
+                ),
+                child: const Icon(
+                  Icons.lightbulb,
+                  color: Colors.white,
+                  size: 20,
+                ),
+              ),
+              const SizedBox(width: 12),
+              const Text(
+                'DAILY TIP',
+                style: TextStyle(
+                  fontSize: 14, // Increased from 12
                   letterSpacing: 1.2,
                 ),
               ),
             ],
           ),
+          const SizedBox(height: 16),
+          if (isLoading)
+            _LoadingShimmer(isDark: isDark, baseColor: AquaColors.primary)
+          else
+            Text(
+              content ?? 'Consistency is key to a healthy harvest.',
+              style: TextStyle(
+                fontSize: 16, // Increased from 15
+                height: 1.6,
+                color: isDark
+                    ? Colors.white.withValues(alpha: 0.9)
+                    : AquaColors.slate900,
+              ),
+            ),
         ],
+      ),
+    );
+  }
+}
+
+class _LoadingShimmer extends StatefulWidget {
+  const _LoadingShimmer({required this.isDark, this.baseColor});
+  final bool isDark;
+  final Color? baseColor;
+
+  @override
+  State<_LoadingShimmer> createState() => _LoadingShimmerState();
+}
+
+class _LoadingShimmerState extends State<_LoadingShimmer>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    )..repeat(reverse: true);
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Opacity(
+          opacity: 0.3 + (_controller.value * 0.4),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _line(width: double.infinity),
+              const SizedBox(height: 8),
+              _line(width: 200),
+              const SizedBox(height: 8),
+              _line(width: 150),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _line({required double width}) {
+    final color =
+        widget.baseColor ?? (widget.isDark ? Colors.white : Colors.black);
+    return Container(
+      height: 12,
+      width: width,
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(6),
       ),
     );
   }
