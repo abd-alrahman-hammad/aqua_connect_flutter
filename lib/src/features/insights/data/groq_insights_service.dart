@@ -7,8 +7,7 @@ import '../../../core/models/hydroponic/settings_model.dart';
 import '../../../core/utils/vitality_utils.dart';
 import '../domain/ai_insight_model.dart';
 
-import '../../../core/config/environment_config.dart';
-
+const _groqApiKey = 'YOUR_GROQ_API_KEY_HERE';
 const _groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
 
 // Free models available on Groq (pick one):
@@ -69,7 +68,7 @@ JSON Schema:
         Uri.parse(_groqApiUrl),
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': 'Bearer ${EnvironmentConfig.groqApiKey}',
+          'Authorization': 'Bearer $_groqApiKey',
         },
         body: jsonEncode({
           'model': _modelName,
