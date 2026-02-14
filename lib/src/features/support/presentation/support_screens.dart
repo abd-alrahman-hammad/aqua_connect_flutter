@@ -116,6 +116,7 @@ class _SupportScreenState extends State<SupportScreen> {
             includeBottomNav: false,
             currentScreen: AppScreen.support,
             onNavigate: widget.onNavigate,
+            scrollable: false,
             child: Column(
               children: [
                 _buildHeader(context),
