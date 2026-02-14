@@ -1,26 +1,20 @@
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
-
+import '../../../core/services/groq_service.dart';
 import '../../../core/models/hydroponic/sensors_model.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
 import '../../../core/utils/vitality_utils.dart';
 import '../domain/ai_insight_model.dart';
 
-const _groqApiKey = 'YOUR_GROQ_API_KEY_HERE';
-const _groqApiUrl = 'https://api.groq.com/openai/v1/chat/completions';
-
-// Free models available on Groq (pick one):
-// - llama-3.3-70b-versatile   (best quality, still free)
-// - llama3-8b-8192             (faster, lighter)
-// - gemma2-9b-it               (Google Gemma, good alternative)
-const _modelName = 'llama-3.3-70b-versatile';
-
-final groqInsightsServiceProvider = Provider<GroqInsightsService>((ref) {
-  return GroqInsightsService();
+final insightsRepositoryProvider = Provider<GroqInsightsService>((ref) {
+  return GroqInsightsService(GroqService());
 });
 
 class GroqInsightsService {
+  final GroqService _groqService;
+
+  GroqInsightsService(this._groqService);
+
   Future<AiInsightModel> generateInsight({
     required SensorsModel sensors,
     required SettingsModel settings,
@@ -64,46 +58,28 @@ JSON Schema:
 ''';
 
     try {
-      final response = await http.post(
-        Uri.parse(_groqApiUrl),
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': 'Bearer $_groqApiKey',
+      final messages = [
+        {
+          'role': 'system',
+          'content':
+              'You are a hydroponic system expert. Always respond with valid JSON only, no extra text.',
         },
-        body: jsonEncode({
-          'model': _modelName,
-          'messages': [
-            {
-              'role': 'system',
-              'content':
-                  'You are a hydroponic system expert. Always respond with valid JSON only, no extra text.',
-            },
-            {'role': 'user', 'content': prompt},
-          ],
-          'temperature': 0.7,
-          'max_tokens': 500,
-          // Force JSON output (supported by Groq)
-          'response_format': {'type': 'json_object'},
-        }),
+        {'role': 'user', 'content': prompt},
+      ];
+
+      final responseBody = await _groqService.sendRequest(
+        messages: messages,
+        jsonMode: true,
+        model: "llama-3.3-70b-versatile",
       );
 
-      if (response.statusCode != 200) {
-        final errorBody = jsonDecode(response.body);
-        throw Exception(
-          'Groq API error ${response.statusCode}: ${errorBody['error']?['message'] ?? response.body}',
-        );
-      }
-
-      final responseBody = jsonDecode(response.body) as Map<String, dynamic>;
       final content =
           responseBody['choices'][0]['message']['content'] as String;
 
       final cleanedJson = _cleanJson(content);
       return AiInsightModel.fromJson(_parseJson(cleanedJson));
-    } on http.ClientException catch (e) {
-      throw Exception('Network error: $e');
     } catch (e) {
-      rethrow;
+      throw Exception('Failed to generate insights: $e');
     }
   }
 

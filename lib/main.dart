@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 import 'src/app/app.dart';
 import 'src/core/config/firebase_initializer.dart';
@@ -13,6 +14,9 @@ Future<void> main() async {
   // Initialize Notifications
   final notificationService = NotificationService();
   await notificationService.initialize();
+
+  // Load environment variables
+  await dotenv.load(fileName: "assets/.env");
 
   // Request permissions immediately for this local-only implementation
   // In a real user flow, you might want to ask this on a specific screen,

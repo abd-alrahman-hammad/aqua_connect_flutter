@@ -50,7 +50,6 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
     super.dispose();
   }
 
-
   Future<void> _updatePassword() async {
     if (!_formKey.currentState!.validate()) return;
 
@@ -311,15 +310,6 @@ class SensorCalibrationScreen extends StatelessWidget {
                     icon: 'bolt',
                     color: AquaColors.warning,
                     onTap: () => onNavigate(AppScreen.calibrationEc),
-                  ),
-                  const SizedBox(height: 16),
-                  _SensorCard(
-                    name: 'Water Temp',
-                    value: '24.5°C',
-                    lastCal: '1 week ago',
-                    icon: 'device_thermostat',
-                    color: AquaColors.critical,
-                    onTap: () => onNavigate(AppScreen.calibrationTemp),
                   ),
                 ],
               ),

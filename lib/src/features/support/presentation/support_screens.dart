@@ -6,6 +6,7 @@ import '../../../core/theme/aqua_colors.dart';
 import '../../../core/widgets/aqua_header.dart';
 import '../../../core/widgets/aqua_page_scaffold.dart';
 import '../../../core/widgets/aqua_symbol.dart';
+import '../../chat/presentation/chat_screen.dart';
 
 class SupportScreen extends StatelessWidget {
   const SupportScreen({super.key, required this.onNavigate});
@@ -178,9 +179,11 @@ class SupportScreen extends StatelessWidget {
                   height: 56,
                   width: double.infinity,
                   child: ElevatedButton.icon(
-                    onPressed: () {},
+                    onPressed: () => Navigator.of(context).push(
+                      MaterialPageRoute(builder: (_) => const ChatScreen()),
+                    ),
                     icon: const AquaSymbol('smart_toy', color: Colors.white),
-                    label: const Text('Chat with Aqua AI'),
+                    label: const Text('Chat with Rayyan'),
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AquaColors.primary,
                       foregroundColor: Colors.white,

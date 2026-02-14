@@ -44,7 +44,7 @@ class InsightsState {
 
 final insightsProvider = StateNotifierProvider<InsightsNotifier, InsightsState>(
   (ref) {
-    final service = ref.watch(groqInsightsServiceProvider); // ✅ Changed
+    final service = ref.watch(insightsRepositoryProvider);
     return InsightsNotifier(service);
   },
 );
