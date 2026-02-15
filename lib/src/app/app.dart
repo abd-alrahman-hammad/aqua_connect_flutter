@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rayyan/src/features/alerts/presentation/alerts_screen.dart';
 
 import '../core/theme/aqua_theme.dart';
+import '../core/theme/theme_provider.dart';
 import '../features/analytics/presentation/analytics_screen.dart';
 import '../features/auth/presentation/auth_screens.dart';
 import '../features/controls/presentation/controls_screen.dart';
@@ -26,13 +27,14 @@ class RayyanApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final state = ref.watch(appControllerProvider);
+    final themeMode = ref.watch(themeProvider);
 
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Rayyan',
       theme: AquaTheme.light(),
       darkTheme: AquaTheme.dark(),
-      themeMode: state.isDark ? ThemeMode.dark : ThemeMode.light,
+      themeMode: themeMode,
       home: _AppRoot(screen: state.screen),
     );
   }
@@ -86,7 +88,12 @@ class _AppRoot extends ConsumerWidget {
         page = SettingsScreen(
           current: screen,
           onNavigate: controller.navigate,
-          onToggleTheme: controller.toggleTheme,
+          onToggleTheme: () {
+            final isDark = ref.read(themeProvider) == ThemeMode.dark;
+            ref
+                .read(themeProvider.notifier)
+                .setThemeMode(isDark ? ThemeMode.light : ThemeMode.dark);
+          },
           onToggleLanguage: controller.toggleLanguage,
         );
       case AppScreen.accountSecurity:

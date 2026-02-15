@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -27,25 +28,27 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   void initState() {
     super.initState();
 
-    // إعداد الأنيميشن (مدة ثانية ونصف للظهور الناعم)
+    // // 2. التعديل الحاسم: ننتظر رسم أول إطار ثم نخفي شاشة النظام
+    // // هذا يربط الشاشتين ببعضهما بدون أي فاصل زمني أو وميض
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   FlutterNativeSplash.remove();
+    // });
+
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
     );
 
-    // تأثير الظهور (Fade In)
     _fadeAnimation = Tween<double>(
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeIn));
 
-    // تأثير التكبير البسيط (Scale Up)
     _scaleAnimation = Tween<double>(
       begin: 0.8,
       end: 1.0,
     ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeOutBack));
 
-    // بدء الأنيميشن فوراً
     _controller.forward();
   }
 
@@ -59,17 +62,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final prefsService = ref.read(authPreferencesServiceProvider);
     final authService = ref.read(firebaseAuthServiceProvider);
 
-    // 1. Check "Remember Me" preference
     final rememberMe = await prefsService.getRememberMe();
 
     if (!rememberMe) {
-      // If user chose not to be remembered, sign out just in case
       await authService.signOut();
       widget.onNavigate(AppScreen.login);
       return;
     }
 
-    // 2. Check Authentication State
     final user = authService.currentUser;
 
     if (user == null) {
@@ -77,7 +77,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       return;
     }
 
-    // 3. Require email verification for auto-login
     if (!user.emailVerified) {
       await authService.signOut();
       widget.onNavigate(AppScreen.login);
@@ -89,20 +88,33 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    final brightness = MediaQuery.of(context).platformBrightness;
+    // الاعتماد على Theme.of لضمان التوافق مع الثيم
+    final brightness = Theme.of(context).brightness;
     final isDark = brightness == Brightness.dark;
 
     final backgroundColor = isDark
         ? AquaColors.backgroundDark
         : AquaColors.backgroundLight;
+
     final textColor = isDark ? Colors.white : AquaColors.slate900;
-    // جعلنا لون الشريط أفتح قليلاً ليتناسب مع التصميم الحديث
+    
+    final subTitleColor = isDark ? AquaColors.slate300 : AquaColors.slate500;
+
     final trackColor = isDark
         ? AquaColors.slate700.withOpacity(0.3)
         : AquaColors.slate200;
 
     return Scaffold(
       backgroundColor: backgroundColor,
+      // AppBar وهمي لضبط Status Bar
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        toolbarHeight: 0, 
+        systemOverlayStyle: isDark
+            ? SystemUiOverlayStyle.light
+            : SystemUiOverlayStyle.dark,
+      ),
       body: Stack(
         children: [
           _buildBackgroundBlobs(isDark),
@@ -114,22 +126,19 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // --- القسم المتحرك (اللوجو والنصوص) ---
                     FadeTransition(
                       opacity: _fadeAnimation,
                       child: ScaleTransition(
                         scale: _scaleAnimation,
                         child: Column(
                           children: [
-                            // اللوجو مع ظل خفيف ليعطيه عمقاً
-                            _buildLogo(),
+                            _buildLogo(isDark),
 
                             const SizedBox(height: 32),
 
                             Text(
                               'Rayyan',
                               style: GoogleFonts.manrope(
-                                // غيرت الخط لـ Manrope ليتناسب مع باقي التطبيق
                                 fontSize: 36,
                                 fontWeight: FontWeight.w800,
                                 color: textColor,
@@ -144,7 +153,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                               style: GoogleFonts.manrope(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
-                                color: AquaColors.slate500,
+                                color: subTitleColor,
                                 letterSpacing: 0.5,
                               ),
                             ),
@@ -155,7 +164,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
                     const SizedBox(height: 60),
 
-                    // شريط التحميل (منفصل عن أنيميشن اللوجو)
                     _buildProgressBar(trackColor),
                   ],
                 ),
@@ -167,11 +175,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     );
   }
 
-  Widget _buildLogo() {
+  Widget _buildLogo(bool isDark) {
     return Container(
       width: 160,
       height: 160,
-      // إضافة ظل خفيف جداً خلف اللوجو لبروزه
       decoration: BoxDecoration(
         shape: BoxShape.circle,
         boxShadow: [
@@ -184,9 +191,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         ],
       ),
       child: Image.asset(
-        'assets/logo/logo.png',
+        isDark 
+            ? 'assets/logo/logo.png' 
+            : 'assets/logo/logo.png',
         fit: BoxFit.contain,
-        // هذا السطر مهم جداً لتجنب الوميض، فهو يخفي الصورة حتى يتم تحميلها بالكامل
         frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
           if (wasSynchronouslyLoaded) return child;
           return AnimatedOpacity(
@@ -196,17 +204,20 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
             child: child,
           );
         },
+        errorBuilder: (context, error, stackTrace) {
+          return Image.asset('assets/logo/logo.png', fit: BoxFit.contain);
+        },
       ),
     );
   }
 
   Widget _buildProgressBar(Color trackColor) {
     return SizedBox(
-      width: 180, // جعلناه أصغر قليلاً لأناقة أكثر
+      width: 180,
       child: TweenAnimationBuilder<double>(
         tween: Tween<double>(begin: 0.0, end: 1.0),
         duration: const Duration(seconds: 3),
-        curve: Curves.easeInOutQuart, // حركة أنعم في البداية والنهاية
+        curve: Curves.easeInOutQuart,
         onEnd: _handleNavigation,
         builder: (context, value, child) {
           return ClipRRect(
@@ -217,7 +228,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               valueColor: const AlwaysStoppedAnimation<Color>(
                 AquaColors.primary,
               ),
-              minHeight: 4, // جعلناه أنحف
+              minHeight: 4,
             ),
           );
         },
@@ -226,7 +237,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   Widget _buildBackgroundBlobs(bool isDark) {
-    // تقليل الشفافية ليكون الخلفية هادئة أكثر
     final primaryBlobColor = AquaColors.primary.withOpacity(
       isDark ? 0.08 : 0.05,
     );
@@ -237,7 +247,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         Positioned(
           top: -100,
           left: -80,
-          child: _buildBlob(primaryBlobColor, 350), // تكبير الحجم قليلاً
+          child: _buildBlob(primaryBlobColor, 350),
         ),
         Positioned(
           bottom: -100,
@@ -257,7 +267,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         filter: ImageFilter.blur(
           sigmaX: 80,
           sigmaY: 80,
-        ), // زيادة التغبيش لنعومة أكثر
+        ),
         child: Container(
           decoration: const BoxDecoration(shape: BoxShape.circle),
         ),
