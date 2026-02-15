@@ -28,11 +28,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   void initState() {
     super.initState();
 
-    // // 2. التعديل الحاسم: ننتظر رسم أول إطار ثم نخفي شاشة النظام
-    // // هذا يربط الشاشتين ببعضهما بدون أي فاصل زمني أو وميض
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   FlutterNativeSplash.remove();
-    // });
 
     _controller = AnimationController(
       vsync: this,
