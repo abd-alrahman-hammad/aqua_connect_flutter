@@ -46,8 +46,7 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
         value = 'dark';
         break;
       case ThemeMode.system:
-      default:
-        value = 'system';
+      value = 'system';
         break;
     }
     await _prefs!.setString(_themeKey, value);
