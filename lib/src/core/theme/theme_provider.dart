@@ -49,6 +49,6 @@ class ThemeNotifier extends StateNotifier<ThemeMode> {
       value = 'system';
         break;
     }
-    await _prefs!.setString(_themeKey, value);
+    await _prefs.setString(_themeKey, value);
   }
 }
