@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_picker/image_picker.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/services/auth_preferences_service.dart';
@@ -29,8 +30,8 @@ class ProfileScreen extends ConsumerWidget {
     showDialog(
       context: context,
       builder: (dialogContext) => AlertDialog(
-        title: const Text('Sign Out'),
-        content: const Text('Are you sure you want to sign out?'),
+        title: Text(AppLocalizations.of(context)!.signOut),
+        content: Text(AppLocalizations.of(context)!.signOutConfirmationMessage),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
         actions: [
           TextButton(
@@ -51,7 +52,11 @@ class ProfileScreen extends ConsumerWidget {
                 if (context.mounted) {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(
-                      content: Text('Error signing out: $e'),
+                      content: Text(
+                        AppLocalizations.of(
+                          context,
+                        )!.errorSigningOut(e.toString()),
+                      ),
                       backgroundColor: AquaColors.critical,
                       behavior: SnackBarBehavior.floating,
                     ),
@@ -90,7 +95,9 @@ class ProfileScreen extends ConsumerWidget {
           userAsync.when(
             data: (user) {
               if (user == null) {
-                return const Center(child: Text('No user data found'));
+                return Center(
+                  child: Text(AppLocalizations.of(context)!.noUserData),
+                );
               }
               return SingleChildScrollView(
                 padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
@@ -161,7 +168,9 @@ class ProfileScreen extends ConsumerWidget {
             ),
             error: (e, st) => Padding(
               padding: const EdgeInsets.all(20.0),
-              child: Center(child: Text('Error: $e')),
+              child: Center(
+                child: Text('${AppLocalizations.of(context)!.error}: $e'),
+              ),
             ),
           ),
         ],
@@ -200,9 +209,11 @@ class _ProfileHeader extends ConsumerWidget {
               );
             } catch (e) {
               if (context.mounted) {
-                ScaffoldMessenger.of(
-                  context,
-                ).showSnackBar(SnackBar(content: Text('Error: $e')));
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(
+                    content: Text('${AppLocalizations.of(context)!.error}: $e'),
+                  ),
+                );
               }
             }
           },
@@ -315,9 +326,13 @@ class _ProfileImageState extends State<_ProfileImage> {
     } catch (e) {
       if (mounted) {
         setState(() => _isUploading = false);
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error picking image: $e')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)!.errorPickingImage(e.toString()),
+            ),
+          ),
+        );
       }
     }
   }

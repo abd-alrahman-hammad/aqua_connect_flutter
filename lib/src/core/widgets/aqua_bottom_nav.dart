@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 
 import '../../app/screens.dart';
+import '../../../l10n/generated/app_localizations.dart';
 import '../theme/aqua_colors.dart';
 import 'aqua_symbol.dart';
 
@@ -59,35 +60,35 @@ class AquaBottomNav extends StatelessWidget {
                       screen: AppScreen.dashboard,
                       current: current,
                       icon: 'grid_view',
-                      label: 'Home',
+                      label: AppLocalizations.of(context)!.home,
                       onTap: () => onNavigate(AppScreen.dashboard),
                     ),
                     _NavItem(
                       screen: AppScreen.controls,
                       current: current,
                       icon: 'settings_input_component',
-                      label: 'Controls',
+                      label: AppLocalizations.of(context)!.controls,
                       onTap: () => onNavigate(AppScreen.controls),
                     ),
                     _NavItem(
                       screen: AppScreen.vision,
                       current: current,
                       icon: 'filter_center_focus',
-                      label: 'Vision',
+                      label: AppLocalizations.of(context)!.vision,
                       onTap: () => onNavigate(AppScreen.vision),
                     ),
                     _NavItem(
                       screen: AppScreen.more,
                       current: current,
                       icon: 'apps',
-                      label: 'More',
+                      label: AppLocalizations.of(context)!.more,
                       onTap: () => onNavigate(AppScreen.more),
                     ),
                     _NavItem(
                       screen: AppScreen.settings,
                       current: current,
                       icon: 'settings',
-                      label: 'Settings',
+                      label: AppLocalizations.of(context)!.settings,
                       onTap: () => onNavigate(AppScreen.settings),
                     ),
                   ],

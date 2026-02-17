@@ -28,7 +28,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   void initState() {
     super.initState();
 
-
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(milliseconds: 1500),
@@ -92,11 +91,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         : AquaColors.backgroundLight;
 
     final textColor = isDark ? Colors.white : AquaColors.slate900;
-    
+
     final subTitleColor = isDark ? AquaColors.slate300 : AquaColors.slate500;
 
     final trackColor = isDark
-        ? AquaColors.slate700.withOpacity(0.3)
+        ? AquaColors.slate700.withValues(alpha: 0.3)
         : AquaColors.slate200;
 
     return Scaffold(
@@ -105,7 +104,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        toolbarHeight: 0, 
+        toolbarHeight: 0,
         systemOverlayStyle: isDark
             ? SystemUiOverlayStyle.light
             : SystemUiOverlayStyle.dark,
@@ -178,7 +177,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: AquaColors.primary.withOpacity(0.2),
+            color: AquaColors.primary.withValues(alpha: 0.2),
             blurRadius: 40,
             spreadRadius: -10,
             offset: const Offset(0, 10),
@@ -186,9 +185,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         ],
       ),
       child: Image.asset(
-        isDark 
-            ? 'assets/logo/logo.png' 
-            : 'assets/logo/logo.png',
+        isDark ? 'assets/logo/logo.png' : 'assets/logo/logo.png',
         fit: BoxFit.contain,
         frameBuilder: (context, child, frame, wasSynchronouslyLoaded) {
           if (wasSynchronouslyLoaded) return child;
@@ -232,10 +229,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   Widget _buildBackgroundBlobs(bool isDark) {
-    final primaryBlobColor = AquaColors.primary.withOpacity(
-      isDark ? 0.08 : 0.05,
+    final primaryBlobColor = AquaColors.primary.withValues(
+      alpha: isDark ? 0.08 : 0.05,
     );
-    final aquaBlobColor = AquaColors.aqua.withOpacity(isDark ? 0.08 : 0.05);
+    final aquaBlobColor = AquaColors.aqua.withValues(
+      alpha: isDark ? 0.08 : 0.05,
+    );
 
     return Stack(
       children: [
@@ -259,10 +258,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       height: size,
       decoration: BoxDecoration(shape: BoxShape.circle, color: color),
       child: BackdropFilter(
-        filter: ImageFilter.blur(
-          sigmaX: 80,
-          sigmaY: 80,
-        ),
+        filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
         child: Container(
           decoration: const BoxDecoration(shape: BoxShape.circle),
         ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
@@ -68,8 +69,10 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
           showDialog(
             context: context,
             builder: (context) => AlertDialog(
-              title: const Text('Success'),
-              content: const Text('Password updated successfully'),
+              title: Text(AppLocalizations.of(context)!.success),
+              content: Text(
+                AppLocalizations.of(context)!.passwordUpdatedSuccessfully,
+              ),
               actions: [
                 TextButton(
                   onPressed: () {
@@ -78,7 +81,7 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                     _newPasswordController.clear();
                     _confirmPasswordController.clear();
                   },
-                  child: const Text('OK'),
+                  child: Text(AppLocalizations.of(context)!.ok),
                 ),
               ],
             ),
@@ -91,12 +94,12 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
-            title: const Text('Error'),
+            title: Text(AppLocalizations.of(context)!.error),
             content: Text(message),
             actions: [
               TextButton(
                 onPressed: () => Navigator.of(context).pop(),
-                child: const Text('OK'),
+                child: Text(AppLocalizations.of(context)!.ok),
               ),
             ],
           ),
@@ -458,8 +461,12 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
                           await dbService.updateSettings(model);
                           if (mounted && messenger != null) {
                             messenger.showSnackBar(
-                              const SnackBar(
-                                content: Text('Thresholds saved successfully'),
+                              SnackBar(
+                                content: Text(
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.thresholdsSavedSuccessfully,
+                                ),
                               ),
                             );
                           }

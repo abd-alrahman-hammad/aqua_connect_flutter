@@ -4,6 +4,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'src/core/theme/theme_provider.dart';
+import 'src/core/localization/locale_provider.dart';
 
 import 'src/app/app.dart';
 import 'src/core/config/firebase_initializer.dart';
@@ -44,6 +45,7 @@ Future<void> main() async {
     ProviderScope(
       overrides: [
         themeProvider.overrideWith((ref) => ThemeNotifier(loadedTheme, prefs)),
+        localeProvider.overrideWith((ref) => LocaleNotifier(prefs)),
       ],
       child: const RayyanApp(),
     ),

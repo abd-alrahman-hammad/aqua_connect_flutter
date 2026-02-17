@@ -2,10 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rayyan/src/features/alerts/presentation/alerts_screen.dart';
 
+import '../../l10n/generated/app_localizations.dart';
 import '../core/theme/aqua_theme.dart';
 import '../core/theme/theme_provider.dart';
+import '../core/localization/locale_provider.dart';
 import '../features/analytics/presentation/analytics_screen.dart';
-import '../features/auth/presentation/auth_screens.dart';
+import '../features/auth/presentation/screens/login_screen.dart';
+import '../features/auth/presentation/screens/sign_up_screen.dart';
+import '../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../features/controls/presentation/controls_screen.dart';
 import '../features/dashboard/presentation/dashboard_screen.dart';
 import '../features/insights/presentation/insights_screen.dart';
@@ -29,12 +33,17 @@ class RayyanApp extends ConsumerWidget {
     final state = ref.watch(appControllerProvider);
     final themeMode = ref.watch(themeProvider);
 
+    final locale = ref.watch(localeProvider);
+
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Rayyan',
       theme: AquaTheme.light(),
       darkTheme: AquaTheme.dark(),
       themeMode: themeMode,
+      locale: locale,
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
       home: _AppRoot(screen: state.screen),
     );
   }
@@ -56,9 +65,9 @@ class _AppRoot extends ConsumerWidget {
       case AppScreen.login:
         page = LoginScreen(onNavigate: controller.navigate);
       case AppScreen.signup:
-        page = SignupScreen(onNavigate: controller.navigate);
+        page = const SignupScreen();
       case AppScreen.forgotPassword:
-        page = ForgotPasswordScreen(onNavigate: controller.navigate);
+        page = const ForgotPasswordScreen();
       case AppScreen.dashboard:
         page = DashboardScreen(
           current: screen,

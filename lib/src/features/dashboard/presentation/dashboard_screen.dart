@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/models/user_model.dart';
@@ -64,6 +65,7 @@ class DashboardScreen extends ConsumerWidget {
                   VitalityUtils.getVitalityMessage(
                     sensorsAsync.valueOrNull,
                     settingsAsync.valueOrNull,
+                    AppLocalizations.of(context)!,
                     isSystemOnline: isConnected,
                   ),
                   textAlign: TextAlign.center,
@@ -84,7 +86,7 @@ class DashboardScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      'Real-time Sensors',
+                      AppLocalizations.of(context)!.realTimeSensors,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w800,
                       ),
@@ -114,7 +116,9 @@ class DashboardScreen extends ConsumerWidget {
                           ),
                           const SizedBox(width: 6),
                           Text(
-                            isConnected ? 'ONLINE' : 'OFFLINE',
+                            isConnected
+                                ? AppLocalizations.of(context)!.online
+                                : AppLocalizations.of(context)!.offline,
                             style: Theme.of(context).textTheme.labelSmall
                                 ?.copyWith(
                                   color: isConnected
@@ -163,8 +167,11 @@ class DashboardScreen extends ConsumerWidget {
                           width: cardWidth,
                           icon: 'water_ph',
                           value: ValueFormatter.formatDouble(sensors?.ph),
-                          label: 'pH Level',
-                          badgeText: VitalityUtils.getStatusLabel(phStatus),
+                          label: AppLocalizations.of(context)!.phLevel,
+                          badgeText: VitalityUtils.getStatusLabel(
+                            phStatus,
+                            AppLocalizations.of(context)!,
+                          ),
                           statusColor: VitalityUtils.getStatusColor(phStatus),
                           iconColor: AquaColors.primary,
                           iconBg: AquaColors.primary.withValues(alpha: 0.10),
@@ -179,8 +186,11 @@ class DashboardScreen extends ConsumerWidget {
                           width: cardWidth,
                           icon: 'bolt',
                           value: ValueFormatter.formatDouble(sensors?.ec),
-                          label: 'EC (mS/cm)',
-                          badgeText: VitalityUtils.getStatusLabel(ecStatus),
+                          label: AppLocalizations.of(context)!.ecLevel,
+                          badgeText: VitalityUtils.getStatusLabel(
+                            ecStatus,
+                            AppLocalizations.of(context)!,
+                          ),
                           statusColor: VitalityUtils.getStatusColor(ecStatus),
                           iconColor: AquaColors.warning,
                           iconBg: AquaColors.warning.withValues(alpha: 0.10),
@@ -196,10 +206,13 @@ class DashboardScreen extends ConsumerWidget {
                           icon: 'device_thermostat',
                           value: ValueFormatter.formatWithSuffix(
                             sensors?.temperature,
-                            '°C',
+                            AppLocalizations.of(context)!.celsiusUnit,
                           ),
-                          label: 'Temperature',
-                          badgeText: VitalityUtils.getStatusLabel(tempStatus),
+                          label: AppLocalizations.of(context)!.temperature,
+                          badgeText: VitalityUtils.getStatusLabel(
+                            tempStatus,
+                            AppLocalizations.of(context)!,
+                          ),
                           statusColor: VitalityUtils.getStatusColor(tempStatus),
                           iconColor: AquaColors.info,
                           iconBg: AquaColors.info.withValues(alpha: 0.10),
@@ -216,8 +229,11 @@ class DashboardScreen extends ConsumerWidget {
                           value: ValueFormatter.formatPercent(
                             sensors?.waterLevel,
                           ),
-                          label: 'Water Level',
-                          badgeText: VitalityUtils.getStatusLabel(waterStatus),
+                          label: AppLocalizations.of(context)!.waterLevel,
+                          badgeText: VitalityUtils.getStatusLabel(
+                            waterStatus,
+                            AppLocalizations.of(context)!,
+                          ),
                           statusColor: VitalityUtils.getStatusColor(
                             waterStatus,
                           ),
@@ -302,7 +318,7 @@ class _TopNav extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            'WELCOME BACK,',
+                            AppLocalizations.of(context)!.welcomeBack,
                             style: Theme.of(context).textTheme.labelSmall
                                 ?.copyWith(
                                   fontSize: 10,
@@ -427,7 +443,7 @@ class _VitalityRing extends StatelessWidget {
               ),
               const SizedBox(height: 4),
               Text(
-                'VITALITY',
+                AppLocalizations.of(context)!.vitality,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: AquaColors.nature,
                   fontWeight: FontWeight.w800,

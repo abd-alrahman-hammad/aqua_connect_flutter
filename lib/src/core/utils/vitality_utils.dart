@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import '../models/hydroponic/sensors_model.dart';
 import '../models/hydroponic/settings_model.dart';
 import '../theme/aqua_colors.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 /// Enum representing the status of a single sensor
 enum SensorStatus { ok, warning, critical, unknown }
@@ -124,16 +125,16 @@ class VitalityUtils {
   }
 
   /// Returns the display text for a given status.
-  static String getStatusLabel(SensorStatus status) {
+  static String getStatusLabel(SensorStatus status, AppLocalizations loc) {
     switch (status) {
       case SensorStatus.ok:
-        return 'OK';
+        return loc.statusOk;
       case SensorStatus.warning:
-        return 'WARNING';
+        return loc.statusWarning;
       case SensorStatus.critical:
-        return 'CRITICAL';
+        return loc.statusCritical;
       case SensorStatus.unknown:
-        return '--';
+        return loc.statusUnknown;
     }
   }
 
@@ -154,15 +155,16 @@ class VitalityUtils {
   /// Generates a descriptive message based on the system's current vitality.
   static String getVitalityMessage(
     SensorsModel? sensors,
-    SettingsModel? settings, {
+    SettingsModel? settings,
+    AppLocalizations loc, {
     bool isSystemOnline = true,
   }) {
     if (!isSystemOnline) {
-      return 'System Offline\n This is the last data received. Please check your connection';
+      return loc.vitalitySystemOffline;
     }
 
     if (sensors == null || settings == null) {
-      return 'Waiting for data...';
+      return loc.vitalityWaitingForData;
     }
 
     final issues = <String>[];
@@ -170,31 +172,31 @@ class VitalityUtils {
     // Check Water Level
     final waterStatus = getWaterLevelStatus(sensors.waterLevel);
     if (waterStatus == SensorStatus.critical) {
-      issues.add('Critical: Low Water');
+      issues.add(loc.vitalityCriticalLowWater);
     } else if (waterStatus == SensorStatus.warning) {
-      issues.add('Low Water');
+      issues.add(loc.vitalityLowWater);
     }
 
     // Check Temperature
     final tempStatus = getTemperatureStatus(sensors.temperature, settings);
     if (tempStatus != SensorStatus.ok && tempStatus != SensorStatus.unknown) {
-      issues.add('Temp Unstable');
+      issues.add(loc.vitalityTempUnstable);
     }
 
     // Check pH
     final phStatus = getPhStatus(sensors.ph, settings);
     if (phStatus != SensorStatus.ok && phStatus != SensorStatus.unknown) {
-      issues.add('pH Unstable');
+      issues.add(loc.vitalityPhUnstable);
     }
 
     // Check EC
     final ecStatus = getEcStatus(sensors.ec, settings);
     if (ecStatus != SensorStatus.ok && ecStatus != SensorStatus.unknown) {
-      issues.add('Ec Unstable');
+      issues.add(loc.vitalityEcUnstable);
     }
 
     if (issues.isEmpty) {
-      return 'System Nominal';
+      return loc.vitalitySystemNominal;
     } else {
       return issues.join(" • ");
     }

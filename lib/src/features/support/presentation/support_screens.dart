@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/theme/aqua_colors.dart';
 import '../../../core/widgets/aqua_header.dart';
@@ -15,52 +16,16 @@ class FaqItem {
   const FaqItem({required this.question, required this.answer});
 }
 
-const _allFaqs = [
-  FaqItem(
-    question: 'What is the ideal pH range?',
-    answer:
-        'For most hydroponic plants, keep the pH between 5.5 and 6.5. Regular testing is essential for nutrient uptake.',
-  ),
-  FaqItem(
-    question: 'How do I maintain my pump?',
-    answer:
-        'Clean your pump monthly to prevent clogging. Ensure it is fully submerged at all times to avoid overheating.',
-  ),
-  FaqItem(
-    question: 'What is the best lighting schedule?',
-    answer:
-        'Leafy greens typically need 14-16 hours of light daily. Fruiting plants may require more specific cycles.',
-  ),
-  FaqItem(
-    question: 'How should I mix nutrients?',
-    answer:
-        'Always add nutrients to water, never mix them directly. Follow the order: Micro, Grow, then Bloom.',
-  ),
-  FaqItem(
-    question: 'How do I enable app notifications?',
-    answer:
-        'Go to Settings > Notifications to enable alerts for critical metrics like low water levels or pH imbalance.',
-  ),
-  FaqItem(
-    question: 'What is the ideal water temperature?',
-    answer:
-        'Maintain water temperature between 65°F and 70°F (18°C - 21°C). Too warm can lead to root rot; too cold slows growth.',
-  ),
-  FaqItem(
-    question: 'Why are my plant leaves turning yellow?',
-    answer:
-        'Yellow leaves often indicate nutrient deficiency (usually Nitrogen) or pH imbalance blocking nutrient uptake.',
-  ),
-  FaqItem(
-    question: 'How far apart should I space my plants?',
-    answer:
-        'Space lettuce and herbs 6-8 inches apart. Larger fruiting plants like tomatoes need 12-18 inches of space.',
-  ),
-  FaqItem(
-    question: 'How often should I clean the system?',
-    answer:
-        'Perform a full system flush and cleaning every 2-3 weeks to prevent algae buildup and salt accumulation.',
-  ),
+List<FaqItem> _getFaqs(AppLocalizations l10n) => [
+  FaqItem(question: l10n.faqQuestion1, answer: l10n.faqAnswer1),
+  FaqItem(question: l10n.faqQuestion2, answer: l10n.faqAnswer2),
+  FaqItem(question: l10n.faqQuestion3, answer: l10n.faqAnswer3),
+  FaqItem(question: l10n.faqQuestion4, answer: l10n.faqAnswer4),
+  FaqItem(question: l10n.faqQuestion5, answer: l10n.faqAnswer5),
+  FaqItem(question: l10n.faqQuestion6, answer: l10n.faqAnswer6),
+  FaqItem(question: l10n.faqQuestion7, answer: l10n.faqAnswer7),
+  FaqItem(question: l10n.faqQuestion8, answer: l10n.faqAnswer8),
+  FaqItem(question: l10n.faqQuestion9, answer: l10n.faqAnswer9),
 ];
 
 class SupportScreen extends StatefulWidget {
@@ -82,9 +47,10 @@ class _SupportScreenState extends State<SupportScreen> {
     super.dispose();
   }
 
-  List<FaqItem> get _filteredFaqs {
-    if (_searchText.isEmpty) return _allFaqs;
-    return _allFaqs
+  List<FaqItem> _filteredFaqs(AppLocalizations l10n) {
+    final allFaqs = _getFaqs(l10n);
+    if (_searchText.isEmpty) return allFaqs;
+    return allFaqs
         .where(
           (faq) =>
               faq.question.toLowerCase().contains(_searchText.toLowerCase()) ||
@@ -106,6 +72,8 @@ class _SupportScreenState extends State<SupportScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
+    final faqs = _filteredFaqs(l10n);
     return Scaffold(
       backgroundColor: isDark
           ? AquaColors.backgroundDark
@@ -128,13 +96,13 @@ class _SupportScreenState extends State<SupportScreen> {
                       children: [
                         if (!_isSearching) ...[
                           Text(
-                            'Video Guides',
+                            l10n.videoGuides,
                             style: Theme.of(context).textTheme.titleLarge
                                 ?.copyWith(fontWeight: FontWeight.w900),
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Visual walkthroughs for your system',
+                            l10n.visualWalkthroughs,
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(color: AquaColors.slate500),
                           ),
@@ -226,7 +194,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                       ),
                                       const SizedBox(height: 8),
                                       Text(
-                                        'Setting up your Reservoir',
+                                        l10n.settingUpReservoir,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodyMedium
@@ -235,7 +203,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                             ),
                                       ),
                                       Text(
-                                        'Automated nutrient mixing guide',
+                                        l10n.nutrientMixingGuide,
                                         style: Theme.of(context)
                                             .textTheme
                                             .bodySmall
@@ -253,24 +221,24 @@ class _SupportScreenState extends State<SupportScreen> {
                         ],
                         Text(
                           _isSearching
-                              ? 'Search Results'
-                              : 'Frequently Asked Questions',
+                              ? l10n.searchResults
+                              : l10n.frequentlyAskedQuestions,
                           style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
                         const SizedBox(height: 12),
-                        if (_filteredFaqs.isEmpty)
+                        if (faqs.isEmpty)
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 24),
                             child: Text(
-                              'No results found.',
+                              l10n.noResultsFound,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(color: AquaColors.slate500),
                             ),
                           )
                         else
-                          ..._filteredFaqs.map((faq) => _FaqTile(item: faq)),
+                          ...faqs.map((faq) => _FaqTile(item: faq)),
                       ],
                     ),
                   ),
@@ -294,7 +262,7 @@ class _SupportScreenState extends State<SupportScreen> {
                         MaterialPageRoute(builder: (_) => const ChatScreen()),
                       ),
                       icon: const AquaSymbol('smart_toy', color: Colors.white),
-                      label: const Text('Chat with Rayyan'),
+                      label: Text(l10n.chatWithRayyan),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: AquaColors.primary,
                         foregroundColor: Colors.white,
@@ -314,6 +282,7 @@ class _SupportScreenState extends State<SupportScreen> {
   }
 
   Widget _buildHeader(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     if (_isSearching) {
       final isDark = Theme.of(context).brightness == Brightness.dark;
       return Container(
@@ -340,23 +309,26 @@ class _SupportScreenState extends State<SupportScreen> {
                   controller: _searchController,
                   autofocus: true,
                   onChanged: (value) => setState(() => _searchText = value),
-                  decoration: const InputDecoration(
-                    hintText: 'Search FAQs...',
+                  decoration: InputDecoration(
+                    hintText: l10n.searchFaqsHint,
                     border: InputBorder.none,
-                    hintStyle: TextStyle(color: AquaColors.slate400),
-                    icon: AquaSymbol('search', color: AquaColors.slate400),
+                    hintStyle: const TextStyle(color: AquaColors.slate400),
+                    icon: const AquaSymbol(
+                      'search',
+                      color: AquaColors.slate400,
+                    ),
                   ),
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
               ),
-              TextButton(onPressed: _toggleSearch, child: const Text('Cancel')),
+              TextButton(onPressed: _toggleSearch, child: Text(l10n.cancel)),
             ],
           ),
         ),
       );
     }
     return AquaHeader(
-      title: 'Support & Learning',
+      title: l10n.supportAndLearning,
       onBack: () => widget.onNavigate(AppScreen.more),
       rightAction: IconButton(
         onPressed: _toggleSearch,

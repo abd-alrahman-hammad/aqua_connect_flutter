@@ -127,7 +127,7 @@ class FirebaseInitializer {
         'projectId': app.options.projectId,
         'databaseURL': app.options.databaseURL,
         'apiKey':
-            app.options.apiKey.substring(0, 10) + '...', // Obscure for security
+            '${app.options.apiKey.substring(0, 10)}...', // Obscure for security
       },
     };
   }

@@ -4,6 +4,7 @@ import '../../../core/theme/aqua_colors.dart';
 import '../../../core/widgets/aqua_header.dart';
 import '../application/chat_provider.dart';
 import '../domain/chat_message_model.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
   const ChatScreen({super.key});
@@ -65,7 +66,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
               top: MediaQuery.of(context).padding.top,
             ),
             child: AquaHeader(
-              title: 'Chat with Rayyan',
+              title: AppLocalizations.of(context)!.chatWithRayyan,
               onBack: () => Navigator.of(context).pop(),
             ),
           ),
@@ -74,7 +75,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             child: chatState.messages.isEmpty
                 ? Center(
                     child: Text(
-                      'Ask me about your hydroponic system!',
+                      AppLocalizations.of(context)!.askMeAboutHydroponic,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AquaColors.slate500,
                       ),
@@ -102,7 +103,9 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Text(
-                'Error: ${chatState.error}',
+                AppLocalizations.of(
+                  context,
+                )!.errorMessage(chatState.error.toString()),
                 style: const TextStyle(color: Colors.red),
               ),
             ),
@@ -212,7 +215,7 @@ class _ChatInput extends StatelessWidget {
               enabled: !isLoading,
               textCapitalization: TextCapitalization.sentences,
               decoration: InputDecoration(
-                hintText: 'Type your question...',
+                hintText: AppLocalizations.of(context)!.typeYourQuestion,
                 filled: true,
                 fillColor: isDark
                     ? AquaColors.surfaceDark

@@ -1,5 +1,7 @@
+import 'dart:ui';
 import 'dart:convert';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../core/services/groq_service.dart';
 import '../../../core/models/hydroponic/sensors_model.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
@@ -20,18 +22,28 @@ class GroqInsightsService {
     required SettingsModel settings,
     required String languageCode,
   }) async {
-    final statusMessage = VitalityUtils.getVitalityMessage(sensors, settings);
+    final loc = lookupAppLocalizations(Locale(languageCode.toLowerCase()));
+
+    final statusMessage = VitalityUtils.getVitalityMessage(
+      sensors,
+      settings,
+      loc,
+    );
     final waterStatus = VitalityUtils.getStatusLabel(
       VitalityUtils.getWaterLevelStatus(sensors.waterLevel),
+      loc,
     );
     final tempStatus = VitalityUtils.getStatusLabel(
       VitalityUtils.getTemperatureStatus(sensors.temperature, settings),
+      loc,
     );
     final phStatus = VitalityUtils.getStatusLabel(
       VitalityUtils.getPhStatus(sensors.ph, settings),
+      loc,
     );
     final ecStatus = VitalityUtils.getStatusLabel(
       VitalityUtils.getEcStatus(sensors.ec, settings),
+      loc,
     );
 
     final prompt =

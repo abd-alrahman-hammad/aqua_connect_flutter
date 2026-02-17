@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/theme/aqua_colors.dart';
@@ -28,7 +29,7 @@ class MoreScreen extends StatelessWidget {
         child: Column(
           children: [
             AquaHeader(
-              title: 'Menu',
+              title: AppLocalizations.of(context)!.menu,
               onBack: () => onNavigate(AppScreen.dashboard),
             ),
             Padding(
@@ -42,8 +43,8 @@ class MoreScreen extends StatelessWidget {
                 children: [
                   // الكرت الأول
                   _MenuCard(
-                    title: 'Analytics',
-                    subtitle: 'History & Trends',
+                    title: AppLocalizations.of(context)!.analytics,
+                    subtitle: AppLocalizations.of(context)!.historyAndTrends,
                     icon: 'monitoring',
                     color: AquaColors.info,
                     bg: AquaColors.info.withValues(alpha: 0.10),
@@ -52,8 +53,8 @@ class MoreScreen extends StatelessWidget {
                   const SizedBox(height: 18), // مسافة بين الكروت
                   // الكرت الثاني
                   _MenuCard(
-                    title: 'AI Insights',
-                    subtitle: 'Growth Predictions',
+                    title: AppLocalizations.of(context)!.aiInsights,
+                    subtitle: AppLocalizations.of(context)!.growthPredictions,
                     icon: 'psychology',
                     color: const Color(0xFF8B5CF6),
                     bg: const Color(0x1A8B5CF6),
@@ -65,8 +66,8 @@ class MoreScreen extends StatelessWidget {
 
                   // الكرت الرابع
                   _MenuCard(
-                    title: 'Support',
-                    subtitle: 'Help & Guides',
+                    title: AppLocalizations.of(context)!.support,
+                    subtitle: AppLocalizations.of(context)!.helpAndGuides,
                     icon: 'help',
                     color: AquaColors.nature,
                     bg: AquaColors.nature.withValues(alpha: 0.10),
@@ -77,7 +78,6 @@ class MoreScreen extends StatelessWidget {
             ),
             SizedBox(height: 190),
           ],
-          
         ),
       ),
     );
@@ -131,9 +131,9 @@ class _MenuCard extends StatelessWidget {
           ),
           child: Stack(
             children: [
-              Positioned(
+              PositionedDirectional(
                 top: -24,
-                right: -24,
+                end: -24,
                 child: Container(
                   width: 96,
                   height: 96,
@@ -178,9 +178,9 @@ class _MenuCard extends StatelessWidget {
                   ),
                 ],
               ),
-              const Positioned(
+              const PositionedDirectional(
                 bottom: 8,
-                right: 8,
+                end: 8,
                 child: AquaSymbol('arrow_forward', color: AquaColors.slate300),
               ),
             ],

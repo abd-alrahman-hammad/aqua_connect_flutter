@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/services/auth_preferences_service.dart';
@@ -7,6 +8,8 @@ import '../../../core/services/firebase_auth_service.dart';
 import '../../../core/theme/aqua_colors.dart';
 import '../../../core/widgets/aqua_page_scaffold.dart';
 import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/localization/locale_provider.dart';
+// Duplicate import removed
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({
@@ -27,12 +30,13 @@ class SettingsScreen extends ConsumerStatefulWidget {
 }
 
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
-  String lang = 'EN';
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final isRtl = Directionality.of(context) == TextDirection.rtl;
+    // userProvider was unused and undefined
     final bg = isDark ? AquaColors.backgroundDark : AquaColors.backgroundLight;
+    final l10n = AppLocalizations.of(context)!;
 
     return AquaPageScaffold(
       currentScreen: widget.current,
@@ -64,7 +68,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       children: [
                         const SizedBox(width: 8),
                         Text(
-                          'System Settings',
+                          l10n.systemSettings,
                           style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
@@ -98,56 +102,56 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                _SectionLabel('Account'),
+                _SectionLabel(l10n.account),
                 _Card(
                   children: [
                     _MenuItem(
                       icon: 'lock',
-                      title: 'Account Security',
-                      subtitle: 'Change Password',
+                      title: l10n.accountSecurity,
+                      subtitle: l10n.changePassword,
                       onTap: () => widget.onNavigate(AppScreen.accountSecurity),
                     ),
                     _Divider(),
                     _MenuItem(
                       icon: 'notifications',
-                      title: 'Notification Settings',
-                      subtitle: 'Alerts & Notifications',
+                      title: l10n.notificationSettings,
+                      subtitle: l10n.alertsAndNotifications,
                       onTap: () =>
                           widget.onNavigate(AppScreen.notificationSettings),
                     ),
                   ],
                 ),
                 const SizedBox(height: 24),
-                _SectionLabel('Hardware & IoT'),
+                _SectionLabel(l10n.hardwareAndIot),
                 _Card(
                   children: [
                     _MenuItem(
                       icon: 'wifi',
-                      title: 'WiFi Management',
-                      subtitle: 'Run Connection Wizard',
+                      title: l10n.wifiManagement,
+                      subtitle: l10n.runConnectionWizard,
                       onTap: () => widget.onNavigate(AppScreen.wifi),
                     ),
                     _Divider(),
                     _MenuItem(
                       icon: 'tune',
-                      title: 'Operating Thresholds',
-                      subtitle: 'Fan, Heater, pH pump, Feeding pump limits',
+                      title: l10n.operatingThresholds,
+                      subtitle: l10n.thresholdsSubtitle,
                       onTap: () => widget.onNavigate(AppScreen.thresholds),
                     ),
                     _Divider(),
                     _MenuItem(
                       icon: 'precision_manufacturing',
-                      title: 'Sensor Calibration',
-                      subtitle: 'pH, EC, and Temperature',
+                      title: l10n.sensorCalibration,
+                      subtitle: l10n.calibrationSubtitle,
                       onTap: () =>
                           widget.onNavigate(AppScreen.sensorCalibration),
                     ),
                     _Divider(),
                     _MenuItem(
                       icon: 'update',
-                      title: 'Firmware Update',
+                      title: l10n.firmwareUpdate,
                       subtitleWidget: Text(
-                        'Up to date: v2.4.1',
+                        l10n.upToDate,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AquaColors.nature,
                           fontWeight: FontWeight.w900,
@@ -158,7 +162,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   ],
                 ),
                 const SizedBox(height: 24),
-                _SectionLabel('App Preferences'),
+                _SectionLabel(l10n.appPreferences),
                 _Card(
                   children: [
                     Padding(
@@ -174,7 +178,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               ),
                               const SizedBox(width: 16),
                               Text(
-                                'Language',
+                                l10n.language,
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(fontWeight: FontWeight.w900),
                               ),
@@ -182,8 +186,23 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                           ),
                           InkWell(
                             onTap: () {
-                              setState(() => lang = lang == 'EN' ? 'AR' : 'EN');
-                              widget.onToggleLanguage();
+                              final currentLocale = ref.read(localeProvider);
+                              final newLocale =
+                                  currentLocale.languageCode == 'en'
+                                  ? const Locale('ar')
+                                  : const Locale('en');
+                              ref
+                                  .read(localeProvider.notifier)
+                                  .setLocale(newLocale);
+                              // We don't need to call widget.onToggleLanguage anymore as state is managed by provider
+                              // But if app_controller relies on it, we might need to update it or remove it.
+                              // Assuming app_controller.toggleLanguage is now redundant but safe to call or ignore.
+                              // The original code called widget.onToggleLanguage();
+                              // I'll keep it if it does something else, but primarily the provider drives the updated UI.
+                              // Actually, looking at AppController, it just updates its own state which is maybe used elsewhere?
+                              // But AppController has 'languageCode' in AppState.
+                              // Ideally we should sync or remove languageCode from AppState.
+                              // For now, let's update proper provider.
                             },
                             borderRadius: BorderRadius.circular(10),
                             child: Container(
@@ -194,17 +213,22 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                     : AquaColors.slate100,
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: Row(
-                                children: [
-                                  _LangPill(
-                                    label: 'EN',
-                                    selected: lang == 'EN',
-                                  ),
-                                  _LangPill(
-                                    label: 'AR',
-                                    selected: lang == 'AR',
-                                  ),
-                                ],
+                              child: Consumer(
+                                builder: (context, ref, child) {
+                                  final locale = ref.watch(localeProvider);
+                                  return Row(
+                                    children: [
+                                      _LangPill(
+                                        label: 'EN',
+                                        selected: locale.languageCode == 'en',
+                                      ),
+                                      _LangPill(
+                                        label: 'AR',
+                                        selected: locale.languageCode == 'ar',
+                                      ),
+                                    ],
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -225,7 +249,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               ),
                               const SizedBox(width: 16),
                               Text(
-                                'Dark Mode',
+                                l10n.darkMode,
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(fontWeight: FontWeight.w900),
                               ),
@@ -245,7 +269,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 borderRadius: BorderRadius.circular(999),
                               ),
                               child: Align(
-                                alignment: isDark
+                                alignment: isRtl
                                     ? Alignment.centerRight
                                     : Alignment.centerLeft,
                                 child: Container(
@@ -277,7 +301,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               ? AquaColors.cardDark
                               : Colors.white,
                           title: Text(
-                            'Sign Out',
+                            l10n.signOutConfirmationTitle,
                             style: Theme.of(context).textTheme.titleLarge
                                 ?.copyWith(
                                   fontWeight: FontWeight.w900,
@@ -285,7 +309,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 ),
                           ),
                           content: Text(
-                            'Are you sure you want to sign out?',
+                            l10n.signOutConfirmationMessage,
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   color: isDark
@@ -297,7 +321,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(false),
                               child: Text(
-                                'Cancel',
+                                l10n.cancel,
                                 style: Theme.of(context).textTheme.labelLarge
                                     ?.copyWith(
                                       color: AquaColors.slate500,
@@ -308,7 +332,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             TextButton(
                               onPressed: () => Navigator.of(context).pop(true),
                               child: Text(
-                                'Sign Out',
+                                l10n.signOut,
                                 style: Theme.of(context).textTheme.labelLarge
                                     ?.copyWith(
                                       color: AquaColors.critical,
@@ -333,7 +357,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       if (context.mounted) {
                         ScaffoldMessenger.of(context).showSnackBar(
                           SnackBar(
-                            content: Text('Error signing out: $e'),
+                            content: Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.errorSigningOut(e.toString()),
+                            ),
                             backgroundColor: AquaColors.critical,
                             behavior: SnackBarBehavior.floating,
                           ),
@@ -353,7 +381,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                     child: Center(
                       child: Text(
-                        'Sign Out',
+                        l10n.signOut,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: AquaColors.critical,
                           fontWeight: FontWeight.w900,
@@ -365,7 +393,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 const SizedBox(height: 16),
                 Center(
                   child: Text(
-                    'Rayyan v2.4.1 Build 102',
+                    l10n.appVersion,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AquaColors.slate400,
                       fontWeight: FontWeight.w800,

@@ -196,7 +196,7 @@ class NotificationService {
 
   void _handleNotificationTap(NotificationResponse response) {
     if (response.payload != null) {
-      print('Notification payload: ${response.payload}');
+      // Notification tap handled - payload: ${response.payload}
     }
   }
 

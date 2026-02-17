@@ -8,6 +8,7 @@ import '../../../core/utils/value_formatter.dart';
 import '../../../core/widgets/aqua_header.dart';
 import '../../../core/widgets/aqua_page_scaffold.dart';
 import '../../../core/widgets/aqua_symbol.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class ControlsScreen extends ConsumerStatefulWidget {
   const ControlsScreen({
@@ -41,7 +42,7 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
       child: Column(
         children: [
           AquaHeader(
-            title: 'Smart Controls',
+            title: AppLocalizations.of(context)!.smartControls,
             onBack: () => widget.onNavigate(AppScreen.dashboard),
             rightAction: InkWell(
               onTap: () => widget.onNavigate(AppScreen.wifi),
@@ -66,7 +67,9 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'System Operation Mode'.toUpperCase(),
+                    AppLocalizations.of(
+                      context,
+                    )!.systemOperationMode.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: isDark ? AquaColors.slate400 : AquaColors.slate500,
                       fontWeight: FontWeight.w800,
@@ -86,13 +89,13 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                     child: Row(
                       children: [
                         _ModeButton(
-                          label: 'Smart Auto',
+                          label: AppLocalizations.of(context)!.smartAuto,
                           active: autoMode,
                           isLoading: isLoading,
                           onTap: () => dbService.toggleAutoMode(true),
                         ),
                         _ModeButton(
-                          label: 'Manual Override',
+                          label: AppLocalizations.of(context)!.manualOverride,
                           active: isManualMode,
                           isLoading: isLoading,
                           onTap: () => dbService.toggleAutoMode(false),
@@ -105,7 +108,7 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        'Hardware Modules',
+                        AppLocalizations.of(context)!.hardwareModules,
                         style: Theme.of(context).textTheme.titleLarge?.copyWith(
                           fontWeight: FontWeight.w800,
                         ),
@@ -124,35 +127,35 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                     runSpacing: 16,
                     children: [
                       _ModuleCard(
-                        title: 'Water Pump',
+                        title: AppLocalizations.of(context)!.waterPump,
                         icon: 'water_drop',
                         active: controlsAsync.valueOrNull?.waterPump ?? false,
                         isEnabled: isManualMode && !isLoading,
                         onToggle: (value) => dbService.toggleWaterPump(value),
                       ),
                       _ModuleCard(
-                        title: 'Ventilation Fan',
+                        title: AppLocalizations.of(context)!.ventilationFan,
                         icon: 'mode_fan',
                         active: controlsAsync.valueOrNull?.fan ?? false,
                         isEnabled: isManualMode && !isLoading,
                         onToggle: (value) => dbService.toggleFan(value),
                       ),
                       _ModuleCard(
-                        title: 'Raise EC',
+                        title: AppLocalizations.of(context)!.raiseEc,
                         icon: 'science',
                         active: controlsAsync.valueOrNull?.pumpEcUp ?? false,
                         isEnabled: isManualMode && !isLoading,
                         onToggle: (value) => dbService.togglePumpEcUp(value),
                       ),
                       _ModuleCard(
-                        title: 'Lower EC',
+                        title: AppLocalizations.of(context)!.lowerEc,
                         icon: 'opacity',
                         active: controlsAsync.valueOrNull?.pumpEcDown ?? false,
                         isEnabled: isManualMode && !isLoading,
                         onToggle: (value) => dbService.togglePumpEcDown(value),
                       ),
                       _ModuleCard(
-                        title: 'Raise pH',
+                        title: AppLocalizations.of(context)!.raisePh,
                         // sub: 'Base Doser',
                         icon: 'keyboard_arrow_up',
                         active: controlsAsync.valueOrNull?.pumpPhUp ?? false,
@@ -160,14 +163,14 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                         onToggle: (value) => dbService.togglePumpPhUp(value),
                       ),
                       _ModuleCard(
-                        title: 'Lower pH',
+                        title: AppLocalizations.of(context)!.lowerPh,
                         icon: 'keyboard_arrow_down',
                         active: controlsAsync.valueOrNull?.pumpPhDown ?? false,
                         isEnabled: isManualMode && !isLoading,
                         onToggle: (value) => dbService.togglePumpPhDown(value),
                       ),
                       _ModuleCard(
-                        title: 'UV Light',
+                        title: AppLocalizations.of(context)!.uvLight,
                         icon: 'flare',
                         // Maps to ledLight as requested (UV Board)
                         active: ledLight,
@@ -175,7 +178,7 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                         onToggle: (value) => dbService.toggleLedLight(value),
                       ),
                       _ModuleCard(
-                        title: 'Heat Gen',
+                        title: AppLocalizations.of(context)!.heatGen,
                         icon: 'thermostat',
                         active: controlsAsync.valueOrNull?.heater ?? false,
                         isEnabled: isManualMode && !isLoading,
@@ -205,7 +208,9 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'Manual override is active. You control all modules at your own risk. Switch to Smart Auto for system-managed operation.',
+                              AppLocalizations.of(
+                                context,
+                              )!.manualOverrideWarning,
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     color: AquaColors.warning.withValues(
@@ -236,7 +241,7 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
-                              'Smart Auto mode: System controls all modules automatically. Switch to Manual Override to take control.',
+                              AppLocalizations.of(context)!.smartAutoInfo,
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
                                     color: AquaColors.primary.withValues(
@@ -349,7 +354,9 @@ class _ModuleCard extends StatelessWidget {
     final borderColor = active
         ? AquaColors.primary
         : (isDark ? Colors.white.withValues(alpha: 0.05) : AquaColors.slate200);
-    final status = active ? 'ON' : 'OFF';
+    final status = active
+        ? AppLocalizations.of(context)!.onStatus
+        : AppLocalizations.of(context)!.offStatus;
 
     return SizedBox(
       width: (MediaQuery.of(context).size.width - 16 * 2 - 16) / 2,
@@ -457,7 +464,6 @@ class _ModuleCard extends StatelessWidget {
                         letterSpacing: 0.8,
                       ),
                     ),
-                    
                   ],
                 ),
               ],

@@ -1,4 +1,6 @@
+import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../core/models/hydroponic/sensors_model.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
@@ -61,7 +63,13 @@ class InsightsNotifier extends StateNotifier<InsightsState> {
   }) async {
     if (state.isLoading) return;
 
-    final currentStatus = VitalityUtils.getVitalityMessage(sensors, settings);
+    final loc = lookupAppLocalizations(Locale(languageCode.toLowerCase()));
+
+    final currentStatus = VitalityUtils.getVitalityMessage(
+      sensors,
+      settings,
+      loc,
+    );
 
     state = state.copyWith(isLoading: true, error: null);
 
@@ -89,13 +97,22 @@ class InsightsNotifier extends StateNotifier<InsightsState> {
     }
   }
 
-  bool shouldAutoRefresh(SensorsModel current, SettingsModel settings) {
+  bool shouldAutoRefresh(
+    SensorsModel current,
+    SettingsModel settings,
+    String languageCode,
+  ) {
     if (state.lastFetchTime == null || state.lastAnalyzedSensors == null) {
       return true; // First load
     }
 
     final timeDiff = DateTime.now().difference(state.lastFetchTime!);
-    final currentStatus = VitalityUtils.getVitalityMessage(current, settings);
+    final loc = lookupAppLocalizations(Locale(languageCode.toLowerCase()));
+    final currentStatus = VitalityUtils.getVitalityMessage(
+      current,
+      settings,
+      loc,
+    );
 
     if (timeDiff.inMinutes < 5) {
       if (currentStatus != state.lastOverallStatus) return true;
@@ -105,11 +122,13 @@ class InsightsNotifier extends StateNotifier<InsightsState> {
     final last = state.lastAnalyzedSensors!;
 
     if (((current.ph ?? 0) - (last.ph ?? 0)).abs() > 0.3) return true;
-    if (((current.temperature ?? 0) - (last.temperature ?? 0)).abs() > 2.0)
+    if (((current.temperature ?? 0) - (last.temperature ?? 0)).abs() > 2.0) {
       return true;
+    }
     if (((current.ec ?? 0) - (last.ec ?? 0)).abs() > 0.3) return true;
-    if (((current.waterLevel ?? 0) - (last.waterLevel ?? 0)).abs() > 10)
+    if (((current.waterLevel ?? 0) - (last.waterLevel ?? 0)).abs() > 10) {
       return true;
+    }
 
     return false;
   }

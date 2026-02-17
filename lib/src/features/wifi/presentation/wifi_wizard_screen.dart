@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/theme/aqua_colors.dart';
@@ -43,7 +44,7 @@ class WiFiWizardScreen extends StatelessWidget {
                   ),
                   Expanded(
                     child: Text(
-                      'WiFi Setup',
+                      AppLocalizations.of(context)!.wifiSetup,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w900,
@@ -53,7 +54,7 @@ class WiFiWizardScreen extends StatelessWidget {
                   TextButton(
                     onPressed: () {},
                     child: Text(
-                      'Help',
+                      AppLocalizations.of(context)!.helpLabel,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AquaColors.primary,
                         fontWeight: FontWeight.w900,
@@ -69,12 +70,21 @@ class WiFiWizardScreen extends StatelessWidget {
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: const [
-                _StepPill(active: true, label: 'Discover'),
+              children: [
+                _StepPill(
+                  active: true,
+                  label: AppLocalizations.of(context)!.discoverStep,
+                ),
                 SizedBox(width: 12),
-                _StepPill(active: true, label: 'Network'),
+                _StepPill(
+                  active: true,
+                  label: AppLocalizations.of(context)!.networkStep,
+                ),
                 SizedBox(width: 12),
-                _StepPill(active: false, label: 'Finish'),
+                _StepPill(
+                  active: false,
+                  label: AppLocalizations.of(context)!.finishStep,
+                ),
               ],
             ),
           ),
@@ -85,14 +95,14 @@ class WiFiWizardScreen extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Text(
-                    'Select Network',
+                    AppLocalizations.of(context)!.selectNetwork,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w900,
                     ),
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Scanning for nearby networks. Select your 2.4GHz home network.',
+                    AppLocalizations.of(context)!.scanningSubtitle,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AquaColors.slate500,
                     ),
@@ -124,7 +134,9 @@ class WiFiWizardScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(width: 8),
                                 Text(
-                                  'Scanning for ESP32 module...',
+                                  AppLocalizations.of(
+                                    context,
+                                  )!.scanningForEsp32,
                                   style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(
                                         color: AquaColors.primary,
@@ -152,7 +164,7 @@ class WiFiWizardScreen extends StatelessWidget {
                                 ? Colors.white.withValues(alpha: 0.10)
                                 : AquaColors.slate200,
                             child: Align(
-                              alignment: Alignment.centerLeft,
+                              alignment: AlignmentDirectional.centerStart,
                               child: FractionallySizedBox(
                                 widthFactor: 0.75,
                                 child: Container(color: AquaColors.primary),
@@ -165,7 +177,9 @@ class WiFiWizardScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   Text(
-                    'Available Networks'.toUpperCase(),
+                    AppLocalizations.of(
+                      context,
+                    )!.availableNetworks.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AquaColors.slate400,
                       fontWeight: FontWeight.w900,
@@ -206,7 +220,7 @@ class WiFiWizardScreen extends StatelessWidget {
                       color: AquaColors.primary,
                     ),
                     label: Text(
-                      'Rescan for Networks',
+                      AppLocalizations.of(context)!.rescanForNetworks,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                         color: AquaColors.primary,
                         fontWeight: FontWeight.w900,
@@ -248,8 +262,10 @@ class WiFiWizardScreen extends StatelessWidget {
                       ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        children: const [
-                          Text('Connect to FarmHouse_Main_2G'),
+                        children: [
+                          Text(
+                            '${AppLocalizations.of(context)!.connectTo} FarmHouse_Main_2G',
+                          ),
                           SizedBox(width: 8),
                           AquaSymbol('arrow_forward', color: Colors.white),
                         ],

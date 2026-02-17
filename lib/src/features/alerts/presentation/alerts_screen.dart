@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/theme/aqua_colors.dart';
 import '../../../core/widgets/aqua_header.dart';
@@ -48,7 +49,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
       child: Column(
         children: [
           AquaHeader(
-            title: 'Alerts & Notifications',
+            title: AppLocalizations.of(context)!.alertsAndNotificationsTitle,
             onBack: () => widget.onNavigate(AppScreen.dashboard),
             rightAction: IconButton(
               onPressed: () {
@@ -95,13 +96,13 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           ),
           alignment: Alignment.centerRight,
           padding: const EdgeInsets.only(right: 20),
-          child: const Column(
+          child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Icon(Icons.delete_outline, color: Colors.white),
               SizedBox(height: 4),
               Text(
-                'Dismiss',
+                AppLocalizations.of(context)!.dismiss,
                 style: TextStyle(color: Colors.white, fontSize: 12),
               ),
             ],
@@ -111,10 +112,12 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           ref.read(alertsProvider.notifier).removeAlert(alert.id);
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
-              content: Text('${alert.title} dismissed'),
+              content: Text(
+                AppLocalizations.of(context)!.alertDismissed(alert.title),
+              ),
               behavior: SnackBarBehavior.floating,
               action: SnackBarAction(
-                label: 'UNDO',
+                label: AppLocalizations.of(context)!.undo,
                 onPressed: () {
                   ref.read(alertsProvider.notifier).addAlert(alert);
                 },
@@ -146,7 +149,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           ),
           const SizedBox(height: 24),
           Text(
-            'All Systems Nominal',
+            AppLocalizations.of(context)!.allSystemsNominal,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
               color: AquaColors.nature,
@@ -154,7 +157,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           ),
           const SizedBox(height: 8),
           Text(
-            'No active alerts or warnings at this time.',
+            AppLocalizations.of(context)!.noActiveAlerts,
             style: Theme.of(
               context,
             ).textTheme.bodyMedium?.copyWith(color: AquaColors.slate400),

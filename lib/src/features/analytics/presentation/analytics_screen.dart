@@ -2,7 +2,9 @@ import 'dart:math';
 
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/services/hydroponic_database_service.dart';
@@ -71,13 +73,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   // Get X-Axis title based on timestamp and range
   String _getXAxisTitle(double value, AnalyticsTimeRange range) {
     final date = DateTime.fromMillisecondsSinceEpoch(value.toInt());
+    final locale = Localizations.localeOf(context).toString();
 
     if (range == AnalyticsTimeRange.h24) {
-      // Show time (HH:mm)
-      return '${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}';
+      return DateFormat.Hm(locale).format(date);
     } else {
-      // Show date (MM/dd)
-      return '${date.month}/${date.day}';
+      return DateFormat.Md(locale).format(date);
     }
   }
 
@@ -103,10 +104,19 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       unit = 'mS/cm';
     } else if (tab == 'Temperature') {
       currentValue = sensors?.temperature ?? 24.0;
-      unit = '°C';
+      unit = AppLocalizations.of(context)!.celsiusUnit;
     }
 
     final chartColor = _getTabColor(tab);
+
+    final tabs = [
+      {'key': 'pH Level', 'label': AppLocalizations.of(context)!.phLevel},
+      {'key': 'EC Level', 'label': AppLocalizations.of(context)!.ecLevel},
+      {
+        'key': 'Temperature',
+        'label': AppLocalizations.of(context)!.temperature,
+      },
+    ];
 
     return AquaPageScaffold(
       includeBottomNav: false,
@@ -115,7 +125,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       child: Column(
         children: [
           AquaHeader(
-            title: 'Historical Analytics',
+            title: AppLocalizations.of(context)!.historicalAnalytics,
             onBack: () => widget.onNavigate(AppScreen.dashboard),
           ),
           // Tabs
@@ -133,10 +143,12 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
               scrollDirection: Axis.horizontal,
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Row(
-                children: ['pH Level', 'EC Level', 'Temperature'].map((t) {
-                  final active = tab == t;
+                children: tabs.map((t) {
+                  final key = t['key'] as String;
+                  final label = t['label'] as String;
+                  final active = tab == key;
                   return InkWell(
-                    onTap: () => setState(() => tab = t),
+                    onTap: () => setState(() => tab = key),
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(0, 16, 24, 12),
                       decoration: BoxDecoration(
@@ -148,7 +160,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                         ),
                       ),
                       child: Text(
-                        t,
+                        label,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.w800,
                           color: active
@@ -241,7 +253,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                '$tab (Live)',
+                                '$tab (${AppLocalizations.of(context)!.live})',
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
                                       color: isDark
@@ -282,7 +294,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  'Stable',
+                                  AppLocalizations.of(context)!.stable,
                                   style: Theme.of(context).textTheme.labelMedium
                                       ?.copyWith(
                                         color: AquaColors.nature,
@@ -302,7 +314,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             if (history.isEmpty) {
                               return Center(
                                 child: Text(
-                                  'No data available for this period',
+                                  AppLocalizations.of(context)!.noDataAvailable,
                                   style: Theme.of(context).textTheme.bodySmall,
                                 ),
                               );
@@ -415,16 +427,17 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           },
                           loading: () =>
                               const Center(child: CircularProgressIndicator()),
-                          error: (err, stack) =>
-                              Center(child: Text('Error loading chart')),
+                          error: (err, stack) => Center(
+                            child: Text(
+                              AppLocalizations.of(context)!.errorLoadingChart,
+                            ),
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
                 const SizedBox(height: 24),
-
-                
               ],
             ),
           ),
@@ -462,4 +475,3 @@ class _Card extends StatelessWidget {
     );
   }
 }
-

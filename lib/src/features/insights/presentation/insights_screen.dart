@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/app_controller.dart';
 import '../../../app/screens.dart';
@@ -44,7 +45,7 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
     final notifier = ref.read(insightsProvider.notifier);
     final appState = ref.read(appControllerProvider);
 
-    if (notifier.shouldAutoRefresh(sensors, settings)) {
+    if (notifier.shouldAutoRefresh(sensors, settings, appState.languageCode)) {
       notifier.fetchInsight(
         sensors: sensors,
         settings: settings,
@@ -56,7 +57,7 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
   @override
   Widget build(BuildContext context) {
     final appState = ref.watch(appControllerProvider);
-    final isDark = appState.isDark;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final sensorsAsync = ref.watch(sensorsStreamProvider);
     final settingsAsync = ref.watch(settingsStreamProvider);
@@ -128,16 +129,16 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
 
     final statusColor = VitalityUtils.getStatusColor(overallStatus);
     final systemStatusMessage = overallStatus == SensorStatus.critical
-        ? 'System Critical'
+        ? AppLocalizations.of(context)!.systemCritical
         : overallStatus == SensorStatus.warning
-        ? 'System Warning'
-        : 'System Optimal';
+        ? AppLocalizations.of(context)!.systemWarning
+        : AppLocalizations.of(context)!.systemOptimal;
 
     final systemStatusDescription = overallStatus == SensorStatus.critical
-        ? 'Low water levels detected. Nutrient balance is severely compromised.'
+        ? AppLocalizations.of(context)!.systemCriticalDescription
         : overallStatus == SensorStatus.warning
-        ? 'Some readings are out of optimal range. Check sensors.'
-        : 'All systems are functioning within optimal parameters.';
+        ? AppLocalizations.of(context)!.systemWarningDescription
+        : AppLocalizations.of(context)!.systemOptimalDescription;
 
     return AquaPageScaffold(
       includeBottomNav: false,
@@ -146,7 +147,7 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
       child: Column(
         children: [
           AquaHeader(
-            title: 'AI Insights',
+            title: AppLocalizations.of(context)!.aiInsights,
             onBack: () => widget.onNavigate(AppScreen.more),
             rightAction: IconButton(
               icon: const AquaSymbol('sync', color: AquaColors.primary),
@@ -211,7 +212,7 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
                 // 3. Analysis Section
                 _SectionHeader(
                   icon: 'analytics',
-                  title: 'ANALYSIS',
+                  title: AppLocalizations.of(context)!.analysis,
                   isDark: isDark,
                 ),
                 const SizedBox(height: 12),
@@ -225,7 +226,7 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
                 // 4. Action Required Section
                 _SectionHeader(
                   icon: 'error', // explicit error icon for Action Required
-                  title: 'ACTION REQUIRED',
+                  title: AppLocalizations.of(context)!.actionRequired,
                   color: AquaColors.critical,
                   isDark: isDark,
                 ),
@@ -329,7 +330,7 @@ class _SensorGrid extends StatelessWidget {
           children: [
             Expanded(
               child: _SensorCard(
-                label: 'PH LEVEL',
+                label: AppLocalizations.of(context)!.phLevel,
                 value: sensors.ph?.toStringAsFixed(1) ?? '--',
                 unit: ' pH',
                 status: VitalityUtils.getPhStatus(sensors.ph, settings),
@@ -339,7 +340,7 @@ class _SensorGrid extends StatelessWidget {
             const SizedBox(width: 16),
             Expanded(
               child: _SensorCard(
-                label: 'EC',
+                label: AppLocalizations.of(context)!.ecLevel,
                 value: sensors.ec?.toStringAsFixed(1) ?? '--',
                 unit: ' µs',
                 status: VitalityUtils.getEcStatus(sensors.ec, settings),
@@ -353,7 +354,7 @@ class _SensorGrid extends StatelessWidget {
           children: [
             Expanded(
               child: _SensorCard(
-                label: 'TEMPERATURE',
+                label: AppLocalizations.of(context)!.temperature,
                 value: sensors.temperature?.toStringAsFixed(1) ?? '--',
                 unit: '°C',
                 status: VitalityUtils.getTemperatureStatus(
@@ -366,7 +367,7 @@ class _SensorGrid extends StatelessWidget {
             const SizedBox(width: 16),
             Expanded(
               child: _SensorCard(
-                label: 'WATER LEVEL',
+                label: AppLocalizations.of(context)!.waterLevel,
                 value: '${sensors.waterLevel ?? '--'}',
                 unit: '%',
                 status: VitalityUtils.getWaterLevelStatus(sensors.waterLevel),
@@ -530,7 +531,7 @@ class _ContentCard extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
-          'Waiting for insights...',
+          AppLocalizations.of(context)!.waitingForInsights,
           style: TextStyle(
             color: isDark ? AquaColors.slate500 : AquaColors.slate400,
           ),
