@@ -90,7 +90,9 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
       }
     } catch (e) {
       if (mounted) {
-        final message = e is AuthException ? e.message : 'Something went wrong';
+        final message = e is AuthException
+            ? e.message
+            : AppLocalizations.of(context)!.somethingWentWrong;
         showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -116,7 +118,7 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
       body: Column(
         children: [
           AquaHeader(
-            title: 'Account Security',
+            title: AppLocalizations.of(context)!.accountSecurityTitle,
             onBack: () => widget.onNavigate(AppScreen.settings),
           ),
           Expanded(
@@ -132,17 +134,21 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                         crossAxisAlignment: CrossAxisAlignment.stretch,
                         children: [
                           Text(
-                            'Change Password',
+                            AppLocalizations.of(context)!.changePasswordTitle,
                             style: Theme.of(context).textTheme.titleLarge
                                 ?.copyWith(fontWeight: FontWeight.w900),
                           ),
                           const SizedBox(height: 16),
                           _Field(
-                            label: 'Current Password',
+                            label: AppLocalizations.of(
+                              context,
+                            )!.currentPassword,
                             obscure: !_currentPasswordVisible,
                             controller: _currentPasswordController,
                             validator: (v) => (v == null || v.isEmpty)
-                                ? 'Please enter your current password'
+                                ? AppLocalizations.of(
+                                    context,
+                                  )!.pleaseEnterCurrentPassword
                                 : null,
                             suffixIcon: IconButton(
                               onPressed: () => setState(
@@ -159,15 +165,19 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                           ),
                           const SizedBox(height: 12),
                           _Field(
-                            label: 'New Password',
+                            label: AppLocalizations.of(context)!.newPassword,
                             obscure: !_newPasswordVisible,
                             controller: _newPasswordController,
                             validator: (v) {
                               if (v == null || v.isEmpty) {
-                                return 'Please enter a new password';
+                                return AppLocalizations.of(
+                                  context,
+                                )!.pleaseEnterNewPassword;
                               }
                               if (v.length < 8) {
-                                return 'Password must be at least 8 characters';
+                                return AppLocalizations.of(
+                                  context,
+                                )!.passwordMinLength;
                               }
                               return null;
                             },
@@ -186,15 +196,21 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                           ),
                           const SizedBox(height: 12),
                           _Field(
-                            label: 'Confirm New Password',
+                            label: AppLocalizations.of(
+                              context,
+                            )!.confirmNewPassword,
                             obscure: !_confirmPasswordVisible,
                             controller: _confirmPasswordController,
                             validator: (v) {
                               if (v == null || v.isEmpty) {
-                                return 'Please confirm your new password';
+                                return AppLocalizations.of(
+                                  context,
+                                )!.pleaseConfirmPassword;
                               }
                               if (v != _newPasswordController.text) {
-                                return 'Passwords do not match';
+                                return AppLocalizations.of(
+                                  context,
+                                )!.passwordsMismatch;
                               }
                               return null;
                             },
@@ -224,7 +240,11 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                                 ),
                               ),
                               child: Text(
-                                _isLoading ? 'Updating...' : 'Update Password',
+                                _isLoading
+                                    ? AppLocalizations.of(context)!.updating
+                                    : AppLocalizations.of(
+                                        context,
+                                      )!.updatePasswordButton,
                               ),
                             ),
                           ),
@@ -252,12 +272,12 @@ class SensorCalibrationScreen extends StatelessWidget {
       body: Column(
         children: [
           AquaHeader(
-            title: 'Sensor Calibration',
+            title: AppLocalizations.of(context)!.sensorCalibrationTitle,
             onBack: () => onNavigate(AppScreen.settings),
             rightAction: Padding(
               padding: const EdgeInsets.only(right: 8),
               child: Text(
-                'Log',
+                AppLocalizations.of(context)!.logLabel,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                   color: AquaColors.primary,
                   fontWeight: FontWeight.w900,
@@ -285,7 +305,9 @@ class SensorCalibrationScreen extends StatelessWidget {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'For accurate readings, calibrate sensors monthly using standard buffer solutions.',
+                            AppLocalizations.of(
+                              context,
+                            )!.calibrationInfoMessage,
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   color: AquaColors.slate600,
@@ -298,18 +320,18 @@ class SensorCalibrationScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 24),
                   _SensorCard(
-                    name: 'pH Sensor',
+                    name: AppLocalizations.of(context)!.phSensor,
                     value: '6.2 pH',
-                    lastCal: '2 days ago',
+                    lastCal: AppLocalizations.of(context)!.daysAgo2,
                     icon: 'water_ph',
                     color: AquaColors.info,
                     onTap: () => onNavigate(AppScreen.calibrationPh),
                   ),
                   const SizedBox(height: 16),
                   _SensorCard(
-                    name: 'EC Sensor',
+                    name: AppLocalizations.of(context)!.ecSensor,
                     value: '1.8 mS',
-                    lastCal: '5 days ago',
+                    lastCal: AppLocalizations.of(context)!.daysAgo5,
                     icon: 'bolt',
                     color: AquaColors.warning,
                     onTap: () => onNavigate(AppScreen.calibrationEc),
@@ -384,7 +406,7 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
       body: Column(
         children: [
           AquaHeader(
-            title: 'Operating Thresholds',
+            title: AppLocalizations.of(context)!.operatingThresholdsTitle,
             onBack: () => widget.onNavigate(AppScreen.settings),
           ),
           Expanded(
@@ -408,7 +430,7 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
-                            'These limits control when fans, heaters, and pumps operate automatically.',
+                            AppLocalizations.of(context)!.thresholdsInfoMessage,
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   color: isDark
@@ -532,48 +554,48 @@ class _ThresholdsForm extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _ThresholdField(
-            label: 'Fan Limit (temp_high)',
-            hint: '°C - Fan operating limit',
+            label: AppLocalizations.of(context)!.fanLimitHighLabel,
+            hint: AppLocalizations.of(context)!.fanLimitHighHint,
             controller: tempHighController,
             enabled: !isLoading,
             placeholder: ValueFormatter.nullPlaceholder,
           ),
           const SizedBox(height: 16),
           _ThresholdField(
-            label: 'Heater Limit (temp_low)',
-            hint: '°C - Heater operating limit',
+            label: AppLocalizations.of(context)!.heaterLimitLowLabel,
+            hint: AppLocalizations.of(context)!.heaterLimitLowHint,
             controller: tempLowController,
             enabled: !isLoading,
             placeholder: ValueFormatter.nullPlaceholder,
           ),
           const SizedBox(height: 16),
           _ThresholdField(
-            label: 'pH Pump Limit (ph_high)',
-            hint: 'pH - pH pump operating limit',
+            label: AppLocalizations.of(context)!.phHighLimitLabel,
+            hint: AppLocalizations.of(context)!.phHighLimitHint,
             controller: phHighController,
             enabled: !isLoading,
             placeholder: ValueFormatter.nullPlaceholder,
           ),
           const SizedBox(height: 16),
           _ThresholdField(
-            label: 'pH Pump Limit (ph_low)',
-            hint: 'pH - pH lower bound',
+            label: AppLocalizations.of(context)!.phLowLimitLabel,
+            hint: AppLocalizations.of(context)!.phLowLimitHint,
             controller: phLowController,
             enabled: !isLoading,
             placeholder: ValueFormatter.nullPlaceholder,
           ),
           const SizedBox(height: 16),
           _ThresholdField(
-            label: 'Feeding Pump Limit (ec_high)',
-            hint: 'mS/cm - Feeding pump off limit',
+            label: AppLocalizations.of(context)!.ecHighLimitLabel,
+            hint: AppLocalizations.of(context)!.ecHighLimitHint,
             controller: ecHighController,
             enabled: !isLoading,
             placeholder: ValueFormatter.nullPlaceholder,
           ),
           const SizedBox(height: 16),
           _ThresholdField(
-            label: 'Feeding Pump Limit (ec_low)',
-            hint: 'mS/cm - Feeding pump operating limit',
+            label: AppLocalizations.of(context)!.ecLowLimitLabel,
+            hint: AppLocalizations.of(context)!.ecLowLimitHint,
             controller: ecLowController,
             enabled: !isLoading,
             placeholder: ValueFormatter.nullPlaceholder,
@@ -591,7 +613,9 @@ class _ThresholdsForm extends StatelessWidget {
                 ),
               ),
               child: Text(
-                isLoading ? ValueFormatter.nullPlaceholder : 'Save Thresholds',
+                isLoading
+                    ? ValueFormatter.nullPlaceholder
+                    : AppLocalizations.of(context)!.saveThresholds,
                 style: const TextStyle(fontWeight: FontWeight.w900),
               ),
             ),
@@ -679,7 +703,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
       body: Column(
         children: [
           AquaHeader(
-            title: 'pH Calibration',
+            title: AppLocalizations.of(context)!.phCalibrationTitle,
             onBack: () => widget.onNavigate(AppScreen.sensorCalibration),
           ),
           Expanded(
@@ -688,7 +712,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
               child: Column(
                 children: [
                   Text(
-                    'Current Reading'.toUpperCase(),
+                    AppLocalizations.of(context)!.currentReading.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AquaColors.slate400,
                       fontWeight: FontWeight.w900,
@@ -745,7 +769,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          'Signal Stable',
+                          AppLocalizations.of(context)!.signalStable,
                           style: Theme.of(context).textTheme.labelMedium
                               ?.copyWith(
                                 color: AquaColors.slate500,
@@ -761,7 +785,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Calibration Wizard',
+                          AppLocalizations.of(context)!.calibrationWizard,
                           style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
@@ -769,23 +793,28 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                         _WizardStep(
                           idx: 0,
                           step: step,
-                          title: 'Prepare Buffer 7.0',
-                          subtitle:
-                              'Clean probe with distilled water and place in pH 7.0 solution.',
+                          title: AppLocalizations.of(context)!.prepareBuffer7,
+                          subtitle: AppLocalizations.of(
+                            context,
+                          )!.prepareBuffer7Sub,
                         ),
                         _WizardStep(
                           idx: 1,
                           step: step,
-                          title: 'Prepare Buffer 4.0',
-                          subtitle:
-                              'Rinse probe again and place in pH 4.0 solution.',
+                          title: AppLocalizations.of(context)!.prepareBuffer4,
+                          subtitle: AppLocalizations.of(
+                            context,
+                          )!.prepareBuffer4Sub,
                         ),
                         _WizardStep(
                           idx: 2,
                           step: step,
-                          title: 'Finalize',
-                          subtitle:
-                              'Save new calibration data to flash memory.',
+                          title: AppLocalizations.of(
+                            context,
+                          )!.finalizeCalibration,
+                          subtitle: AppLocalizations.of(
+                            context,
+                          )!.finalizeCalibrationSub,
                         ),
                         const SizedBox(height: 16),
                         SizedBox(
@@ -807,10 +836,16 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                             ),
                             child: Text(
                               step == 0
-                                  ? 'Calibrate Point 7.0'
+                                  ? AppLocalizations.of(
+                                      context,
+                                    )!.calibratePoint7
                                   : step == 1
-                                  ? 'Calibrate Point 4.0'
-                                  : 'Save Calibration',
+                                  ? AppLocalizations.of(
+                                      context,
+                                    )!.calibratePoint4
+                                  : AppLocalizations.of(
+                                      context,
+                                    )!.saveCalibration,
                               style: const TextStyle(
                                 fontWeight: FontWeight.w900,
                               ),
@@ -840,7 +875,7 @@ class EcCalibrationScreen extends StatelessWidget {
       body: Column(
         children: [
           AquaHeader(
-            title: 'EC Calibration',
+            title: AppLocalizations.of(context)!.ecCalibrationTitle,
             onBack: () => onNavigate(AppScreen.sensorCalibration),
           ),
           Expanded(
@@ -849,7 +884,9 @@ class EcCalibrationScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Text(
-                    'Current Conductivity'.toUpperCase(),
+                    AppLocalizations.of(
+                      context,
+                    )!.currentConductivity.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AquaColors.slate400,
                       fontWeight: FontWeight.w900,
@@ -905,7 +942,7 @@ class EcCalibrationScreen extends StatelessWidget {
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
-                                  'Ensure the probe is clean and free of organic buildup before calibrating.',
+                                  AppLocalizations.of(context)!.ecProbeWarning,
                                   style: Theme.of(context).textTheme.bodySmall
                                       ?.copyWith(color: AquaColors.warning),
                                 ),
@@ -915,14 +952,20 @@ class EcCalibrationScreen extends StatelessWidget {
                         ),
                         const SizedBox(height: 16),
                         _SelectRow(
-                          title: 'Calibration Standard',
-                          value: '1.413 mS/cm (Standard)',
+                          title: AppLocalizations.of(
+                            context,
+                          )!.calibrationStandard,
+                          value: AppLocalizations.of(
+                            context,
+                          )!.calibrationStandardValue,
                         ),
                         const SizedBox(height: 12),
                         _SelectRow(
-                          title: 'Temperature Compensation',
-                          value: '2.0% / °C',
-                          trailing: 'Fixed',
+                          title: AppLocalizations.of(context)!.tempCompensation,
+                          value: AppLocalizations.of(
+                            context,
+                          )!.tempCompensationValue,
+                          trailing: AppLocalizations.of(context)!.fixedLabel,
                         ),
                         const SizedBox(height: 20),
                         SizedBox(
@@ -937,9 +980,13 @@ class EcCalibrationScreen extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Start 1-Point Calibration',
-                              style: TextStyle(fontWeight: FontWeight.w900),
+                            child: Text(
+                              AppLocalizations.of(
+                                context,
+                              )!.startOnePointCalibration,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                           ),
                         ),
@@ -947,7 +994,7 @@ class EcCalibrationScreen extends StatelessWidget {
                           onPressed: () =>
                               onNavigate(AppScreen.sensorCalibration),
                           child: Text(
-                            'Cancel',
+                            AppLocalizations.of(context)!.cancel,
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   color: AquaColors.slate500,
@@ -983,7 +1030,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
       body: Column(
         children: [
           AquaHeader(
-            title: 'Temp Calibration',
+            title: AppLocalizations.of(context)!.tempCalibrationTitle,
             onBack: () => widget.onNavigate(AppScreen.sensorCalibration),
           ),
           Expanded(
@@ -992,7 +1039,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
               child: Column(
                 children: [
                   Text(
-                    'Sensor Reading'.toUpperCase(),
+                    AppLocalizations.of(context)!.sensorReading.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AquaColors.slate400,
                       fontWeight: FontWeight.w900,
@@ -1028,7 +1075,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                   ),
                   const SizedBox(height: 8),
                   Text(
-                    'Raw Value: 24.5°C',
+                    AppLocalizations.of(context)!.rawValue('24.5'),
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
                       color: AquaColors.slate500,
                       fontWeight: FontWeight.w900,
@@ -1040,13 +1087,13 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Manual Offset Adjustment',
+                          AppLocalizations.of(context)!.manualOffsetAdjustment,
                           style: Theme.of(context).textTheme.titleLarge
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Use a certified reference thermometer to determine the offset required.',
+                          AppLocalizations.of(context)!.offsetInstructions,
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: AquaColors.slate500),
                         ),
@@ -1080,7 +1127,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                                         ?.copyWith(fontWeight: FontWeight.w900),
                                   ),
                                   Text(
-                                    'OFFSET °C',
+                                    AppLocalizations.of(context)!.offsetLabel,
                                     style: Theme.of(context)
                                         .textTheme
                                         .labelSmall
@@ -1116,9 +1163,11 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                                 borderRadius: BorderRadius.circular(12),
                               ),
                             ),
-                            child: const Text(
-                              'Apply Offset',
-                              style: TextStyle(fontWeight: FontWeight.w900),
+                            child: Text(
+                              AppLocalizations.of(context)!.applyOffset,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w900,
+                              ),
                             ),
                           ),
                         ),
@@ -1145,7 +1194,7 @@ class FirmwareUpdateScreen extends StatelessWidget {
       body: Column(
         children: [
           AquaHeader(
-            title: 'Firmware Update',
+            title: AppLocalizations.of(context)!.firmwareUpdateTitle,
             onBack: () => onNavigate(AppScreen.settings),
           ),
           Expanded(
@@ -1193,14 +1242,14 @@ class FirmwareUpdateScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 16),
                   Text(
-                    'System is Up to Date',
+                    AppLocalizations.of(context)!.systemUpToDate,
                     style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.w900,
                     ),
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    'Installed Version: v2.4.1',
+                    AppLocalizations.of(context)!.installedVersion('v2.4.1'),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       color: AquaColors.slate500,
                       fontWeight: FontWeight.w600,
@@ -1212,20 +1261,22 @@ class FirmwareUpdateScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
-                          'Changelog v2.4.1',
+                          AppLocalizations.of(
+                            context,
+                          )!.changelogTitle('v2.4.1'),
                           style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(fontWeight: FontWeight.w900),
                         ),
                         const SizedBox(height: 4),
                         Text(
-                          'Released Oct 24, 2023',
+                          AppLocalizations.of(context)!.releasedDate,
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: AquaColors.slate400),
                         ),
                         const SizedBox(height: 16),
-                        _Bullet('Improved pH sensor stability algorithm'),
-                        _Bullet('New "Eco Mode" for lighting schedule'),
-                        _Bullet('Bug fixes for WiFi reconnection logic'),
+                        _Bullet(AppLocalizations.of(context)!.changelogItem1),
+                        _Bullet(AppLocalizations.of(context)!.changelogItem2),
+                        _Bullet(AppLocalizations.of(context)!.changelogItem3),
                       ],
                     ),
                   ),
@@ -1241,9 +1292,9 @@ class FirmwareUpdateScreen extends StatelessWidget {
                         borderRadius: BorderRadius.circular(12),
                       ),
                     ),
-                    child: const Text(
-                      'Check for Updates',
-                      style: TextStyle(fontWeight: FontWeight.w900),
+                    child: Text(
+                      AppLocalizations.of(context)!.checkForUpdates,
+                      style: const TextStyle(fontWeight: FontWeight.w900),
                     ),
                   ),
                 ],
@@ -1287,7 +1338,7 @@ class _NotificationSettingsScreenState
       body: Column(
         children: [
           AquaHeader(
-            title: 'Notification Settings',
+            title: AppLocalizations.of(context)!.notificationSettingsTitle,
             onBack: () => widget.onNavigate(AppScreen.settings),
           ),
           Expanded(
@@ -1296,8 +1347,8 @@ class _NotificationSettingsScreenState
               children: [
                 // Master Toggle
                 _buildSwitchTile(
-                  title: 'Push Notifications',
-                  subtitle: 'Enable or disable all notifications',
+                  title: AppLocalizations.of(context)!.pushNotifications,
+                  subtitle: AppLocalizations.of(context)!.pushNotificationsSub,
                   value: _prefs.pushEnabled,
                   onChanged: (v) =>
                       _updatePrefs(_prefs.copyWith(pushEnabled: v)),
@@ -1311,7 +1362,7 @@ class _NotificationSettingsScreenState
                     vertical: 8,
                   ),
                   child: Text(
-                    'ALERTS & WARNINGS',
+                    AppLocalizations.of(context)!.alertsAndWarningsSection,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
                       color: AquaColors.slate400,
                       fontWeight: FontWeight.bold,
@@ -1322,8 +1373,10 @@ class _NotificationSettingsScreenState
 
                 // Critical Alerts
                 _buildSwitchTile(
-                  title: 'Critical System Failures',
-                  subtitle: 'Pump failure, leak detection, power loss',
+                  title: AppLocalizations.of(context)!.criticalSystemFailures,
+                  subtitle: AppLocalizations.of(
+                    context,
+                  )!.criticalSystemFailuresSub,
                   value: _prefs.criticalAlertsEnabled,
                   // If master toggle is off, these should visually look disabled or handle logic
                   // But for now, we just update the specific preference
@@ -1338,8 +1391,8 @@ class _NotificationSettingsScreenState
 
                 // Water Level Alerts (NEW)
                 _buildSwitchTile(
-                  title: 'Water Level Alerts',
-                  subtitle: 'Low water level, refilling required',
+                  title: AppLocalizations.of(context)!.waterLevelAlerts,
+                  subtitle: AppLocalizations.of(context)!.waterLevelAlertsSub,
                   value: _prefs.waterLevelNotificationsEnabled,
                   onChanged: _prefs.pushEnabled
                       ? (v) => _updatePrefs(
@@ -1351,8 +1404,8 @@ class _NotificationSettingsScreenState
                 const SizedBox(height: 8), // Spacing between tiles
                 // Warnings
                 _buildSwitchTile(
-                  title: 'Parameter Warnings',
-                  subtitle: 'pH or EC deviation outside safe range',
+                  title: AppLocalizations.of(context)!.parameterWarnings,
+                  subtitle: AppLocalizations.of(context)!.parameterWarningsSub,
                   value: _prefs.parameterWarningsEnabled,
                   onChanged: _prefs.pushEnabled
                       ? (v) => _updatePrefs(
@@ -1564,7 +1617,7 @@ class _SensorCard extends StatelessWidget {
                         ),
                       ),
                       Text(
-                        'Current: $value',
+                        AppLocalizations.of(context)!.currentValue(value),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: AquaColors.slate500,
                         ),
@@ -1583,7 +1636,9 @@ class _SensorCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
-                  'Last: $lastCal'.toUpperCase(),
+                  AppLocalizations.of(
+                    context,
+                  )!.lastCalibration(lastCal).toUpperCase(),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                     color: AquaColors.slate500,
                     fontWeight: FontWeight.w900,
@@ -1603,9 +1658,9 @@ class _SensorCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
-              child: const Text(
-                'Calibrate Now',
-                style: TextStyle(fontWeight: FontWeight.w900),
+              child: Text(
+                AppLocalizations.of(context)!.calibrateNow,
+                style: const TextStyle(fontWeight: FontWeight.w900),
               ),
             ),
           ),

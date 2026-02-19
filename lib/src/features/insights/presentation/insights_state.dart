@@ -15,6 +15,7 @@ class InsightsState {
   final SensorsModel? lastAnalyzedSensors;
   final DateTime? lastFetchTime;
   final String? lastOverallStatus;
+  final String? lastLanguageCode;
 
   const InsightsState({
     this.insight,
@@ -23,6 +24,7 @@ class InsightsState {
     this.lastAnalyzedSensors,
     this.lastFetchTime,
     this.lastOverallStatus,
+    this.lastLanguageCode,
   });
 
   InsightsState copyWith({
@@ -32,6 +34,7 @@ class InsightsState {
     SensorsModel? lastAnalyzedSensors,
     DateTime? lastFetchTime,
     String? lastOverallStatus,
+    String? lastLanguageCode,
   }) {
     return InsightsState(
       insight: insight ?? this.insight,
@@ -40,6 +43,7 @@ class InsightsState {
       lastAnalyzedSensors: lastAnalyzedSensors ?? this.lastAnalyzedSensors,
       lastFetchTime: lastFetchTime ?? this.lastFetchTime,
       lastOverallStatus: lastOverallStatus ?? this.lastOverallStatus,
+      lastLanguageCode: lastLanguageCode ?? this.lastLanguageCode,
     );
   }
 }
@@ -86,6 +90,7 @@ class InsightsNotifier extends StateNotifier<InsightsState> {
         lastAnalyzedSensors: sensors,
         lastFetchTime: DateTime.now(),
         lastOverallStatus: currentStatus,
+        lastLanguageCode: languageCode,
       );
     } catch (e) {
       state = state.copyWith(
@@ -104,6 +109,10 @@ class InsightsNotifier extends StateNotifier<InsightsState> {
   ) {
     if (state.lastFetchTime == null || state.lastAnalyzedSensors == null) {
       return true; // First load
+    }
+
+    if (state.lastLanguageCode != languageCode) {
+      return true; // Language changed
     }
 
     final timeDiff = DateTime.now().difference(state.lastFetchTime!);

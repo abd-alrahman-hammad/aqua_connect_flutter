@@ -10,6 +10,7 @@ import '../../../core/models/user_model.dart';
 import '../../../core/services/user_database_service.dart';
 import '../../../core/services/hydroponic_database_service.dart';
 import '../../../core/theme/aqua_colors.dart';
+import '../../../core/theme/theme_provider.dart';
 import '../../../core/utils/value_formatter.dart';
 import '../../../core/utils/vitality_utils.dart'; // [NEW]
 import '../../../core/widgets/aqua_page_scaffold.dart';
@@ -49,6 +50,7 @@ class DashboardScreen extends ConsumerWidget {
         children: [
           _TopNav(
             onAlerts: () => onNavigate(AppScreen.alerts),
+            onProfile: () => onNavigate(AppScreen.profile),
             user: userAsync.valueOrNull,
           ),
           Padding(
@@ -87,10 +89,14 @@ class DashboardScreen extends ConsumerWidget {
                   children: [
                     Text(
                       AppLocalizations.of(context)!.realTimeSensors,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w800,
                       ),
+                      
                     ),
+                    const SizedBox(width: 8),
                     Container(
                       padding: const EdgeInsets.symmetric(
                         horizontal: 8,
@@ -257,14 +263,15 @@ class DashboardScreen extends ConsumerWidget {
   }
 }
 
-class _TopNav extends StatelessWidget {
-  const _TopNav({required this.onAlerts, this.user});
+class _TopNav extends ConsumerWidget {
+  const _TopNav({required this.onAlerts, required this.onProfile, this.user});
 
   final VoidCallback onAlerts;
+  final VoidCallback onProfile;
   final UserModel? user;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bg = isDark
         ? AquaColors.backgroundDark.withValues(alpha: 0.90)
@@ -293,24 +300,26 @@ class _TopNav extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: AquaColors.primary,
-                            width: 2,
+                      GestureDetector(
+                        onTap: onProfile,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: AquaColors.primary,
+                              width: 2,
+                            ),
                           ),
-                        ),
-                        clipBehavior: Clip.antiAlias,
-                        child: CachedNetworkImage(
-                          imageUrl:
-                              user?.photoUrl ??
-                              'https://picsum.photos/100', // Fallback to placeholder
-                          fit: BoxFit.cover,
-                          errorWidget: (context, url, error) =>
-                              const Icon(Icons.person),
+                          clipBehavior: Clip.antiAlias,
+                          child: CachedNetworkImage(
+                            imageUrl:
+                                user?.photoUrl ?? 'https://picsum.photos/100',
+                            fit: BoxFit.cover,
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.person),
+                          ),
                         ),
                       ),
                       const SizedBox(width: 12),
@@ -338,23 +347,71 @@ class _TopNav extends StatelessWidget {
                       ),
                     ],
                   ),
-                  InkWell(
-                    onTap: onAlerts,
-                    borderRadius: BorderRadius.circular(12),
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        color: isDark ? AquaColors.surfaceDark : Colors.white,
+                  Row(
+                    children: [
+                      InkWell(
+                        onTap: () {
+                          final current = ref.read(themeProvider);
+                          ref
+                              .read(themeProvider.notifier)
+                              .setThemeMode(
+                                current == ThemeMode.dark
+                                    ? ThemeMode.light
+                                    : ThemeMode.dark,
+                              );
+                        },
                         borderRadius: BorderRadius.circular(12),
-                        border: Border.all(
-                          color: isDark
-                              ? Colors.white.withValues(alpha: 0.10)
-                              : AquaColors.slate200,
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? AquaColors.surfaceDark
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.10)
+                                  : AquaColors.slate200,
+                            ),
+                          ),
+                          child: Center(
+                            child: Icon(
+                              isDark
+                                  ? Icons.dark_mode_rounded
+                                  : Icons.light_mode_rounded,
+                              size: 20,
+                              color: isDark
+                                  ? AquaColors.primary
+                                  : AquaColors.slate600,
+                            ),
+                          ),
                         ),
                       ),
-                      child: const Center(child: AquaSymbol('notifications')),
-                    ),
+                      const SizedBox(width: 8),
+                      InkWell(
+                        onTap: onAlerts,
+                        borderRadius: BorderRadius.circular(12),
+                        child: Container(
+                          width: 40,
+                          height: 40,
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? AquaColors.surfaceDark
+                                : Colors.white,
+                            borderRadius: BorderRadius.circular(12),
+                            border: Border.all(
+                              color: isDark
+                                  ? Colors.white.withValues(alpha: 0.10)
+                                  : AquaColors.slate200,
+                            ),
+                          ),
+                          child: const Center(
+                            child: AquaSymbol('notifications'),
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -447,8 +504,8 @@ class _VitalityRing extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
                   color: AquaColors.nature,
                   fontWeight: FontWeight.w800,
-                  letterSpacing: 3.2,
-                  fontSize: 10,
+                  letterSpacing: 2.0,
+                  fontSize: 11,
                 ),
               ),
             ],

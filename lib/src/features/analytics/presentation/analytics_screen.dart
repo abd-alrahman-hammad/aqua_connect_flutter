@@ -126,7 +126,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         children: [
           AquaHeader(
             title: AppLocalizations.of(context)!.historicalAnalytics,
-            onBack: () => widget.onNavigate(AppScreen.dashboard),
+            onBack: () => widget.onNavigate(AppScreen.more),
           ),
           // Tabs
           Container(

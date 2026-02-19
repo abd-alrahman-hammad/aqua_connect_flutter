@@ -36,9 +36,9 @@ class ProfileScreen extends ConsumerWidget {
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(dialogContext),
-            child: const Text(
-              'Cancel',
-              style: TextStyle(color: AquaColors.slate500),
+            child: Text(
+              AppLocalizations.of(context)!.cancel,
+              style: const TextStyle(color: AquaColors.slate500),
             ),
           ),
           TextButton(
@@ -64,9 +64,9 @@ class ProfileScreen extends ConsumerWidget {
                 }
               }
             },
-            child: const Text(
-              'Sign Out',
-              style: TextStyle(
+            child: Text(
+              AppLocalizations.of(context)!.signOut,
+              style: const TextStyle(
                 color: AquaColors.critical,
                 fontWeight: FontWeight.bold,
               ),
@@ -89,7 +89,7 @@ class ProfileScreen extends ConsumerWidget {
       child: Column(
         children: [
           AquaHeader(
-            title: 'Profile',
+            title: AppLocalizations.of(context)!.profileTitle,
             onBack: () => onNavigate(AppScreen.settings),
           ),
           userAsync.when(
@@ -106,12 +106,14 @@ class ProfileScreen extends ConsumerWidget {
                     _ProfileHeader(user: user, isDark: isDark),
                     const SizedBox(height: 32),
                     _SectionContainer(
-                      title: 'Personal Information',
+                      title: AppLocalizations.of(context)!.personalInformation,
                       isDark: isDark,
                       children: [
                         _EditableField(
-                          label: 'Display Name',
-                          value: user.displayName ?? 'No Name',
+                          label: AppLocalizations.of(context)!.displayName,
+                          value:
+                              user.displayName ??
+                              AppLocalizations.of(context)!.noName,
                           onSave: (value) async {
                             await ref
                                 .read(userDatabaseServiceProvider)
@@ -120,8 +122,10 @@ class ProfileScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 24),
                         _EditableField(
-                          label: 'Email',
-                          value: user.email ?? 'No Email',
+                          label: AppLocalizations.of(context)!.emailAddress,
+                          value:
+                              user.email ??
+                              AppLocalizations.of(context)!.noEmail,
                           enabled: false,
                           onSave: (_) {},
                         ),
@@ -129,7 +133,7 @@ class ProfileScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 24),
                     _SectionContainer(
-                      title: 'Settings',
+                      title: AppLocalizations.of(context)!.settings,
                       isDark: isDark,
                       children: [
                         ListTile(
@@ -146,9 +150,9 @@ class ProfileScreen extends ConsumerWidget {
                               color: AquaColors.critical,
                             ),
                           ),
-                          title: const Text(
-                            'Sign Out',
-                            style: TextStyle(
+                          title: Text(
+                            AppLocalizations.of(context)!.signOut,
+                            style: const TextStyle(
                               color: AquaColors.critical,
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
@@ -220,7 +224,7 @@ class _ProfileHeader extends ConsumerWidget {
         ),
         const SizedBox(height: 16),
         Text(
-          user.displayName ?? 'User',
+          user.displayName ?? AppLocalizations.of(context)!.defaultUser,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
             color: isDark ? Colors.white : AquaColors.slate900,

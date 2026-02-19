@@ -11,6 +11,7 @@ import '../widgets/auth_brand_header.dart';
 import '../widgets/auth_text_field.dart';
 import '../widgets/auth_button.dart';
 import '../widgets/switch_pill.dart';
+import '../widgets/language_toggle.dart';
 import 'sign_up_screen.dart';
 import 'forgot_password_screen.dart';
 
@@ -213,6 +214,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         const SizedBox(height: 8),
+                        const Align(
+                          alignment: AlignmentDirectional.centerEnd,
+                          child: LanguageToggle(),
+                        ),
+                        const SizedBox(height: 16),
                         AuthBrandHeader(
                           title: AppLocalizations.of(context)!.rayyanTitle,
                           subtitle: AppLocalizations.of(

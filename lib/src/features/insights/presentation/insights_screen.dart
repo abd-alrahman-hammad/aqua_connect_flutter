@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
-import '../../../app/app_controller.dart';
+import '../../../core/localization/locale_provider.dart';
 import '../../../app/screens.dart';
 import '../../../core/models/hydroponic/sensors_model.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
@@ -43,20 +43,19 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
     if (sensors == null || settings == null) return;
 
     final notifier = ref.read(insightsProvider.notifier);
-    final appState = ref.read(appControllerProvider);
+    final languageCode = ref.read(localeProvider).languageCode;
 
-    if (notifier.shouldAutoRefresh(sensors, settings, appState.languageCode)) {
+    if (notifier.shouldAutoRefresh(sensors, settings, languageCode)) {
       notifier.fetchInsight(
         sensors: sensors,
         settings: settings,
-        languageCode: appState.languageCode,
+        languageCode: languageCode,
       );
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final appState = ref.watch(appControllerProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final sensorsAsync = ref.watch(sensorsStreamProvider);
@@ -79,6 +78,15 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
           _checkAndFetchInsights(sensors, settings);
         });
       });
+    });
+
+    // Listen to language changes explicitly to re-fetch if needed
+    ref.listen<Locale>(localeProvider, (prev, next) {
+      if (prev?.languageCode != next.languageCode) {
+        final sensors = sensorsAsync.valueOrNull;
+        final settings = settingsAsync.valueOrNull;
+        _checkAndFetchInsights(sensors, settings);
+      }
     });
 
     final sensors = sensorsAsync.valueOrNull;
@@ -158,7 +166,7 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
                       .fetchInsight(
                         sensors: sensors,
                         settings: settings,
-                        languageCode: appState.languageCode,
+                        languageCode: ref.read(localeProvider).languageCode,
                       );
                 }
               },
@@ -636,8 +644,8 @@ class _DailyTipCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-              const Text(
-                'DAILY TIP',
+              Text(
+                AppLocalizations.of(context)!.dailyTip,
                 style: TextStyle(
                   fontSize: 14, // Increased from 12
                   letterSpacing: 1.2,
@@ -650,13 +658,15 @@ class _DailyTipCard extends StatelessWidget {
             _LoadingShimmer(isDark: isDark, baseColor: AquaColors.primary)
           else
             Text(
-              content ?? 'Consistency is key to a healthy harvest.',
+              content ?? AppLocalizations.of(context)!.waitingForInsights,
               style: TextStyle(
                 fontSize: 16, // Increased from 15
                 height: 1.6,
-                color: isDark
-                    ? Colors.white.withValues(alpha: 0.9)
-                    : AquaColors.slate900,
+                color: content == null
+                    ? (isDark ? AquaColors.slate500 : AquaColors.slate400)
+                    : (isDark
+                          ? Colors.white.withValues(alpha: 0.9)
+                          : AquaColors.slate900),
               ),
             ),
         ],

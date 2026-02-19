@@ -874,4 +874,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get defaultDailyTip => 'Consistency is key to a healthy harvest.';
+
+  @override
+  String get profileTitle => 'Profile';
+
+  @override
+  String get personalInformation => 'Personal Information';
+
+  @override
+  String get displayName => 'Display Name';
+
+  @override
+  String get noName => 'No Name';
+
+  @override
+  String get noEmail => 'No Email';
 }

@@ -102,7 +102,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get helpAndGuides => 'المساعدة والإرشادات';
 
   @override
-  String get realTimeSensors => 'أجهزة الاستشعار في الوقت الفعلي';
+  String get realTimeSensors => 'القراءات الحالية للحساسات';
 
   @override
   String get online => 'متصل';
@@ -878,4 +878,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get defaultDailyTip => 'الاستمرارية هي مفتاح الحصاد الصحي.';
+
+  @override
+  String get profileTitle => 'الملف الشخصي';
+
+  @override
+  String get personalInformation => 'المعلومات الشخصية';
+
+  @override
+  String get displayName => 'الاسم المعروض';
+
+  @override
+  String get noName => 'بدون اسم';
+
+  @override
+  String get noEmail => 'بدون بريد إلكتروني';
 }

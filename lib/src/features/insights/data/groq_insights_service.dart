@@ -57,8 +57,8 @@ Context:
 - pH: ${sensors.ph ?? '--'} ($phStatus) (Target: ${settings.phLow}-${settings.phHigh})
 - EC: ${sensors.ec ?? '--'} mS/cm ($ecStatus) (Target: ${settings.ecLow}-${settings.ecHigh} mS/cm)
 
-Output the values of the JSON in ${languageCode == 'AR' ? 'Arabic' : 'English'} based on languageCode. 
-Strictly keep the JSON keys (analysis, action_required, daily_tip) in English.
+Output the values of the JSON in ${languageCode.toLowerCase() == 'ar' ? 'Arabic' : 'English'} based on languageCode. 
+Strictly keep the JSON keys (analysis, action_required, daily_tip) in English
 Return ONLY valid JSON with no extra text, no markdown, no code blocks.
 
 JSON Schema:

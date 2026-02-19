@@ -47,7 +47,7 @@ class ChatRepository {
 
   String _getSystemPrompt(String languageCode) {
     if (languageCode.toLowerCase() == 'ar') {
-      return "أنت مساعد ذكي لتطبيق زراعة مائية يسمى Rayyan. مهمتك الإجابة فقط عن أسئلة الزراعة المائية أو الزراعة. إذا سُئلت عن أي موضوع آخر فاعتذر بلطف وارفض الإجابة.";
+      return "أنت مساعد ذكي لتطبيق زراعة مائية يسمى ريان. مهمتك الإجابة فقط عن أسئلة الزراعة المائية أو الزراعة. إذا سُئلت عن أي موضوع آخر فاعتذر بلطف وارفض الإجابة.";
     } else {
       return "You are a smart assistant for a hydroponic app named Rayyan. You must only answer agriculture or hydroponic-related questions. If asked about anything else, politely apologize and refuse.";
     }

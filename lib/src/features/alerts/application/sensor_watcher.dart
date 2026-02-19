@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../core/models/hydroponic/sensors_model.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
 import '../../../core/utils/vitality_utils.dart';
@@ -23,43 +24,55 @@ class SensorWatcher {
   SensorWatcher(this._notificationService, this._alertsNotifier, this._ref);
 
   /// Main entry point to check sensors and trigger alerts
-  void checkSensors(SensorsModel sensors, SettingsModel settings) {
+  void checkSensors(
+    SensorsModel sensors,
+    SettingsModel settings,
+    AppLocalizations loc,
+  ) {
     // 1. Get current User Preferences
     final prefs = _ref.read(notificationPreferencesProvider);
 
     // 2. Evaluate Sensors
     _evaluateSensor(
-      label: 'pH Level',
+      label: loc.phLevel,
       value: sensors.ph,
       status: VitalityUtils.getPhStatus(sensors.ph, settings),
       prefs: prefs,
       icon: 'water_drop',
+      loc: loc,
+      sensorKey: 'ph',
     );
 
     _evaluateSensor(
-      label: 'EC Level',
+      label: loc.ecLevel,
       value: sensors.ec,
       status: VitalityUtils.getEcStatus(sensors.ec, settings),
       prefs: prefs,
       icon: 'bolt',
+      loc: loc,
+      sensorKey: 'ec',
     );
 
     _evaluateSensor(
-      label: 'Temperature',
+      label: loc.temperature,
       value: sensors.temperature,
       status: VitalityUtils.getTemperatureStatus(sensors.temperature, settings),
       prefs: prefs,
       icon: 'device_thermostat',
       unit: '°C',
+      loc: loc,
+      sensorKey: 'temp',
     );
 
     _evaluateSensor(
-      label: 'Water Level',
+      label: loc.waterLevel,
       value: sensors.waterLevel,
       status: VitalityUtils.getWaterLevelStatus(sensors.waterLevel),
       prefs: prefs,
       icon: 'waves',
       unit: '%',
+      loc: loc,
+      sensorKey: 'water_level',
     );
   }
 
@@ -69,6 +82,8 @@ class SensorWatcher {
     required SensorStatus status,
     required NotificationPreferences prefs,
     required String icon,
+    required AppLocalizations loc,
+    required String sensorKey,
     String unit = '',
   }) {
     // If status is OK or Unknown, we do nothing.
@@ -83,7 +98,7 @@ class SensorWatcher {
     }
 
     // Case 2 & 3: Filter based on specific toggles
-    if (label == 'Water Level') {
+    if (sensorKey == 'water_level') {
       if (!prefs.waterLevelNotificationsEnabled) shouldSendPush = false;
     } else if (status == SensorStatus.critical) {
       if (!prefs.criticalAlertsEnabled) shouldSendPush = false;
@@ -93,7 +108,7 @@ class SensorWatcher {
 
     // 4. Spam Prevention (Debounce / Throttling)
     // specific key for this sensor issue
-    final throttleKey = '$label-${status.name}';
+    final throttleKey = '$sensorKey-${status.name}';
     final lastTime = _lastNotificationTimes[throttleKey];
     final isThrottled =
         lastTime != null &&
@@ -104,7 +119,7 @@ class SensorWatcher {
     }
 
     // Construct the Alert
-    final alert = _createAlertModel(label, value, status, icon, unit);
+    final alert = _createAlertModel(label, value, status, icon, unit, loc);
 
     // Logic:
     // We ALWAYS add to the in-app history (AlertsNotifier) so the "Alerts" screen
@@ -137,17 +152,17 @@ class SensorWatcher {
     SensorStatus status,
     String icon,
     String unit,
+    AppLocalizations loc,
   ) {
     final bool isCritical = status == SensorStatus.critical;
     final String title = isCritical
-        ? '🚨 Critical: $label Issue'
-        : '⚠️ Warning: $label Issue';
+        ? loc.alertCriticalTitle(label)
+        : loc.alertWarningTitle(label);
 
     final String valStr = value is double
         ? value.toStringAsFixed(1)
         : value.toString();
-    final String message =
-        '$label is currently at $valStr$unit. Check system immediately.';
+    final String message = loc.alertBody(label, valStr, unit);
 
     return AlertModel(
       id: DateTime.now().millisecondsSinceEpoch.toString(),

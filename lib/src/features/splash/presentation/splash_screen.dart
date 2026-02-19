@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/theme/aqua_colors.dart';
@@ -131,7 +132,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                             const SizedBox(height: 32),
 
                             Text(
-                              'Rayyan',
+                              AppLocalizations.of(context)!.rayyanTitle,
                               style: GoogleFonts.manrope(
                                 fontSize: 36,
                                 fontWeight: FontWeight.w800,
@@ -143,7 +144,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                             const SizedBox(height: 12),
 
                             Text(
-                              'Smart Hydroponics Management',
+                              AppLocalizations.of(context)!.rayyanSubtitle,
                               style: GoogleFonts.manrope(
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,

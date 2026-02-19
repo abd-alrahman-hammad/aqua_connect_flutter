@@ -1,4 +1,7 @@
+import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../../../l10n/generated/app_localizations.dart';
+import '../../../core/localization/locale_provider.dart';
 import '../../../core/services/hydroponic_database_service.dart';
 import '../../../core/models/hydroponic/sensors_model.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
@@ -28,7 +31,9 @@ final sensorMonitorServiceProvider = Provider<SensorWatcher>((ref) {
     next.whenData((sensors) {
       final settings = ref.read(settingsStreamProvider).valueOrNull;
       if (settings != null) {
-        watcher.checkSensors(sensors, settings);
+        final languageCode = ref.read(localeProvider).languageCode;
+        final loc = lookupAppLocalizations(Locale(languageCode.toLowerCase()));
+        watcher.checkSensors(sensors, settings, loc);
       }
     });
   });
@@ -39,7 +44,9 @@ final sensorMonitorServiceProvider = Provider<SensorWatcher>((ref) {
     next.whenData((settings) {
       final sensors = ref.read(sensorsStreamProvider).valueOrNull;
       if (sensors != null) {
-        watcher.checkSensors(sensors, settings);
+        final languageCode = ref.read(localeProvider).languageCode;
+        final loc = lookupAppLocalizations(Locale(languageCode.toLowerCase()));
+        watcher.checkSensors(sensors, settings, loc);
       }
     });
   });
