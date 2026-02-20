@@ -318,5 +318,7 @@
   "personalInformation": "Personal Information",
   "displayName": "Display Name",
   "noName": "No Name",
-  "noEmail": "No Email"
+  "noEmail": "No Email",
+  "offlineStartupTitle": "No Internet Connection",
+  "offlineStartupMessage": "We're sorry — your plants miss you too.\nWe'll reconnect automatically once you're back online."
 }

@@ -291,5 +291,7 @@
   "personalInformation": "المعلومات الشخصية",
   "displayName": "الاسم المعروض",
   "noName": "بدون اسم",
-  "noEmail": "بدون بريد إلكتروني"
+  "noEmail": "بدون بريد إلكتروني",
+  "offlineStartupTitle": "لا يوجد اتصال بالإنترنت",
+  "offlineStartupMessage": "نعتذر — نباتاتك تفتقدك أيضاً.\nسنعيد الاتصال تلقائياً عند عودة الإنترنت."
 }

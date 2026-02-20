@@ -889,4 +889,11 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get noEmail => 'No Email';
+
+  @override
+  String get offlineStartupTitle => 'No Internet Connection';
+
+  @override
+  String get offlineStartupMessage =>
+      'We\'re sorry — your plants miss you too.\nWe\'ll reconnect automatically once you\'re back online.';
 }

@@ -893,4 +893,11 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get noEmail => 'بدون بريد إلكتروني';
+
+  @override
+  String get offlineStartupTitle => 'لا يوجد اتصال بالإنترنت';
+
+  @override
+  String get offlineStartupMessage =>
+      'نعتذر — نباتاتك تفتقدك أيضاً.\nسنعيد الاتصال تلقائياً عند عودة الإنترنت.';
 }

@@ -1753,6 +1753,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'No Email'**
   String get noEmail;
+
+  /// No description provided for @offlineStartupTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No Internet Connection'**
+  String get offlineStartupTitle;
+
+  /// No description provided for @offlineStartupMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'We\'re sorry — your plants miss you too.\nWe\'ll reconnect automatically once you\'re back online.'**
+  String get offlineStartupMessage;
 }
 
 class _AppLocalizationsDelegate

@@ -1,4 +1,5 @@
 import 'dart:ui';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,6 +10,7 @@ import '../../../app/screens.dart';
 import '../../../core/theme/aqua_colors.dart';
 import '../../../core/services/auth_preferences_service.dart';
 import '../../../core/services/firebase_auth_service.dart';
+import 'offline_startup_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
   const SplashScreen({super.key, required this.onNavigate});
@@ -75,6 +77,23 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     if (!user.emailVerified) {
       await authService.signOut();
       widget.onNavigate(AppScreen.login);
+      return;
+    }
+
+    // Check internet connectivity before going to dashboard
+    final connectivityResult = await Connectivity().checkConnectivity();
+    final hasInternet = connectivityResult.any(
+      (r) => r != ConnectivityResult.none,
+    );
+
+    if (!hasInternet) {
+      if (mounted) {
+        Navigator.of(context).push(
+          MaterialPageRoute(
+            builder: (_) => OfflineStartupScreen(onNavigate: widget.onNavigate),
+          ),
+        );
+      }
       return;
     }
 
