@@ -849,7 +849,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get manualOverrideWarning =>
-      'التحكم اليدوي نشط. أنت تتحكم في جميع الوحدات على مسؤوليتك الخاصة. قم بالتبديل إلى الوضع التلقائي الذكي للتشغيل المدار بواسطة النظام.';
+      '(التحكم اليدوي نشط). أنت تتحكم في جميع الوحدات على مسؤوليتك الخاصة. يُرجى التبديل إلى الوضع التلقائي الذكي المُدار بواسطة النظام.';
 
   @override
   String get smartAutoInfo =>

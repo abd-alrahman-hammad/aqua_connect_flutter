@@ -4,7 +4,6 @@ enum AppScreen {
   forgotPassword,
   dashboard,
   alerts,
-
   controls,
   analytics,
   insights,
