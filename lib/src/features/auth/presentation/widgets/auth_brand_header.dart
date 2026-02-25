@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/aqua_colors.dart';
+import '../../../../core/theme/rayyan_colors.dart';
 
 class AuthBrandHeader extends StatelessWidget {
   const AuthBrandHeader({
@@ -19,7 +19,7 @@ class AuthBrandHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final glowColor = AquaColors.primary.withValues(
+    final glowColor = RayyanColors.primary.withValues(
       alpha: isDark ? 0.15 : 0.10,
     );
     final borderColor = Colors.transparent;
@@ -57,7 +57,7 @@ class AuthBrandHeader extends StatelessWidget {
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.w900,
             letterSpacing: -0.5,
-            color: isDark ? Colors.white : AquaColors.slate900,
+            color: isDark ? Colors.white : RayyanColors.slate900,
           ),
           textAlign: TextAlign.center,
         ),
@@ -65,7 +65,7 @@ class AuthBrandHeader extends StatelessWidget {
         Text(
           subtitle,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-            color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+            color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
             fontWeight: FontWeight.w500,
             letterSpacing: 0.2,
           ),

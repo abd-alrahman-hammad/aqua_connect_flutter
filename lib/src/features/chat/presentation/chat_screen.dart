@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/theme/aqua_colors.dart';
-import '../../../core/widgets/aqua_header.dart';
+import '../../../core/theme/rayyan_colors.dart';
+import '../../../core/widgets/rayyan_header.dart';
 import '../application/chat_provider.dart';
 import '../domain/chat_message_model.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -51,21 +51,21 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
     return Scaffold(
       backgroundColor: isDark
-          ? AquaColors.backgroundDark
-          : AquaColors.backgroundLight,
+          ? RayyanColors.backgroundDark
+          : RayyanColors.backgroundLight,
       // تمت إزالة SafeArea من هنا للسماح للخلفية بالوصول لأعلى الشاشة
       body: Column(
         children: [
           // تم تغليف الهيدر بحاوية للتحكم في الحافة العلوية (Notch)
           Container(
             color: isDark
-                ? AquaColors.backgroundDark
-                : AquaColors.backgroundLight,
+                ? RayyanColors.backgroundDark
+                : RayyanColors.backgroundLight,
             padding: EdgeInsets.only(
               // هذا السطر يضيف مسافة بمقدار ارتفاع شريط الحالة فقط
               top: MediaQuery.of(context).padding.top,
             ),
-            child: AquaHeader(
+            child: RayyanHeader(
               title: AppLocalizations.of(context)!.chatWithRayyan,
               onBack: () => Navigator.of(context).pop(),
             ),
@@ -77,7 +77,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                     child: Text(
                       AppLocalizations.of(context)!.askMeAboutHydroponic,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AquaColors.slate500,
+                        color: RayyanColors.slate500,
                       ),
                     ),
                   )
@@ -96,7 +96,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
           if (chatState.isLoading)
             const Padding(
               padding: EdgeInsets.all(8.0),
-              child: LinearProgressIndicator(color: AquaColors.primary),
+              child: LinearProgressIndicator(color: RayyanColors.primary),
             ),
 
           if (chatState.error != null)
@@ -152,8 +152,8 @@ class _MessageBubble extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           color: isUser
-              ? AquaColors.primary
-              : (isDark ? AquaColors.cardDark : Colors.white),
+              ? RayyanColors.primary
+              : (isDark ? RayyanColors.cardDark : Colors.white),
           borderRadius: BorderRadius.only(
             topLeft: const Radius.circular(16),
             topRight: const Radius.circular(16),
@@ -165,7 +165,7 @@ class _MessageBubble extends StatelessWidget {
               : Border.all(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.1)
-                      : AquaColors.slate200,
+                      : RayyanColors.slate200,
                 ),
         ),
         child: Text(
@@ -173,7 +173,7 @@ class _MessageBubble extends StatelessWidget {
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
             color: isUser
                 ? Colors.white
-                : (isDark ? Colors.white : AquaColors.slate900),
+                : (isDark ? Colors.white : RayyanColors.slate900),
           ),
         ),
       ),
@@ -198,12 +198,12 @@ class _ChatInput extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.fromLTRB(16, 12, 16, 24),
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.backgroundDark : Colors.white,
+        color: isDark ? RayyanColors.backgroundDark : Colors.white,
         border: Border(
           top: BorderSide(
             color: isDark
                 ? Colors.white.withValues(alpha: 0.1)
-                : AquaColors.slate200,
+                : RayyanColors.slate200,
           ),
         ),
       ),
@@ -218,8 +218,8 @@ class _ChatInput extends StatelessWidget {
                 hintText: AppLocalizations.of(context)!.typeYourQuestion,
                 filled: true,
                 fillColor: isDark
-                    ? AquaColors.surfaceDark
-                    : AquaColors.slate100,
+                    ? RayyanColors.surfaceDark
+                    : RayyanColors.slate100,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(24),
                   borderSide: BorderSide.none,
@@ -236,7 +236,7 @@ class _ChatInput extends StatelessWidget {
           IconButton(
             onPressed: isLoading ? null : onSend,
             style: IconButton.styleFrom(
-              backgroundColor: AquaColors.primary,
+              backgroundColor: RayyanColors.primary,
               foregroundColor: Colors.white,
             ),
             icon: const Icon(Icons.send_rounded),

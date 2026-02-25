@@ -11,10 +11,10 @@ import '../../../core/services/auth_preferences_service.dart';
 import '../../../core/services/firebase_auth_service.dart';
 import '../../../core/services/storage_service.dart';
 import '../../../core/services/user_database_service.dart';
-import '../../../core/theme/aqua_colors.dart';
-import '../../../core/widgets/aqua_header.dart';
-import '../../../core/widgets/aqua_page_scaffold.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/theme/rayyan_colors.dart';
+import '../../../core/widgets/rayyan_header.dart';
+import '../../../core/widgets/rayyan_page_scaffold.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({
@@ -38,7 +38,7 @@ class ProfileScreen extends ConsumerWidget {
             onPressed: () => Navigator.pop(dialogContext),
             child: Text(
               AppLocalizations.of(context)!.cancel,
-              style: const TextStyle(color: AquaColors.slate500),
+              style: const TextStyle(color: RayyanColors.slate500),
             ),
           ),
           TextButton(
@@ -57,7 +57,7 @@ class ProfileScreen extends ConsumerWidget {
                           context,
                         )!.errorSigningOut(e.toString()),
                       ),
-                      backgroundColor: AquaColors.critical,
+                      backgroundColor: RayyanColors.critical,
                       behavior: SnackBarBehavior.floating,
                     ),
                   );
@@ -67,7 +67,7 @@ class ProfileScreen extends ConsumerWidget {
             child: Text(
               AppLocalizations.of(context)!.signOut,
               style: const TextStyle(
-                color: AquaColors.critical,
+                color: RayyanColors.critical,
                 fontWeight: FontWeight.bold,
               ),
             ),
@@ -82,13 +82,13 @@ class ProfileScreen extends ConsumerWidget {
     final userAsync = ref.watch(realtimeUserProfileStreamProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return AquaPageScaffold(
+    return RayyanPageScaffold(
       currentScreen: current,
       onNavigate: onNavigate,
       includeBottomNav: false, // Hide bottom nav on Profile screen
       child: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.profileTitle,
             onBack: () => onNavigate(AppScreen.settings),
           ),
@@ -141,19 +141,19 @@ class ProfileScreen extends ConsumerWidget {
                           leading: Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: AquaColors.critical.withValues(alpha: 0.1),
+                              color: RayyanColors.critical.withValues(alpha: 0.1),
                               shape: BoxShape.circle,
                             ),
-                            child: const AquaSymbol(
+                            child: const RayyanSymbol(
                               'logout',
                               size: 20,
-                              color: AquaColors.critical,
+                              color: RayyanColors.critical,
                             ),
                           ),
                           title: Text(
                             AppLocalizations.of(context)!.signOut,
                             style: const TextStyle(
-                              color: AquaColors.critical,
+                              color: RayyanColors.critical,
                               fontWeight: FontWeight.w600,
                               fontSize: 16,
                             ),
@@ -227,7 +227,7 @@ class _ProfileHeader extends ConsumerWidget {
           user.displayName ?? AppLocalizations.of(context)!.defaultUser,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
             fontWeight: FontWeight.bold,
-            color: isDark ? Colors.white : AquaColors.slate900,
+            color: isDark ? Colors.white : RayyanColors.slate900,
           ),
         ),
         const SizedBox(height: 4),
@@ -235,7 +235,7 @@ class _ProfileHeader extends ConsumerWidget {
           user.email ?? '',
           style: Theme.of(
             context,
-          ).textTheme.bodyMedium?.copyWith(color: AquaColors.slate500),
+          ).textTheme.bodyMedium?.copyWith(color: RayyanColors.slate500),
         ),
       ],
     );
@@ -263,7 +263,7 @@ class _SectionContainer extends StatelessWidget {
           style: const TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.bold,
-            color: AquaColors.slate500,
+            color: RayyanColors.slate500,
             letterSpacing: 0.5,
           ),
         ),
@@ -272,12 +272,12 @@ class _SectionContainer extends StatelessWidget {
           width: double.infinity,
           padding: const EdgeInsets.all(20),
           decoration: BoxDecoration(
-            color: isDark ? AquaColors.cardDark : Colors.white,
+            color: isDark ? RayyanColors.cardDark : Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.05)
-                  : AquaColors.slate200,
+                  : RayyanColors.slate200,
             ),
             boxShadow: [
               if (!isDark)
@@ -354,7 +354,7 @@ class _ProfileImageState extends State<_ProfileImage> {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               border: Border.all(
-                color: isDark ? AquaColors.cardDark : Colors.white,
+                color: isDark ? RayyanColors.cardDark : Colors.white,
                 width: 6,
               ),
               boxShadow: [
@@ -371,16 +371,16 @@ class _ProfileImageState extends State<_ProfileImage> {
                     imageUrl: widget.photoUrl!,
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
-                        Container(color: AquaColors.slate200),
+                        Container(color: RayyanColors.slate200),
                     errorWidget: (context, url, error) =>
                         const Icon(Icons.error),
                   )
                 : Container(
-                    color: AquaColors.slate200,
+                    color: RayyanColors.slate200,
                     child: const Icon(
                       Icons.person,
                       size: 70,
-                      color: AquaColors.slate400,
+                      color: RayyanColors.slate400,
                     ),
                   ),
           ),
@@ -402,16 +402,16 @@ class _ProfileImageState extends State<_ProfileImage> {
             child: Container(
               padding: const EdgeInsets.all(10),
               decoration: BoxDecoration(
-                color: AquaColors.primary,
+                color: RayyanColors.primary,
                 shape: BoxShape.circle,
                 border: Border.all(
                   color: isDark
-                      ? AquaColors.backgroundDark
-                      : AquaColors.backgroundLight,
+                      ? RayyanColors.backgroundDark
+                      : RayyanColors.backgroundLight,
                   width: 4,
                 ),
               ),
-              child: const AquaSymbol('edit', size: 18, color: Colors.white),
+              child: const RayyanSymbol('edit', size: 18, color: Colors.white),
             ),
           ),
         ],
@@ -481,7 +481,7 @@ class _EditableFieldState extends State<_EditableField> {
                 Text(
                   widget.label,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AquaColors.slate500,
+                    color: RayyanColors.slate500,
                     fontWeight: FontWeight.w600,
                   ),
                 ),
@@ -498,9 +498,9 @@ class _EditableFieldState extends State<_EditableField> {
           if (widget.enabled)
             IconButton(
               onPressed: () => setState(() => _isEditing = true),
-              icon: const AquaSymbol(
+              icon: const RayyanSymbol(
                 'edit',
-                color: AquaColors.primary,
+                color: RayyanColors.primary,
                 size: 20,
               ),
               padding: EdgeInsets.zero,
@@ -517,7 +517,7 @@ class _EditableFieldState extends State<_EditableField> {
         Text(
           widget.label,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: AquaColors.slate500,
+            color: RayyanColors.slate500,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -537,11 +537,11 @@ class _EditableFieldState extends State<_EditableField> {
                   ),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: AquaColors.primary),
+                    borderSide: BorderSide(color: RayyanColors.primary),
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: AquaColors.primary, width: 2),
+                    borderSide: BorderSide(color: RayyanColors.primary, width: 2),
                   ),
                 ),
               ),
@@ -549,9 +549,9 @@ class _EditableFieldState extends State<_EditableField> {
             const SizedBox(width: 8),
             IconButton(
               onPressed: _save,
-              icon: const AquaSymbol(
+              icon: const RayyanSymbol(
                 'check_circle',
-                color: AquaColors.nature,
+                color: RayyanColors.nature,
                 size: 24,
               ),
               padding: EdgeInsets.zero,
@@ -564,9 +564,9 @@ class _EditableFieldState extends State<_EditableField> {
                   _controller.text = widget.value;
                 });
               },
-              icon: const AquaSymbol(
+              icon: const RayyanSymbol(
                 'cancel',
-                color: AquaColors.critical,
+                color: RayyanColors.critical,
                 size: 24,
               ),
               padding: EdgeInsets.zero,

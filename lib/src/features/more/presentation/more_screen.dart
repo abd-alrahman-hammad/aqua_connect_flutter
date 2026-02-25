@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
-import '../../../core/theme/aqua_colors.dart';
-import '../../../core/widgets/aqua_header.dart';
-import '../../../core/widgets/aqua_page_scaffold.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/theme/rayyan_colors.dart';
+import '../../../core/widgets/rayyan_header.dart';
+import '../../../core/widgets/rayyan_page_scaffold.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 
 class MoreScreen extends StatelessWidget {
   const MoreScreen({
@@ -19,16 +19,16 @@ class MoreScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AquaPageScaffold(
+    return RayyanPageScaffold(
       currentScreen: current,
       onNavigate: onNavigate,
       // استخدام ListView أو SingleChildScrollView يسمح للكروت بالتمرير
-      // بينما يظل شريط التنقل (الموجود داخل AquaPageScaffold) ثابتاً في الأسفل
+      // بينما يظل شريط التنقل (الموجود داخل RayyanPageScaffold) ثابتاً في الأسفل
       child: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
         child: Column(
           children: [
-            AquaHeader(
+            RayyanHeader(
               title: AppLocalizations.of(context)!.menu,
               onBack: () => onNavigate(AppScreen.dashboard),
             ),
@@ -46,8 +46,8 @@ class MoreScreen extends StatelessWidget {
                     title: AppLocalizations.of(context)!.analytics,
                     subtitle: AppLocalizations.of(context)!.historyAndTrends,
                     icon: 'monitoring',
-                    color: AquaColors.info,
-                    bg: AquaColors.info.withValues(alpha: 0.10),
+                    color: RayyanColors.info,
+                    bg: RayyanColors.info.withValues(alpha: 0.10),
                     onTap: () => onNavigate(AppScreen.analytics),
                   ),
                   const SizedBox(height: 18), // مسافة بين الكروت
@@ -69,8 +69,8 @@ class MoreScreen extends StatelessWidget {
                     title: AppLocalizations.of(context)!.support,
                     subtitle: AppLocalizations.of(context)!.helpAndGuides,
                     icon: 'help',
-                    color: AquaColors.nature,
-                    bg: AquaColors.nature.withValues(alpha: 0.10),
+                    color: RayyanColors.nature,
+                    bg: RayyanColors.nature.withValues(alpha: 0.10),
                     onTap: () => onNavigate(AppScreen.support),
                   ),
                 ],
@@ -114,12 +114,12 @@ class _MenuCard extends StatelessWidget {
         child: Container(
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
-            color: isDark ? AquaColors.cardDark : Colors.white,
+            color: isDark ? RayyanColors.cardDark : Colors.white,
             borderRadius: BorderRadius.circular(16),
             border: Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.05)
-                  : AquaColors.slate200,
+                  : RayyanColors.slate200,
             ),
             boxShadow: [
               BoxShadow(
@@ -153,7 +153,7 @@ class _MenuCard extends StatelessWidget {
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Center(
-                      child: AquaSymbol(icon, color: color, size: 24),
+                      child: RayyanSymbol(icon, color: color, size: 24),
                     ),
                   ),
                   Column(
@@ -169,8 +169,8 @@ class _MenuCard extends StatelessWidget {
                         subtitle,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
                           color: isDark
-                              ? AquaColors.slate400
-                              : AquaColors.slate500,
+                              ? RayyanColors.slate400
+                              : RayyanColors.slate500,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -181,7 +181,7 @@ class _MenuCard extends StatelessWidget {
               const PositionedDirectional(
                 bottom: 8,
                 end: 8,
-                child: AquaSymbol('arrow_forward', color: AquaColors.slate300),
+                child: RayyanSymbol('arrow_forward', color: RayyanColors.slate300),
               ),
             ],
           ),

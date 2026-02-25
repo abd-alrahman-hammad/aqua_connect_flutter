@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../models/hydroponic/sensors_model.dart';
 import '../models/hydroponic/settings_model.dart';
-import '../theme/aqua_colors.dart';
+import '../theme/rayyan_colors.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 /// Enum representing the status of a single sensor
@@ -142,13 +142,13 @@ class VitalityUtils {
   static Color getStatusColor(SensorStatus status) {
     switch (status) {
       case SensorStatus.ok:
-        return AquaColors.success; // Green
+        return RayyanColors.success; // Green
       case SensorStatus.warning:
-        return AquaColors.warning; // Orange
+        return RayyanColors.warning; // Orange
       case SensorStatus.critical:
-        return AquaColors.error; // Red
+        return RayyanColors.error; // Red
       case SensorStatus.unknown:
-        return AquaColors.slate400; // Grey
+        return RayyanColors.slate400; // Grey
     }
   }
 

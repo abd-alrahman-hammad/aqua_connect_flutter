@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/services/hydroponic_database_service.dart';
-import '../../../core/theme/aqua_colors.dart';
+import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/utils/value_formatter.dart';
-import '../../../core/widgets/aqua_header.dart';
-import '../../../core/widgets/aqua_page_scaffold.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/widgets/rayyan_header.dart';
+import '../../../core/widgets/rayyan_page_scaffold.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 class ControlsScreen extends ConsumerStatefulWidget {
@@ -36,12 +36,12 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
     final ledLight = controlsAsync.valueOrNull?.ledLight ?? false;
     final isManualMode = !autoMode;
 
-    return AquaPageScaffold(
+    return RayyanPageScaffold(
       currentScreen: widget.current,
       onNavigate: widget.onNavigate,
       child: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.smartControls,
             onBack: () => widget.onNavigate(AppScreen.dashboard),
             rightAction: InkWell(
@@ -51,11 +51,11 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: AquaColors.primary.withValues(alpha: 0.10),
+                  color: RayyanColors.primary.withValues(alpha: 0.10),
                   shape: BoxShape.circle,
                 ),
                 child: const Center(
-                  child: AquaSymbol('wifi', color: AquaColors.primary),
+                  child: RayyanSymbol('wifi', color: RayyanColors.primary),
                 ),
               ),
             ),
@@ -71,7 +71,7 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                       context,
                     )!.systemOperationMode.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+                      color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.2,
                       fontSize: 10,
@@ -82,8 +82,8 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                     padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: isDark
-                          ? AquaColors.surfaceDark
-                          : AquaColors.slate200,
+                          ? RayyanColors.surfaceDark
+                          : RayyanColors.slate200,
                       borderRadius: BorderRadius.circular(12),
                     ),
                     child: Row(
@@ -192,18 +192,18 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AquaColors.warning.withValues(alpha: 0.10),
+                        color: RayyanColors.warning.withValues(alpha: 0.10),
                         border: Border.all(
-                          color: AquaColors.warning.withValues(alpha: 0.20),
+                          color: RayyanColors.warning.withValues(alpha: 0.20),
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const AquaSymbol(
+                          const RayyanSymbol(
                             'warning',
-                            color: AquaColors.warning,
+                            color: RayyanColors.warning,
                           ),
                           const SizedBox(width: 12),
                           Expanded(
@@ -213,7 +213,7 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                               )!.manualOverrideWarning,
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                    color: AquaColors.warning.withValues(
+                                    color: RayyanColors.warning.withValues(
                                       alpha: 0.80,
                                     ),
                                     height: 1.4,
@@ -228,23 +228,23 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                     Container(
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
-                        color: AquaColors.primary.withValues(alpha: 0.10),
+                        color: RayyanColors.primary.withValues(alpha: 0.10),
                         border: Border.all(
-                          color: AquaColors.primary.withValues(alpha: 0.20),
+                          color: RayyanColors.primary.withValues(alpha: 0.20),
                         ),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const AquaSymbol('info', color: AquaColors.primary),
+                          const RayyanSymbol('info', color: RayyanColors.primary),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
                               AppLocalizations.of(context)!.smartAutoInfo,
                               style: Theme.of(context).textTheme.bodySmall
                                   ?.copyWith(
-                                    color: AquaColors.primary.withValues(
+                                    color: RayyanColors.primary.withValues(
                                       alpha: 0.90,
                                     ),
                                     height: 1.4,
@@ -291,7 +291,7 @@ class _ModeButton extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 10),
           decoration: BoxDecoration(
             color: active
-                ? (isDark ? AquaColors.primary : Colors.white)
+                ? (isDark ? RayyanColors.primary : Colors.white)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(10),
             boxShadow: active
@@ -310,7 +310,7 @@ class _ModeButton extends StatelessWidget {
                     ValueFormatter.nullPlaceholder,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w800,
-                      color: isDark ? Colors.white : AquaColors.slate900,
+                      color: isDark ? Colors.white : RayyanColors.slate900,
                     ),
                   )
                 : Text(
@@ -318,8 +318,8 @@ class _ModeButton extends StatelessWidget {
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w800,
                       color: active
-                          ? (isDark ? Colors.white : AquaColors.slate900)
-                          : AquaColors.slate500,
+                          ? (isDark ? Colors.white : RayyanColors.slate900)
+                          : RayyanColors.slate500,
                     ),
                   ),
           ),
@@ -349,11 +349,11 @@ class _ModuleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final cardColor = active
-        ? (isDark ? AquaColors.surfaceDark : Colors.white)
-        : (isDark ? AquaColors.cardDark : Colors.white);
+        ? (isDark ? RayyanColors.surfaceDark : Colors.white)
+        : (isDark ? RayyanColors.cardDark : Colors.white);
     final borderColor = active
-        ? AquaColors.primary
-        : (isDark ? Colors.white.withValues(alpha: 0.05) : AquaColors.slate200);
+        ? RayyanColors.primary
+        : (isDark ? Colors.white.withValues(alpha: 0.05) : RayyanColors.slate200);
     final status = active
         ? AppLocalizations.of(context)!.onStatus
         : AppLocalizations.of(context)!.offStatus;
@@ -374,7 +374,7 @@ class _ModuleCard extends StatelessWidget {
               boxShadow: active
                   ? [
                       BoxShadow(
-                        color: AquaColors.primary.withValues(alpha: 0.30),
+                        color: RayyanColors.primary.withValues(alpha: 0.30),
                         blurRadius: 20,
                       ),
                     ]
@@ -397,18 +397,18 @@ class _ModuleCard extends StatelessWidget {
                       height: 40,
                       decoration: BoxDecoration(
                         color: active
-                            ? AquaColors.primary.withValues(alpha: 0.20)
+                            ? RayyanColors.primary.withValues(alpha: 0.20)
                             : (isDark
                                   ? Colors.white.withValues(alpha: 0.05)
-                                  : AquaColors.slate100),
+                                  : RayyanColors.slate100),
                         borderRadius: BorderRadius.circular(12),
                       ),
                       child: Center(
-                        child: AquaSymbol(
+                        child: RayyanSymbol(
                           icon,
                           color: active
-                              ? AquaColors.primary
-                              : AquaColors.slate400,
+                              ? RayyanColors.primary
+                              : RayyanColors.slate400,
                         ),
                       ),
                     ),
@@ -420,10 +420,10 @@ class _ModuleCard extends StatelessWidget {
                         padding: const EdgeInsets.all(4),
                         decoration: BoxDecoration(
                           color: active
-                              ? AquaColors.primary
+                              ? RayyanColors.primary
                               : (isDark
-                                    ? AquaColors.slate700
-                                    : AquaColors.slate300),
+                                    ? RayyanColors.slate700
+                                    : RayyanColors.slate300),
                           borderRadius: BorderRadius.circular(999),
                         ),
                         child: Align(
@@ -459,8 +459,8 @@ class _ModuleCard extends StatelessWidget {
                         fontSize: 10,
                         fontWeight: FontWeight.w800,
                         color: active
-                            ? AquaColors.primary
-                            : AquaColors.slate400,
+                            ? RayyanColors.primary
+                            : RayyanColors.slate400,
                         letterSpacing: 0.8,
                       ),
                     ),

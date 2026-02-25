@@ -7,11 +7,11 @@ import '../../../app/screens.dart';
 import '../../../core/models/hydroponic/sensors_model.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
 import '../../../core/services/hydroponic_database_service.dart';
-import '../../../core/theme/aqua_colors.dart';
+import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/utils/vitality_utils.dart';
-import '../../../core/widgets/aqua_header.dart';
-import '../../../core/widgets/aqua_page_scaffold.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/widgets/rayyan_header.dart';
+import '../../../core/widgets/rayyan_page_scaffold.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 import '../../insights/presentation/insights_state.dart';
 
 class InsightsScreen extends ConsumerStatefulWidget {
@@ -148,17 +148,17 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
         ? AppLocalizations.of(context)!.systemWarningDescription
         : AppLocalizations.of(context)!.systemOptimalDescription;
 
-    return AquaPageScaffold(
+    return RayyanPageScaffold(
       includeBottomNav: false,
       currentScreen: widget.current,
       onNavigate: widget.onNavigate,
       child: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.aiInsights,
             onBack: () => widget.onNavigate(AppScreen.more),
             rightAction: IconButton(
-              icon: const AquaSymbol('sync', color: AquaColors.primary),
+              icon: const RayyanSymbol('sync', color: RayyanColors.primary),
               onPressed: () {
                 if (sensors != null && settings != null) {
                   ref
@@ -202,15 +202,15 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AquaColors.error.withValues(alpha: 0.1),
+                      color: RayyanColors.error.withValues(alpha: 0.1),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: AquaColors.error.withValues(alpha: 0.3),
+                        color: RayyanColors.error.withValues(alpha: 0.3),
                       ),
                     ),
                     child: Text(
                       insightsState.error!,
-                      style: const TextStyle(color: AquaColors.error),
+                      style: const TextStyle(color: RayyanColors.error),
                       textAlign: TextAlign.center,
                     ),
                   ),
@@ -235,7 +235,7 @@ class _InsightsScreenState extends ConsumerState<InsightsScreen> {
                 _SectionHeader(
                   icon: 'error', // explicit error icon for Action Required
                   title: AppLocalizations.of(context)!.actionRequired,
-                  color: AquaColors.critical,
+                  color: RayyanColors.critical,
                   isDark: isDark,
                 ),
                 const SizedBox(height: 12),
@@ -308,7 +308,7 @@ class _StatusHero extends StatelessWidget {
         Text(
           description,
           style: TextStyle(
-            color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+            color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
             fontSize: 16, // Increased from 14
             height: 1.5,
           ),
@@ -413,10 +413,10 @@ class _SensorCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.cardDark : Colors.white,
+        color: isDark ? RayyanColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: isDark ? const Color(0xFF2C2C2C) : AquaColors.slate200,
+          color: isDark ? const Color(0xFF2C2C2C) : RayyanColors.slate200,
         ),
       ),
       child: Column(
@@ -427,7 +427,7 @@ class _SensorCard extends StatelessWidget {
             style: TextStyle(
               fontSize: 13, // Increased from 12
               fontWeight: FontWeight.w600,
-              color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+              color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
               letterSpacing: 0.5,
             ),
           ),
@@ -442,7 +442,7 @@ class _SensorCard extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                     color: isCriticalOrWarning
                         ? color
-                        : (isDark ? Colors.white : AquaColors.slate900),
+                        : (isDark ? Colors.white : RayyanColors.slate900),
                   ),
                 ),
                 TextSpan(
@@ -450,7 +450,7 @@ class _SensorCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16, // Increased from 14
                     fontWeight: FontWeight.w500,
-                    color: isDark ? AquaColors.slate500 : AquaColors.slate400,
+                    color: isDark ? RayyanColors.slate500 : RayyanColors.slate400,
                   ),
                 ),
               ],
@@ -477,14 +477,14 @@ class _SectionHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // If it's a standard material icon name for now, but wrapper considers using AquaSymbol or Icon.
+    // If it's a standard material icon name for now, but wrapper considers using RayyanSymbol or Icon.
     // The design uses a small circle icon with text.
     return Row(
       children: [
         Container(
           padding: const EdgeInsets.all(6),
           decoration: BoxDecoration(
-            color: (color ?? AquaColors.slate500).withValues(alpha: 0.1),
+            color: (color ?? RayyanColors.slate500).withValues(alpha: 0.1),
             shape: BoxShape.circle,
           ),
           child: Icon(
@@ -494,7 +494,7 @@ class _SectionHeader extends StatelessWidget {
                 ? Icons.warning_amber_rounded
                 : Icons.circle,
             size: 16,
-            color: color ?? AquaColors.slate500,
+            color: color ?? RayyanColors.slate500,
           ),
         ),
         const SizedBox(width: 12),
@@ -504,7 +504,7 @@ class _SectionHeader extends StatelessWidget {
             fontSize: 14, // Increased from 12
             fontWeight: FontWeight.w700,
             letterSpacing: 1.5,
-            color: isDark ? AquaColors.slate300 : AquaColors.slate600,
+            color: isDark ? RayyanColors.slate300 : RayyanColors.slate600,
           ),
         ),
       ],
@@ -535,13 +535,13 @@ class _ContentCard extends StatelessWidget {
       return Container(
         padding: const EdgeInsets.all(24),
         decoration: BoxDecoration(
-          color: isDark ? AquaColors.cardDark : Colors.white,
+          color: isDark ? RayyanColors.cardDark : Colors.white,
           borderRadius: BorderRadius.circular(20),
         ),
         child: Text(
           AppLocalizations.of(context)!.waitingForInsights,
           style: TextStyle(
-            color: isDark ? AquaColors.slate500 : AquaColors.slate400,
+            color: isDark ? RayyanColors.slate500 : RayyanColors.slate400,
           ),
         ),
       );
@@ -550,7 +550,7 @@ class _ContentCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.cardDark : Colors.white,
+        color: isDark ? RayyanColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(20),
       ),
       child: bulletPoints
@@ -560,7 +560,7 @@ class _ContentCard extends StatelessWidget {
               style: TextStyle(
                 fontSize: 16, // Increased from 15
                 height: 1.6,
-                color: isDark ? AquaColors.slate300 : AquaColors.slate700,
+                color: isDark ? RayyanColors.slate300 : RayyanColors.slate700,
               ),
             ),
     );
@@ -583,7 +583,7 @@ class _ContentCard extends StatelessWidget {
             children: [
               Padding(
                 padding: const EdgeInsets.only(top: 6),
-                child: Icon(Icons.circle, size: 6, color: AquaColors.critical),
+                child: Icon(Icons.circle, size: 6, color: RayyanColors.critical),
               ),
               const SizedBox(width: 12),
               Expanded(
@@ -592,7 +592,7 @@ class _ContentCard extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 16, // Increased from 15
                     height: 1.5,
-                    color: isDark ? AquaColors.slate300 : AquaColors.slate700,
+                    color: isDark ? RayyanColors.slate300 : RayyanColors.slate700,
                   ),
                 ),
               ),
@@ -624,7 +624,7 @@ class _DailyTipCard extends StatelessWidget {
             ? const Color(0xFF0F291E) // Darker green for dark mode
             : const Color(0xFFE8F5E9), // Light green for light mode
         borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: AquaColors.primary.withValues(alpha: 0.3)),
+        border: Border.all(color: RayyanColors.primary.withValues(alpha: 0.3)),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -634,7 +634,7 @@ class _DailyTipCard extends StatelessWidget {
               Container(
                 padding: const EdgeInsets.all(8),
                 decoration: const BoxDecoration(
-                  color: AquaColors.primary,
+                  color: RayyanColors.primary,
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -655,7 +655,7 @@ class _DailyTipCard extends StatelessWidget {
           ),
           const SizedBox(height: 16),
           if (isLoading)
-            _LoadingShimmer(isDark: isDark, baseColor: AquaColors.primary)
+            _LoadingShimmer(isDark: isDark, baseColor: RayyanColors.primary)
           else
             Text(
               content ?? AppLocalizations.of(context)!.waitingForInsights,
@@ -663,10 +663,10 @@ class _DailyTipCard extends StatelessWidget {
                 fontSize: 16, // Increased from 15
                 height: 1.6,
                 color: content == null
-                    ? (isDark ? AquaColors.slate500 : AquaColors.slate400)
+                    ? (isDark ? RayyanColors.slate500 : RayyanColors.slate400)
                     : (isDark
                           ? Colors.white.withValues(alpha: 0.9)
-                          : AquaColors.slate900),
+                          : RayyanColors.slate900),
               ),
             ),
         ],

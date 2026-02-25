@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
-import '../../../../core/theme/aqua_colors.dart';
-import '../../../../core/widgets/aqua_symbol.dart';
+import '../../../../core/theme/rayyan_colors.dart';
+import '../../../../core/widgets/rayyan_symbol.dart';
 import '../../../../core/services/firebase_auth_service.dart';
 import '../widgets/auth_brand_header.dart';
 import '../widgets/auth_text_field.dart';
@@ -111,8 +111,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDark
-          ? AquaColors.backgroundDark
-          : AquaColors.backgroundLight,
+          ? RayyanColors.backgroundDark
+          : RayyanColors.backgroundLight,
       body: SafeArea(
         child: Stack(
           children: [
@@ -121,7 +121,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
               left: 16,
               child: IconButton(
                 onPressed: () => Navigator.pop(context),
-                icon: const AquaSymbol('arrow_back_ios_new'),
+                icon: const RayyanSymbol('arrow_back_ios_new'),
               ),
             ),
             Center(
@@ -213,8 +213,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     color: isDark
-                                        ? AquaColors.slate400
-                                        : AquaColors.slate500,
+                                        ? RayyanColors.slate400
+                                        : RayyanColors.slate500,
                                   ),
                               children: [
                                 TextSpan(
@@ -233,7 +233,7 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                           .textTheme
                                           .bodyMedium
                                           ?.copyWith(
-                                            color: AquaColors.primary,
+                                            color: RayyanColors.primary,
                                             fontWeight: FontWeight.w800,
                                           ),
                                     ),

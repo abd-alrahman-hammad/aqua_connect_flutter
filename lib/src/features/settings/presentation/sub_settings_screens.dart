@@ -6,10 +6,10 @@ import '../../../app/screens.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
 import '../../../core/services/firebase_auth_service.dart';
 import '../../../core/services/hydroponic_database_service.dart';
-import '../../../core/theme/aqua_colors.dart';
+import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/utils/value_formatter.dart';
-import '../../../core/widgets/aqua_header.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/widgets/rayyan_header.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 import '../domain/notification_preferences.dart';
 
 class AccountSecurityScreen extends ConsumerStatefulWidget {
@@ -117,7 +117,7 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
     return Scaffold(
       body: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.accountSecurityTitle,
             onBack: () => widget.onNavigate(AppScreen.settings),
           ),
@@ -155,11 +155,11 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                                 () => _currentPasswordVisible =
                                     !_currentPasswordVisible,
                               ),
-                              icon: AquaSymbol(
+                              icon: RayyanSymbol(
                                 _currentPasswordVisible
                                     ? 'visibility'
                                     : 'visibility_off',
-                                color: AquaColors.slate400,
+                                color: RayyanColors.slate400,
                               ),
                             ),
                           ),
@@ -186,11 +186,11 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                                 () =>
                                     _newPasswordVisible = !_newPasswordVisible,
                               ),
-                              icon: AquaSymbol(
+                              icon: RayyanSymbol(
                                 _newPasswordVisible
                                     ? 'visibility'
                                     : 'visibility_off',
-                                color: AquaColors.slate400,
+                                color: RayyanColors.slate400,
                               ),
                             ),
                           ),
@@ -219,11 +219,11 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                                 () => _confirmPasswordVisible =
                                     !_confirmPasswordVisible,
                               ),
-                              icon: AquaSymbol(
+                              icon: RayyanSymbol(
                                 _confirmPasswordVisible
                                     ? 'visibility'
                                     : 'visibility_off',
-                                color: AquaColors.slate400,
+                                color: RayyanColors.slate400,
                               ),
                             ),
                           ),
@@ -233,7 +233,7 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                             child: ElevatedButton(
                               onPressed: _isLoading ? null : _updatePassword,
                               style: ElevatedButton.styleFrom(
-                                backgroundColor: AquaColors.primary,
+                                backgroundColor: RayyanColors.primary,
                                 foregroundColor: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(12),
@@ -271,7 +271,7 @@ class SensorCalibrationScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.sensorCalibrationTitle,
             onBack: () => onNavigate(AppScreen.settings),
             rightAction: Padding(
@@ -279,7 +279,7 @@ class SensorCalibrationScreen extends StatelessWidget {
               child: Text(
                 AppLocalizations.of(context)!.logLabel,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AquaColors.primary,
+                  color: RayyanColors.primary,
                   fontWeight: FontWeight.w900,
                 ),
               ),
@@ -293,15 +293,15 @@ class SensorCalibrationScreen extends StatelessWidget {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AquaColors.primary.withValues(alpha: 0.10),
+                      color: RayyanColors.primary.withValues(alpha: 0.10),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: AquaColors.primary.withValues(alpha: 0.20),
+                        color: RayyanColors.primary.withValues(alpha: 0.20),
                       ),
                     ),
                     child: Row(
                       children: [
-                        const AquaSymbol('info', color: AquaColors.primary),
+                        const RayyanSymbol('info', color: RayyanColors.primary),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
@@ -310,7 +310,7 @@ class SensorCalibrationScreen extends StatelessWidget {
                             )!.calibrationInfoMessage,
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
-                                  color: AquaColors.slate600,
+                                  color: RayyanColors.slate600,
                                   height: 1.4,
                                 ),
                           ),
@@ -324,7 +324,7 @@ class SensorCalibrationScreen extends StatelessWidget {
                     value: '6.2 pH',
                     lastCal: AppLocalizations.of(context)!.daysAgo2,
                     icon: 'water_ph',
-                    color: AquaColors.info,
+                    color: RayyanColors.info,
                     onTap: () => onNavigate(AppScreen.calibrationPh),
                   ),
                   const SizedBox(height: 16),
@@ -333,7 +333,7 @@ class SensorCalibrationScreen extends StatelessWidget {
                     value: '1.8 mS',
                     lastCal: AppLocalizations.of(context)!.daysAgo5,
                     icon: 'bolt',
-                    color: AquaColors.warning,
+                    color: RayyanColors.warning,
                     onTap: () => onNavigate(AppScreen.calibrationEc),
                   ),
                 ],
@@ -405,7 +405,7 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
     return Scaffold(
       body: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.operatingThresholdsTitle,
             onBack: () => widget.onNavigate(AppScreen.settings),
           ),
@@ -418,15 +418,15 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AquaColors.primary.withValues(alpha: 0.10),
+                      color: RayyanColors.primary.withValues(alpha: 0.10),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: AquaColors.primary.withValues(alpha: 0.20),
+                        color: RayyanColors.primary.withValues(alpha: 0.20),
                       ),
                     ),
                     child: Row(
                       children: [
-                        const AquaSymbol('info', color: AquaColors.primary),
+                        const RayyanSymbol('info', color: RayyanColors.primary),
                         const SizedBox(width: 12),
                         Expanded(
                           child: Text(
@@ -434,8 +434,8 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   color: isDark
-                                      ? AquaColors.slate300
-                                      : AquaColors.slate600,
+                                      ? RayyanColors.slate300
+                                      : RayyanColors.slate600,
                                   height: 1.4,
                                 ),
                           ),
@@ -606,7 +606,7 @@ class _ThresholdsForm extends StatelessWidget {
             child: ElevatedButton(
               onPressed: isLoading ? null : onSave,
               style: ElevatedButton.styleFrom(
-                backgroundColor: AquaColors.primary,
+                backgroundColor: RayyanColors.primary,
                 foregroundColor: Colors.white,
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -651,7 +651,7 @@ class _ThresholdField extends StatelessWidget {
         Text(
           label.toUpperCase(),
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+            color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
             fontWeight: FontWeight.w900,
             letterSpacing: 1.2,
           ),
@@ -664,13 +664,13 @@ class _ThresholdField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: enabled ? hint : placeholder,
             filled: true,
-            fillColor: isDark ? AquaColors.surfaceDark : AquaColors.slate100,
+            fillColor: isDark ? RayyanColors.surfaceDark : RayyanColors.slate100,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.10)
-                    : AquaColors.slate200,
+                    : RayyanColors.slate200,
               ),
             ),
             enabledBorder: OutlineInputBorder(
@@ -678,7 +678,7 @@ class _ThresholdField extends StatelessWidget {
               borderSide: BorderSide(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.10)
-                    : AquaColors.slate200,
+                    : RayyanColors.slate200,
               ),
             ),
           ),
@@ -702,7 +702,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
     return Scaffold(
       body: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.phCalibrationTitle,
             onBack: () => widget.onNavigate(AppScreen.sensorCalibration),
           ),
@@ -714,7 +714,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                   Text(
                     AppLocalizations.of(context)!.currentReading.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AquaColors.slate400,
+                      color: RayyanColors.slate400,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2,
                     ),
@@ -728,7 +728,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                         '6.2',
                         style: Theme.of(context).textTheme.displaySmall
                             ?.copyWith(
-                              color: AquaColors.info,
+                              color: RayyanColors.info,
                               fontWeight: FontWeight.w900,
                             ),
                       ),
@@ -739,7 +739,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                           'pH',
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(
-                                color: AquaColors.slate500,
+                                color: RayyanColors.slate500,
                                 fontWeight: FontWeight.w800,
                               ),
                         ),
@@ -753,7 +753,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                       vertical: 8,
                     ),
                     decoration: BoxDecoration(
-                      color: AquaColors.slate100,
+                      color: RayyanColors.slate100,
                       borderRadius: BorderRadius.circular(999),
                     ),
                     child: Row(
@@ -763,7 +763,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                           width: 8,
                           height: 8,
                           decoration: const BoxDecoration(
-                            color: AquaColors.nature,
+                            color: RayyanColors.nature,
                             shape: BoxShape.circle,
                           ),
                         ),
@@ -772,7 +772,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                           AppLocalizations.of(context)!.signalStable,
                           style: Theme.of(context).textTheme.labelMedium
                               ?.copyWith(
-                                color: AquaColors.slate500,
+                                color: RayyanColors.slate500,
                                 fontWeight: FontWeight.w900,
                               ),
                         ),
@@ -828,7 +828,7 @@ class _PhCalibrationScreenState extends State<PhCalibrationScreen> {
                               }
                             },
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AquaColors.info,
+                              backgroundColor: RayyanColors.info,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -874,7 +874,7 @@ class EcCalibrationScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.ecCalibrationTitle,
             onBack: () => onNavigate(AppScreen.sensorCalibration),
           ),
@@ -888,7 +888,7 @@ class EcCalibrationScreen extends StatelessWidget {
                       context,
                     )!.currentConductivity.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AquaColors.slate400,
+                      color: RayyanColors.slate400,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2,
                     ),
@@ -902,7 +902,7 @@ class EcCalibrationScreen extends StatelessWidget {
                         '1.8',
                         style: Theme.of(context).textTheme.displaySmall
                             ?.copyWith(
-                              color: AquaColors.warning,
+                              color: RayyanColors.warning,
                               fontWeight: FontWeight.w900,
                             ),
                       ),
@@ -913,7 +913,7 @@ class EcCalibrationScreen extends StatelessWidget {
                           'mS',
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(
-                                color: AquaColors.slate500,
+                                color: RayyanColors.slate500,
                                 fontWeight: FontWeight.w800,
                               ),
                         ),
@@ -927,24 +927,24 @@ class EcCalibrationScreen extends StatelessWidget {
                         Container(
                           padding: const EdgeInsets.all(16),
                           decoration: BoxDecoration(
-                            color: AquaColors.warning.withValues(alpha: 0.10),
+                            color: RayyanColors.warning.withValues(alpha: 0.10),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: AquaColors.warning.withValues(alpha: 0.20),
+                              color: RayyanColors.warning.withValues(alpha: 0.20),
                             ),
                           ),
                           child: Row(
                             children: [
-                              const AquaSymbol(
+                              const RayyanSymbol(
                                 'warning',
-                                color: AquaColors.warning,
+                                color: RayyanColors.warning,
                               ),
                               const SizedBox(width: 12),
                               Expanded(
                                 child: Text(
                                   AppLocalizations.of(context)!.ecProbeWarning,
                                   style: Theme.of(context).textTheme.bodySmall
-                                      ?.copyWith(color: AquaColors.warning),
+                                      ?.copyWith(color: RayyanColors.warning),
                                 ),
                               ),
                             ],
@@ -974,7 +974,7 @@ class EcCalibrationScreen extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {},
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AquaColors.warning,
+                              backgroundColor: RayyanColors.warning,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -997,7 +997,7 @@ class EcCalibrationScreen extends StatelessWidget {
                             AppLocalizations.of(context)!.cancel,
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
-                                  color: AquaColors.slate500,
+                                  color: RayyanColors.slate500,
                                   fontWeight: FontWeight.w900,
                                 ),
                           ),
@@ -1029,7 +1029,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
     return Scaffold(
       body: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.tempCalibrationTitle,
             onBack: () => widget.onNavigate(AppScreen.sensorCalibration),
           ),
@@ -1041,7 +1041,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                   Text(
                     AppLocalizations.of(context)!.sensorReading.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AquaColors.slate400,
+                      color: RayyanColors.slate400,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2,
                     ),
@@ -1055,7 +1055,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                         (24.5 + offset).toStringAsFixed(1),
                         style: Theme.of(context).textTheme.displaySmall
                             ?.copyWith(
-                              color: AquaColors.critical,
+                              color: RayyanColors.critical,
                               fontWeight: FontWeight.w900,
                             ),
                       ),
@@ -1066,7 +1066,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                           '°C',
                           style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(
-                                color: AquaColors.slate500,
+                                color: RayyanColors.slate500,
                                 fontWeight: FontWeight.w800,
                               ),
                         ),
@@ -1077,7 +1077,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                   Text(
                     AppLocalizations.of(context)!.rawValue('24.5'),
                     style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: AquaColors.slate500,
+                      color: RayyanColors.slate500,
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -1095,13 +1095,13 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                         Text(
                           AppLocalizations.of(context)!.offsetInstructions,
                           style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(color: AquaColors.slate500),
+                              ?.copyWith(color: RayyanColors.slate500),
                         ),
                         const SizedBox(height: 16),
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: AquaColors.slate100,
+                            color: RayyanColors.slate100,
                             borderRadius: BorderRadius.circular(12),
                           ),
                           child: Row(
@@ -1132,7 +1132,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                                         .textTheme
                                         .labelSmall
                                         ?.copyWith(
-                                          color: AquaColors.slate400,
+                                          color: RayyanColors.slate400,
                                           fontWeight: FontWeight.w900,
                                           letterSpacing: 1.4,
                                         ),
@@ -1157,7 +1157,7 @@ class _TempCalibrationScreenState extends State<TempCalibrationScreen> {
                             onPressed: () =>
                                 widget.onNavigate(AppScreen.sensorCalibration),
                             style: ElevatedButton.styleFrom(
-                              backgroundColor: AquaColors.critical,
+                              backgroundColor: RayyanColors.critical,
                               foregroundColor: Colors.white,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -1193,7 +1193,7 @@ class FirmwareUpdateScreen extends StatelessWidget {
     return Scaffold(
       body: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.firmwareUpdateTitle,
             onBack: () => onNavigate(AppScreen.settings),
           ),
@@ -1206,16 +1206,16 @@ class FirmwareUpdateScreen extends StatelessWidget {
                     width: 128,
                     height: 128,
                     decoration: BoxDecoration(
-                      color: AquaColors.slate100,
+                      color: RayyanColors.slate100,
                       shape: BoxShape.circle,
                     ),
                     child: Stack(
                       children: [
                         const Center(
-                          child: AquaSymbol(
+                          child: RayyanSymbol(
                             'system_update',
                             size: 64,
-                            color: AquaColors.slate300,
+                            color: RayyanColors.slate300,
                           ),
                         ),
                         Positioned(
@@ -1225,15 +1225,15 @@ class FirmwareUpdateScreen extends StatelessWidget {
                             width: 40,
                             height: 40,
                             decoration: BoxDecoration(
-                              color: AquaColors.nature,
+                              color: RayyanColors.nature,
                               shape: BoxShape.circle,
                               border: Border.all(
-                                color: AquaColors.backgroundLight,
+                                color: RayyanColors.backgroundLight,
                                 width: 4,
                               ),
                             ),
                             child: const Center(
-                              child: AquaSymbol('check', color: Colors.white),
+                              child: RayyanSymbol('check', color: Colors.white),
                             ),
                           ),
                         ),
@@ -1251,7 +1251,7 @@ class FirmwareUpdateScreen extends StatelessWidget {
                   Text(
                     AppLocalizations.of(context)!.installedVersion('v2.4.1'),
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AquaColors.slate500,
+                      color: RayyanColors.slate500,
                       fontWeight: FontWeight.w600,
                     ),
                   ),
@@ -1271,7 +1271,7 @@ class FirmwareUpdateScreen extends StatelessWidget {
                         Text(
                           AppLocalizations.of(context)!.releasedDate,
                           style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(color: AquaColors.slate400),
+                              ?.copyWith(color: RayyanColors.slate400),
                         ),
                         const SizedBox(height: 16),
                         _Bullet(AppLocalizations.of(context)!.changelogItem1),
@@ -1337,7 +1337,7 @@ class _NotificationSettingsScreenState
     return Scaffold(
       body: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.notificationSettingsTitle,
             onBack: () => widget.onNavigate(AppScreen.settings),
           ),
@@ -1364,7 +1364,7 @@ class _NotificationSettingsScreenState
                   child: Text(
                     AppLocalizations.of(context)!.alertsAndWarningsSection,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AquaColors.slate400,
+                      color: RayyanColors.slate400,
                       fontWeight: FontWeight.bold,
                       letterSpacing: 1.2,
                     ),
@@ -1431,12 +1431,12 @@ class _NotificationSettingsScreenState
     return Container(
       margin: const EdgeInsets.only(bottom: 8),
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.cardDark : Colors.white,
+        color: isDark ? RayyanColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.05)
-              : AquaColors.slate200,
+              : RayyanColors.slate200,
         ),
       ),
       child: SwitchListTile(
@@ -1450,10 +1450,10 @@ class _NotificationSettingsScreenState
           subtitle,
           style: Theme.of(
             context,
-          ).textTheme.bodySmall?.copyWith(color: AquaColors.slate500),
+          ).textTheme.bodySmall?.copyWith(color: RayyanColors.slate500),
         ),
         value: value,
-        activeColor: AquaColors.primary,
+        activeColor: RayyanColors.primary,
         contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
         onChanged: onChanged,
       ),
@@ -1471,12 +1471,12 @@ class _Card extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.cardDark : Colors.white,
+        color: isDark ? RayyanColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.05)
-              : AquaColors.slate200,
+              : RayyanColors.slate200,
         ),
       ),
       child: child,
@@ -1507,7 +1507,7 @@ class _Field extends StatelessWidget {
         Text(
           label.toUpperCase(),
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: AquaColors.slate500,
+            color: RayyanColors.slate500,
             fontWeight: FontWeight.w900,
             letterSpacing: 1.2,
           ),
@@ -1520,19 +1520,19 @@ class _Field extends StatelessWidget {
           decoration: InputDecoration(
             hintText: '',
             filled: true,
-            fillColor: isDark ? AquaColors.surfaceDark : AquaColors.slate100,
+            fillColor: isDark ? RayyanColors.surfaceDark : RayyanColors.slate100,
             suffixIcon: suffixIcon,
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(
-                color: AquaColors.critical,
+                color: RayyanColors.critical,
                 width: 1.2,
               ),
             ),
             focusedErrorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(
-                color: AquaColors.critical,
+                color: RayyanColors.critical,
                 width: 1.2,
               ),
             ),
@@ -1541,7 +1541,7 @@ class _Field extends StatelessWidget {
               borderSide: BorderSide(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.10)
-                    : AquaColors.slate200,
+                    : RayyanColors.slate200,
               ),
             ),
             enabledBorder: OutlineInputBorder(
@@ -1549,7 +1549,7 @@ class _Field extends StatelessWidget {
               borderSide: BorderSide(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.10)
-                    : AquaColors.slate200,
+                    : RayyanColors.slate200,
               ),
             ),
           ),
@@ -1580,12 +1580,12 @@ class _SensorCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.cardDark : Colors.white,
+        color: isDark ? RayyanColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.05)
-              : AquaColors.slate200,
+              : RayyanColors.slate200,
         ),
       ),
       child: Column(
@@ -1600,11 +1600,11 @@ class _SensorCard extends StatelessWidget {
                     height: 40,
                     decoration: BoxDecoration(
                       color: isDark
-                          ? AquaColors.surfaceDark
-                          : AquaColors.slate100,
+                          ? RayyanColors.surfaceDark
+                          : RayyanColors.slate100,
                       borderRadius: BorderRadius.circular(12),
                     ),
-                    child: Center(child: AquaSymbol(icon, color: color)),
+                    child: Center(child: RayyanSymbol(icon, color: color)),
                   ),
                   const SizedBox(width: 12),
                   Column(
@@ -1619,7 +1619,7 @@ class _SensorCard extends StatelessWidget {
                       Text(
                         AppLocalizations.of(context)!.currentValue(value),
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AquaColors.slate500,
+                          color: RayyanColors.slate500,
                         ),
                       ),
                     ],
@@ -1632,7 +1632,7 @@ class _SensorCard extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: isDark ? AquaColors.surfaceDark : AquaColors.slate100,
+                  color: isDark ? RayyanColors.surfaceDark : RayyanColors.slate100,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
@@ -1640,7 +1640,7 @@ class _SensorCard extends StatelessWidget {
                     context,
                   )!.lastCalibration(lastCal).toUpperCase(),
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AquaColors.slate500,
+                    color: RayyanColors.slate500,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -1696,10 +1696,10 @@ class _WizardStep extends StatelessWidget {
                 width: 32,
                 height: 32,
                 decoration: BoxDecoration(
-                  color: done ? AquaColors.info : Colors.transparent,
+                  color: done ? RayyanColors.info : Colors.transparent,
                   borderRadius: BorderRadius.circular(999),
                   border: Border.all(
-                    color: done ? AquaColors.info : AquaColors.slate200,
+                    color: done ? RayyanColors.info : RayyanColors.slate200,
                     width: 2,
                   ),
                 ),
@@ -1707,7 +1707,7 @@ class _WizardStep extends StatelessWidget {
                   child: Text(
                     '${idx + 1}',
                     style: TextStyle(
-                      color: done ? Colors.white : AquaColors.slate400,
+                      color: done ? Colors.white : RayyanColors.slate400,
                       fontWeight: FontWeight.w900,
                     ),
                   ),
@@ -1718,8 +1718,8 @@ class _WizardStep extends StatelessWidget {
                   width: 2,
                   height: 40,
                   color: step >= idx + 1
-                      ? AquaColors.info
-                      : AquaColors.slate200,
+                      ? RayyanColors.info
+                      : RayyanColors.slate200,
                 ),
             ],
           ),
@@ -1734,7 +1734,7 @@ class _WizardStep extends StatelessWidget {
                     title,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w900,
-                      color: active ? null : AquaColors.slate400,
+                      color: active ? null : RayyanColors.slate400,
                     ),
                   ),
                   const SizedBox(height: 4),
@@ -1742,7 +1742,7 @@ class _WizardStep extends StatelessWidget {
                     subtitle,
                     style: Theme.of(
                       context,
-                    ).textTheme.bodySmall?.copyWith(color: AquaColors.slate500),
+                    ).textTheme.bodySmall?.copyWith(color: RayyanColors.slate500),
                   ),
                 ],
               ),
@@ -1768,7 +1768,7 @@ class _SelectRow extends StatelessWidget {
         Text(
           title.toUpperCase(),
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: AquaColors.slate500,
+            color: RayyanColors.slate500,
             fontWeight: FontWeight.w900,
             letterSpacing: 1.2,
           ),
@@ -1778,12 +1778,12 @@ class _SelectRow extends StatelessWidget {
           height: 48,
           padding: const EdgeInsets.symmetric(horizontal: 16),
           decoration: BoxDecoration(
-            color: isDark ? AquaColors.surfaceDark : AquaColors.slate100,
+            color: isDark ? RayyanColors.surfaceDark : RayyanColors.slate100,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.10)
-                  : AquaColors.slate200,
+                  : RayyanColors.slate200,
             ),
           ),
           child: Row(
@@ -1799,7 +1799,7 @@ class _SelectRow extends StatelessWidget {
                 Text(
                   trailing!,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                    color: AquaColors.slate400,
+                    color: RayyanColors.slate400,
                     fontWeight: FontWeight.w900,
                   ),
                 ),
@@ -1825,15 +1825,15 @@ class _RoundButton extends StatelessWidget {
         width: 48,
         height: 48,
         decoration: BoxDecoration(
-          color: isDark ? AquaColors.cardDark : Colors.white,
+          color: isDark ? RayyanColors.cardDark : Colors.white,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(
             color: isDark
                 ? Colors.white.withValues(alpha: 0.05)
-                : AquaColors.slate200,
+                : RayyanColors.slate200,
           ),
         ),
-        child: Center(child: AquaSymbol(icon)),
+        child: Center(child: RayyanSymbol(icon)),
       ),
     );
   }
@@ -1848,14 +1848,14 @@ class _Bullet extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          const AquaSymbol('check_circle', color: AquaColors.primary, size: 18),
+          const RayyanSymbol('check_circle', color: RayyanColors.primary, size: 18),
           const SizedBox(width: 12),
           Expanded(
             child: Text(
               text,
               style: Theme.of(
                 context,
-              ).textTheme.bodyMedium?.copyWith(color: AquaColors.slate600),
+              ).textTheme.bodyMedium?.copyWith(color: RayyanColors.slate600),
             ),
           ),
         ],

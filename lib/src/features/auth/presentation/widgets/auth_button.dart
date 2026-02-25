@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/aqua_colors.dart';
+import '../../../../core/theme/rayyan_colors.dart';
 
 class AuthButton extends StatelessWidget {
   const AuthButton({
@@ -20,10 +20,10 @@ class AuthButton extends StatelessWidget {
       child: ElevatedButton(
         onPressed: isLoading ? null : onPressed,
         style: ElevatedButton.styleFrom(
-          backgroundColor: AquaColors.primary,
+          backgroundColor: RayyanColors.primary,
           foregroundColor: Colors.white,
           elevation: 0,
-          shadowColor: AquaColors.primary.withValues(alpha: 0.30),
+          shadowColor: RayyanColors.primary.withValues(alpha: 0.30),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12),
           ),

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
-import '../../../core/theme/aqua_colors.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/theme/rayyan_colors.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 
 class WiFiWizardScreen extends StatelessWidget {
   const WiFiWizardScreen({super.key, required this.onNavigate});
@@ -14,19 +14,19 @@ class WiFiWizardScreen extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDark
-          ? AquaColors.backgroundDark
-          : AquaColors.backgroundLight,
+          ? RayyanColors.backgroundDark
+          : RayyanColors.backgroundLight,
       body: Column(
         children: [
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
             decoration: BoxDecoration(
-              color: isDark ? AquaColors.backgroundDark : Colors.white,
+              color: isDark ? RayyanColors.backgroundDark : Colors.white,
               border: Border(
                 bottom: BorderSide(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.05)
-                      : AquaColors.slate200,
+                      : RayyanColors.slate200,
                 ),
               ),
             ),
@@ -36,9 +36,9 @@ class WiFiWizardScreen extends StatelessWidget {
                 children: [
                   IconButton(
                     onPressed: () => onNavigate(AppScreen.controls),
-                    icon: const AquaSymbol(
+                    icon: const RayyanSymbol(
                       'close',
-                      color: AquaColors.primary,
+                      color: RayyanColors.primary,
                       size: 28,
                     ),
                   ),
@@ -56,7 +56,7 @@ class WiFiWizardScreen extends StatelessWidget {
                     child: Text(
                       AppLocalizations.of(context)!.helpLabel,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AquaColors.primary,
+                        color: RayyanColors.primary,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -66,7 +66,7 @@ class WiFiWizardScreen extends StatelessWidget {
             ),
           ),
           Container(
-            color: isDark ? AquaColors.backgroundDark : Colors.white,
+            color: isDark ? RayyanColors.backgroundDark : Colors.white,
             padding: const EdgeInsets.symmetric(vertical: 16),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -104,17 +104,17 @@ class WiFiWizardScreen extends StatelessWidget {
                   Text(
                     AppLocalizations.of(context)!.scanningSubtitle,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: AquaColors.slate500,
+                      color: RayyanColors.slate500,
                     ),
                   ),
                   const SizedBox(height: 24),
                   Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
-                      color: AquaColors.primary.withValues(alpha: 0.05),
+                      color: RayyanColors.primary.withValues(alpha: 0.05),
                       borderRadius: BorderRadius.circular(16),
                       border: Border.all(
-                        color: AquaColors.primary.withValues(alpha: 0.20),
+                        color: RayyanColors.primary.withValues(alpha: 0.20),
                       ),
                     ),
                     child: Column(
@@ -128,7 +128,7 @@ class WiFiWizardScreen extends StatelessWidget {
                                   width: 8,
                                   height: 8,
                                   decoration: const BoxDecoration(
-                                    color: AquaColors.primary,
+                                    color: RayyanColors.primary,
                                     shape: BoxShape.circle,
                                   ),
                                 ),
@@ -139,7 +139,7 @@ class WiFiWizardScreen extends StatelessWidget {
                                   )!.scanningForEsp32,
                                   style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(
-                                        color: AquaColors.primary,
+                                        color: RayyanColors.primary,
                                         fontWeight: FontWeight.w900,
                                       ),
                                 ),
@@ -149,7 +149,7 @@ class WiFiWizardScreen extends StatelessWidget {
                               '75%',
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
-                                    color: AquaColors.primary,
+                                    color: RayyanColors.primary,
                                     fontWeight: FontWeight.w900,
                                   ),
                             ),
@@ -162,12 +162,12 @@ class WiFiWizardScreen extends StatelessWidget {
                             height: 6,
                             color: isDark
                                 ? Colors.white.withValues(alpha: 0.10)
-                                : AquaColors.slate200,
+                                : RayyanColors.slate200,
                             child: Align(
                               alignment: AlignmentDirectional.centerStart,
                               child: FractionallySizedBox(
                                 widthFactor: 0.75,
-                                child: Container(color: AquaColors.primary),
+                                child: Container(color: RayyanColors.primary),
                               ),
                             ),
                           ),
@@ -181,7 +181,7 @@ class WiFiWizardScreen extends StatelessWidget {
                       context,
                     )!.availableNetworks.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AquaColors.slate400,
+                      color: RayyanColors.slate400,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2,
                     ),
@@ -201,7 +201,7 @@ class WiFiWizardScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 12),
                   const _NetworkTile(
-                    name: 'Aqua_Lab_Extender',
+                    name: 'Rayyan_Lab_Extender',
                     type: 'WPA3 Protected',
                     locked: true,
                   ),
@@ -215,14 +215,14 @@ class WiFiWizardScreen extends StatelessWidget {
                   const SizedBox(height: 8),
                   TextButton.icon(
                     onPressed: () {},
-                    icon: const AquaSymbol(
+                    icon: const RayyanSymbol(
                       'refresh',
-                      color: AquaColors.primary,
+                      color: RayyanColors.primary,
                     ),
                     label: Text(
                       AppLocalizations.of(context)!.rescanForNetworks,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: AquaColors.primary,
+                        color: RayyanColors.primary,
                         fontWeight: FontWeight.w900,
                       ),
                     ),
@@ -234,12 +234,12 @@ class WiFiWizardScreen extends StatelessWidget {
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
             decoration: BoxDecoration(
-              color: isDark ? AquaColors.cardDark : Colors.white,
+              color: isDark ? RayyanColors.cardDark : Colors.white,
               border: Border(
                 top: BorderSide(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.05)
-                      : AquaColors.slate200,
+                      : RayyanColors.slate200,
                 ),
               ),
             ),
@@ -253,7 +253,7 @@ class WiFiWizardScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () => onNavigate(AppScreen.controls),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AquaColors.primary,
+                        backgroundColor: RayyanColors.primary,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -267,7 +267,7 @@ class WiFiWizardScreen extends StatelessWidget {
                             '${AppLocalizations.of(context)!.connectTo} FarmHouse_Main_2G',
                           ),
                           SizedBox(width: 8),
-                          AquaSymbol('arrow_forward', color: Colors.white),
+                          RayyanSymbol('arrow_forward', color: Colors.white),
                         ],
                       ),
                     ),
@@ -276,7 +276,7 @@ class WiFiWizardScreen extends StatelessWidget {
                   Text(
                     'Rayyan IoT v2.4.0'.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AquaColors.slate400,
+                      color: RayyanColors.slate400,
                       fontWeight: FontWeight.w900,
                       letterSpacing: 2,
                     ),
@@ -303,7 +303,7 @@ class _StepPill extends StatelessWidget {
           width: 48,
           height: 6,
           decoration: BoxDecoration(
-            color: active ? AquaColors.primary : AquaColors.slate200,
+            color: active ? RayyanColors.primary : RayyanColors.slate200,
             borderRadius: BorderRadius.circular(999),
           ),
         ),
@@ -311,7 +311,7 @@ class _StepPill extends StatelessWidget {
         Text(
           label.toUpperCase(),
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: active ? AquaColors.primary : AquaColors.slate400,
+            color: active ? RayyanColors.primary : RayyanColors.slate400,
             fontWeight: FontWeight.w900,
             letterSpacing: 1.2,
           ),
@@ -339,11 +339,11 @@ class _NetworkTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bg = active
-        ? (isDark ? AquaColors.surfaceDark : Colors.white)
-        : (isDark ? AquaColors.cardDark : Colors.white);
+        ? (isDark ? RayyanColors.surfaceDark : Colors.white)
+        : (isDark ? RayyanColors.cardDark : Colors.white);
     final border = active
-        ? AquaColors.primary
-        : (isDark ? Colors.white.withValues(alpha: 0.05) : AquaColors.slate200);
+        ? RayyanColors.primary
+        : (isDark ? Colors.white.withValues(alpha: 0.05) : RayyanColors.slate200);
     return Opacity(
       opacity: dim ? 0.5 : 1,
       child: Container(
@@ -355,7 +355,7 @@ class _NetworkTile extends StatelessWidget {
           boxShadow: active
               ? [
                   BoxShadow(
-                    color: AquaColors.primary.withValues(alpha: 0.15),
+                    color: RayyanColors.primary.withValues(alpha: 0.15),
                     blurRadius: 12,
                   ),
                 ]
@@ -371,16 +371,16 @@ class _NetworkTile extends StatelessWidget {
                   height: 40,
                   decoration: BoxDecoration(
                     color: active
-                        ? AquaColors.primary.withValues(alpha: 0.20)
+                        ? RayyanColors.primary.withValues(alpha: 0.20)
                         : (isDark
                               ? Colors.white.withValues(alpha: 0.05)
-                              : AquaColors.slate100),
+                              : RayyanColors.slate100),
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Center(
-                    child: AquaSymbol(
+                    child: RayyanSymbol(
                       locked ? 'wifi_lock' : 'wifi',
-                      color: active ? AquaColors.primary : AquaColors.slate400,
+                      color: active ? RayyanColors.primary : RayyanColors.slate400,
                     ),
                   ),
                 ),
@@ -398,7 +398,7 @@ class _NetworkTile extends StatelessWidget {
                     Text(
                       type,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: AquaColors.slate500,
+                        color: RayyanColors.slate500,
                       ),
                     ),
                   ],
@@ -407,13 +407,13 @@ class _NetworkTile extends StatelessWidget {
             ),
             Row(
               children: [
-                const AquaSymbol(
+                const RayyanSymbol(
                   'signal_wifi_4_bar',
-                  color: AquaColors.slate400,
+                  color: RayyanColors.slate400,
                 ),
                 if (active) ...[
                   const SizedBox(width: 8),
-                  const AquaSymbol('check_circle', color: AquaColors.primary),
+                  const RayyanSymbol('check_circle', color: RayyanColors.primary),
                 ],
               ],
             ),

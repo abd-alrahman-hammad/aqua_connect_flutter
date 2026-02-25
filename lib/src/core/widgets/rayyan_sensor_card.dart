@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
-import '../theme/aqua_colors.dart';
-import 'aqua_symbol.dart';
+import '../theme/rayyan_colors.dart';
+import 'rayyan_symbol.dart';
 
 /// Shared sensor/reading card widget used in Dashboard and Monitoring screens.
 ///
 /// Displays an icon, value, label, and optional status badge in a styled card.
 /// Supports optional tap handler (wraps in InkWell when provided).
-class AquaSensorCard extends StatelessWidget {
-  const AquaSensorCard({
+class RayyanSensorCard extends StatelessWidget {
+  const RayyanSensorCard({
     super.key,
     required this.icon,
     required this.value,
@@ -44,7 +44,7 @@ class AquaSensorCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final effectiveWidth =
         width ?? (MediaQuery.of(context).size.width - 16 * 2 - 12) / 2;
-    final effectiveBadgeColor = statusColor ?? badgeColor ?? AquaColors.nature;
+    final effectiveBadgeColor = statusColor ?? badgeColor ?? RayyanColors.nature;
     final effectiveBadgeBg =
         badgeBg ?? effectiveBadgeColor.withValues(alpha: 0.10);
     final displayLabel = labelUppercase ? label.toUpperCase() : label;
@@ -52,12 +52,12 @@ class AquaSensorCard extends StatelessWidget {
     final cardContent = Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.cardDark : Colors.white,
+        color: isDark ? RayyanColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.05)
-              : AquaColors.slate200,
+              : RayyanColors.slate200,
         ),
         boxShadow: [
           BoxShadow(
@@ -81,7 +81,7 @@ class AquaSensorCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Center(
-                  child: AquaSymbol(
+                  child: RayyanSymbol(
                     icon,
                     color: iconColor,
                     size: iconSize > 36 ? 24 : 18,
@@ -117,7 +117,7 @@ class AquaSensorCard extends StatelessWidget {
           Text(
             displayLabel,
             style: Theme.of(context).textTheme.labelSmall?.copyWith(
-              color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+              color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
               fontWeight: FontWeight.w700,
               fontSize: 10,
               letterSpacing: 0.6,

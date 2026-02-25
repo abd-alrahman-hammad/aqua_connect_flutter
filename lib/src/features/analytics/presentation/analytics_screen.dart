@@ -8,11 +8,11 @@ import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/services/hydroponic_database_service.dart';
-import '../../../core/theme/aqua_colors.dart';
+import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/utils/value_formatter.dart';
-import '../../../core/widgets/aqua_header.dart';
-import '../../../core/widgets/aqua_page_scaffold.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/widgets/rayyan_header.dart';
+import '../../../core/widgets/rayyan_page_scaffold.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 
 import 'analytics_state.dart';
 
@@ -50,13 +50,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
   Color _getTabColor(String tab) {
     switch (tab) {
       case 'pH Level':
-        return AquaColors.primary;
+        return RayyanColors.primary;
       case 'EC Level':
-        return AquaColors.warning;
+        return RayyanColors.warning;
       case 'Temperature':
-        return AquaColors.info;
+        return RayyanColors.info;
       default:
-        return AquaColors.primary;
+        return RayyanColors.primary;
     }
   }
 
@@ -118,13 +118,13 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
       },
     ];
 
-    return AquaPageScaffold(
+    return RayyanPageScaffold(
       includeBottomNav: false,
       currentScreen: widget.current,
       onNavigate: widget.onNavigate,
       child: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.historicalAnalytics,
             onBack: () => widget.onNavigate(AppScreen.more),
           ),
@@ -135,7 +135,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                 bottom: BorderSide(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.05)
-                      : AquaColors.slate200,
+                      : RayyanColors.slate200,
                 ),
               ),
             ),
@@ -166,8 +166,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                           color: active
                               ? chartColor
                               : (isDark
-                                    ? AquaColors.slate400
-                                    : AquaColors.slate500),
+                                    ? RayyanColors.slate400
+                                    : RayyanColors.slate500),
                         ),
                       ),
                     ),
@@ -185,8 +185,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                   padding: const EdgeInsets.all(4),
                   decoration: BoxDecoration(
                     color: isDark
-                        ? AquaColors.surfaceDark
-                        : AquaColors.slate200,
+                        ? RayyanColors.surfaceDark
+                        : RayyanColors.slate200,
                     borderRadius: BorderRadius.circular(12),
                   ),
                   child: Row(
@@ -205,7 +205,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                             decoration: BoxDecoration(
                               color: selected
                                   ? (isDark
-                                        ? AquaColors.backgroundDark
+                                        ? RayyanColors.backgroundDark
                                         : Colors.white)
                                   : Colors.transparent,
                               borderRadius: BorderRadius.circular(10),
@@ -227,8 +227,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                     ?.copyWith(
                                       fontWeight: FontWeight.w800,
                                       color: selected
-                                          ? AquaColors.primary
-                                          : AquaColors.slate500,
+                                          ? RayyanColors.primary
+                                          : RayyanColors.slate500,
                                       fontSize: 12,
                                     ),
                               ),
@@ -257,8 +257,8 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(
                                       color: isDark
-                                          ? AquaColors.slate400
-                                          : AquaColors.slate500,
+                                          ? RayyanColors.slate400
+                                          : RayyanColors.slate500,
                                     ),
                               ),
                               const SizedBox(height: 4),
@@ -281,23 +281,23 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: AquaColors.nature.withValues(alpha: 0.10),
+                              color: RayyanColors.nature.withValues(alpha: 0.10),
                               borderRadius: BorderRadius.circular(999),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const AquaSymbol(
+                                const RayyanSymbol(
                                   'trending_up',
                                   size: 16,
-                                  color: AquaColors.nature,
+                                  color: RayyanColors.nature,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
                                   AppLocalizations.of(context)!.stable,
                                   style: Theme.of(context).textTheme.labelMedium
                                       ?.copyWith(
-                                        color: AquaColors.nature,
+                                        color: RayyanColors.nature,
                                         fontWeight: FontWeight.w800,
                                       ),
                                 ),
@@ -413,7 +413,7 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                                 lineTouchData: LineTouchData(
                                   touchTooltipData: LineTouchTooltipData(
                                     getTooltipColor: (touchedSpot) => isDark
-                                        ? AquaColors.surfaceDark
+                                        ? RayyanColors.surfaceDark
                                         : Colors.white,
                                     tooltipBorderRadius: BorderRadius.circular(
                                       8,
@@ -456,12 +456,12 @@ class _Card extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.cardDark : Colors.white,
+        color: isDark ? RayyanColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.05)
-              : AquaColors.slate200,
+              : RayyanColors.slate200,
         ),
         boxShadow: [
           BoxShadow(

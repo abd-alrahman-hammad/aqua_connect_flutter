@@ -2,11 +2,11 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import '../theme/aqua_colors.dart';
-import 'aqua_symbol.dart';
+import '../theme/rayyan_colors.dart';
+import 'rayyan_symbol.dart';
 
-class AquaHeader extends StatelessWidget {
-  const AquaHeader({
+class RayyanHeader extends StatelessWidget {
+  const RayyanHeader({
     super.key,
     required this.title,
     this.onBack,
@@ -27,11 +27,11 @@ class AquaHeader extends StatelessWidget {
     final isDark = theme.brightness == Brightness.dark;
 
     final bg = isDark
-        ? AquaColors.backgroundDark.withValues(alpha: 0.80)
+        ? RayyanColors.backgroundDark.withValues(alpha: 0.80)
         : Colors.white.withValues(alpha: 0.80);
     final border = isDark
         ? Colors.white.withValues(alpha: 0.05)
-        : AquaColors.slate200;
+        : RayyanColors.slate200;
     final textColor = forceDarkText ? Colors.white : null;
 
     return ClipRect(
@@ -62,7 +62,7 @@ class AquaHeader extends StatelessWidget {
                                 shape: const CircleBorder(),
                                 backgroundColor: Colors.transparent,
                               ),
-                              icon: AquaSymbol(
+                              icon: RayyanSymbol(
                                 'arrow_back_ios_new',
                                 color: textColor,
                               ),

@@ -7,7 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
-import '../../../core/theme/aqua_colors.dart';
+import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/services/auth_preferences_service.dart';
 import '../../../core/services/firebase_auth_service.dart';
 import 'offline_startup_screen.dart';
@@ -107,16 +107,16 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     final isDark = brightness == Brightness.dark;
 
     final backgroundColor = isDark
-        ? AquaColors.backgroundDark
-        : AquaColors.backgroundLight;
+        ? RayyanColors.backgroundDark
+        : RayyanColors.backgroundLight;
 
-    final textColor = isDark ? Colors.white : AquaColors.slate900;
+    final textColor = isDark ? Colors.white : RayyanColors.slate900;
 
-    final subTitleColor = isDark ? AquaColors.slate300 : AquaColors.slate500;
+    final subTitleColor = isDark ? RayyanColors.slate300 : RayyanColors.slate500;
 
     final trackColor = isDark
-        ? AquaColors.slate700.withValues(alpha: 0.3)
-        : AquaColors.slate200;
+        ? RayyanColors.slate700.withValues(alpha: 0.3)
+        : RayyanColors.slate200;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -197,7 +197,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: AquaColors.primary.withValues(alpha: 0.2),
+            color: RayyanColors.primary.withValues(alpha: 0.2),
             blurRadius: 40,
             spreadRadius: -10,
             offset: const Offset(0, 10),
@@ -238,7 +238,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
               value: value,
               backgroundColor: trackColor,
               valueColor: const AlwaysStoppedAnimation<Color>(
-                AquaColors.primary,
+                RayyanColors.primary,
               ),
               minHeight: 4,
             ),
@@ -249,10 +249,10 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   }
 
   Widget _buildBackgroundBlobs(bool isDark) {
-    final primaryBlobColor = AquaColors.primary.withValues(
+    final primaryBlobColor = RayyanColors.primary.withValues(
       alpha: isDark ? 0.08 : 0.05,
     );
-    final aquaBlobColor = AquaColors.aqua.withValues(
+    final rayyanBlobColor = RayyanColors.rayyan.withValues(
       alpha: isDark ? 0.08 : 0.05,
     );
 
@@ -266,7 +266,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
         Positioned(
           bottom: -100,
           right: -80,
-          child: _buildBlob(aquaBlobColor, 350),
+          child: _buildBlob(rayyanBlobColor, 350),
         ),
       ],
     );

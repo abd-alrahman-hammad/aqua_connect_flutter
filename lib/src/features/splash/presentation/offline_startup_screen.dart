@@ -8,7 +8,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
-import '../../../core/theme/aqua_colors.dart';
+import '../../../core/theme/rayyan_colors.dart';
 
 /// Full-screen offline screen shown at startup when Remember Me is enabled
 /// but no internet connection is available.
@@ -81,10 +81,10 @@ class _OfflineStartupScreenState extends State<OfflineStartupScreen>
     final isDark = brightness == Brightness.dark;
 
     final backgroundColor = isDark
-        ? AquaColors.backgroundDark
-        : AquaColors.backgroundLight;
-    final textColor = isDark ? Colors.white : AquaColors.slate900;
-    final subTextColor = isDark ? AquaColors.slate300 : AquaColors.slate500;
+        ? RayyanColors.backgroundDark
+        : RayyanColors.backgroundLight;
+    final textColor = isDark ? Colors.white : RayyanColors.slate900;
+    final subTextColor = isDark ? RayyanColors.slate300 : RayyanColors.slate500;
 
     final l10n = AppLocalizations.of(context)!;
 
@@ -118,7 +118,7 @@ class _OfflineStartupScreenState extends State<OfflineStartupScreen>
                           height: 120,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: AquaColors.primary.withValues(
+                            color: RayyanColors.primary.withValues(
                               alpha: isDark ? 0.15 : 0.1,
                             ),
                           ),
@@ -127,8 +127,8 @@ class _OfflineStartupScreenState extends State<OfflineStartupScreen>
                               Icons.wifi_off_rounded,
                               size: 52,
                               color: isDark
-                                  ? AquaColors.slate300
-                                  : AquaColors.slate500,
+                                  ? RayyanColors.slate300
+                                  : RayyanColors.slate500,
                             ),
                           ),
                         ),
@@ -171,7 +171,7 @@ class _OfflineStartupScreenState extends State<OfflineStartupScreen>
                         child: CircularProgressIndicator(
                           strokeWidth: 2,
                           valueColor: AlwaysStoppedAnimation<Color>(
-                            AquaColors.primary.withValues(alpha: 0.5),
+                            RayyanColors.primary.withValues(alpha: 0.5),
                           ),
                         ),
                       ),
@@ -189,10 +189,10 @@ class _OfflineStartupScreenState extends State<OfflineStartupScreen>
   // ─── Background blobs (same pattern as SplashScreen) ───
 
   Widget _buildBackgroundBlobs(bool isDark) {
-    final primaryBlobColor = AquaColors.primary.withValues(
+    final primaryBlobColor = RayyanColors.primary.withValues(
       alpha: isDark ? 0.08 : 0.05,
     );
-    final aquaBlobColor = AquaColors.aqua.withValues(
+    final rayyanBlobColor = RayyanColors.rayyan.withValues(
       alpha: isDark ? 0.08 : 0.05,
     );
 
@@ -206,7 +206,7 @@ class _OfflineStartupScreenState extends State<OfflineStartupScreen>
         Positioned(
           bottom: -100,
           right: -80,
-          child: _buildBlob(aquaBlobColor, 350),
+          child: _buildBlob(rayyanBlobColor, 350),
         ),
       ],
     );

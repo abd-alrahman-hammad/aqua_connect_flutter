@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
-import '../../../core/theme/aqua_colors.dart';
-import '../../../core/widgets/aqua_header.dart';
-import '../../../core/widgets/aqua_page_scaffold.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/theme/rayyan_colors.dart';
+import '../../../core/widgets/rayyan_header.dart';
+import '../../../core/widgets/rayyan_page_scaffold.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 import '../application/sensor_monitor_service.dart';
 import '../domain/alert_model.dart';
 
@@ -42,20 +42,23 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
 
     final alerts = ref.watch(alertsProvider);
 
-    return AquaPageScaffold(
+    return RayyanPageScaffold(
       currentScreen: widget.current,
       onNavigate: widget.onNavigate,
       includeBottomNav: false,
       child: Column(
         children: [
-          AquaHeader(
+          RayyanHeader(
             title: AppLocalizations.of(context)!.alertsAndNotificationsTitle,
-            onBack: () => widget.onNavigate(AppScreen.dashboard),
+            onBack: () {
+              ScaffoldMessenger.of(context).clearSnackBars();
+              widget.onNavigate(AppScreen.dashboard);
+            },
             rightAction: IconButton(
               onPressed: () {
                 ref.read(alertsProvider.notifier).clearAll();
               },
-              icon: const AquaSymbol('done_all'),
+              icon: const RayyanSymbol('done_all'),
             ),
           ),
 
@@ -91,7 +94,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
         direction: DismissDirection.endToStart,
         background: Container(
           decoration: BoxDecoration(
-            color: AquaColors.critical,
+            color: RayyanColors.critical,
             borderRadius: BorderRadius.circular(16),
           ),
           alignment: Alignment.centerRight,
@@ -109,7 +112,11 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           ),
         ),
         onDismissed: (direction) {
-          ref.read(alertsProvider.notifier).removeAlert(alert.id);
+          final notifier = ref.read(alertsProvider.notifier);
+          notifier.removeAlert(alert.id);
+
+          if (!context.mounted) return;
+          ScaffoldMessenger.of(context).clearSnackBars();
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(
@@ -119,7 +126,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
               action: SnackBarAction(
                 label: AppLocalizations.of(context)!.undo,
                 onPressed: () {
-                  ref.read(alertsProvider.notifier).addAlert(alert);
+                  notifier.addAlert(alert);
                 },
               ),
             ),
@@ -138,13 +145,13 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
           Container(
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
-              color: AquaColors.nature.withValues(alpha: 0.1),
+              color: RayyanColors.nature.withValues(alpha: 0.1),
               shape: BoxShape.circle,
             ),
-            child: const AquaSymbol(
+            child: const RayyanSymbol(
               'check_circle',
               size: 48,
-              color: AquaColors.nature,
+              color: RayyanColors.nature,
             ),
           ),
           const SizedBox(height: 24),
@@ -152,7 +159,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
             AppLocalizations.of(context)!.allSystemsNominal,
             style: Theme.of(context).textTheme.headlineSmall?.copyWith(
               fontWeight: FontWeight.bold,
-              color: AquaColors.nature,
+              color: RayyanColors.nature,
             ),
           ),
           const SizedBox(height: 8),
@@ -160,7 +167,7 @@ class _AlertsScreenState extends ConsumerState<AlertsScreen> {
             AppLocalizations.of(context)!.noActiveAlerts,
             style: Theme.of(
               context,
-            ).textTheme.bodyMedium?.copyWith(color: AquaColors.slate400),
+            ).textTheme.bodyMedium?.copyWith(color: RayyanColors.slate400),
           ),
         ],
       ),
@@ -175,29 +182,29 @@ class _AlertCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Color border = AquaColors.info;
-    Color iconColor = AquaColors.info;
-    Color iconBg = AquaColors.info.withValues(alpha: 0.10);
+    Color border = RayyanColors.info;
+    Color iconColor = RayyanColors.info;
+    Color iconBg = RayyanColors.info.withValues(alpha: 0.10);
 
     if (alert.type == AlertType.critical) {
-      border = AquaColors.critical;
-      iconColor = AquaColors.critical;
-      iconBg = AquaColors.critical.withValues(alpha: 0.10);
+      border = RayyanColors.critical;
+      iconColor = RayyanColors.critical;
+      iconBg = RayyanColors.critical.withValues(alpha: 0.10);
     } else if (alert.type == AlertType.warning) {
-      border = AquaColors.warning;
-      iconColor = AquaColors.warning;
-      iconBg = AquaColors.warning.withValues(alpha: 0.10);
+      border = RayyanColors.warning;
+      iconColor = RayyanColors.warning;
+      iconBg = RayyanColors.warning.withValues(alpha: 0.10);
     } else if (alert.type == AlertType.optimal) {
-      border = AquaColors.nature;
-      iconColor = AquaColors.nature;
-      iconBg = AquaColors.nature.withValues(alpha: 0.10);
+      border = RayyanColors.nature;
+      iconColor = RayyanColors.nature;
+      iconBg = RayyanColors.nature.withValues(alpha: 0.10);
     }
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.cardDark : Colors.white,
+        color: isDark ? RayyanColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border(left: BorderSide(color: border, width: 4)),
         boxShadow: [
@@ -221,7 +228,7 @@ class _AlertCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Center(
-                child: AquaSymbol(alert.icon, color: iconColor, size: 24),
+                child: RayyanSymbol(alert.icon, color: iconColor, size: 24),
               ),
             ),
             const SizedBox(width: 16),
@@ -244,8 +251,8 @@ class _AlertCard extends StatelessWidget {
                         _formatTime(alert.timestamp),
                         style: Theme.of(context).textTheme.labelSmall?.copyWith(
                           color: isDark
-                              ? AquaColors.slate400
-                              : AquaColors.slate500,
+                              ? RayyanColors.slate400
+                              : RayyanColors.slate500,
                           fontWeight: FontWeight.w600,
                         ),
                       ),
@@ -255,7 +262,7 @@ class _AlertCard extends StatelessWidget {
                   Text(
                     alert.message,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isDark ? AquaColors.slate300 : AquaColors.slate600,
+                      color: isDark ? RayyanColors.slate300 : RayyanColors.slate600,
                       height: 1.4,
                     ),
                   ),

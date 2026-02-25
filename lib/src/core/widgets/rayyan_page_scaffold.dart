@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import '../../app/screens.dart';
-import 'aqua_bottom_nav.dart';
+import 'rayyan_bottom_nav.dart';
 
-class AquaPageScaffold extends StatelessWidget {
-  const AquaPageScaffold({
+class RayyanPageScaffold extends StatelessWidget {
+  const RayyanPageScaffold({
     super.key,
     required this.currentScreen,
     required this.onNavigate,
@@ -42,7 +42,7 @@ class AquaPageScaffold extends StatelessWidget {
         children: [
           SafeArea(top: false, bottom: false, child: content),
           if (includeBottomNav)
-            AquaBottomNav(current: currentScreen, onNavigate: onNavigate),
+            RayyanBottomNav(current: currentScreen, onNavigate: onNavigate),
         ],
       ),
     );

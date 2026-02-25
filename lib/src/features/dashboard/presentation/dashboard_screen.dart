@@ -9,13 +9,13 @@ import '../../../app/screens.dart';
 import '../../../core/models/user_model.dart';
 import '../../../core/services/user_database_service.dart';
 import '../../../core/services/hydroponic_database_service.dart';
-import '../../../core/theme/aqua_colors.dart';
+import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/theme/theme_provider.dart';
 import '../../../core/utils/value_formatter.dart';
 import '../../../core/utils/vitality_utils.dart'; // [NEW]
-import '../../../core/widgets/aqua_page_scaffold.dart';
-import '../../../core/widgets/aqua_sensor_card.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/widgets/rayyan_page_scaffold.dart';
+import '../../../core/widgets/rayyan_sensor_card.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 import '../../../core/models/hydroponic/sensors_model.dart'; // [NEW] - for type safety in builder
 import '../../../core/models/hydroponic/settings_model.dart'; // [NEW]
 
@@ -43,7 +43,7 @@ class DashboardScreen extends ConsumerWidget {
     final userAsync = ref.watch(realtimeUserProfileStreamProvider);
     final isConnected = ref.watch(systemStatusProvider);
 
-    return AquaPageScaffold(
+    return RayyanPageScaffold(
       currentScreen: current,
       onNavigate: onNavigate,
       child: Column(
@@ -72,7 +72,7 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+                    color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
                     height: 1.35,
                   ),
                 ),
@@ -104,8 +104,8 @@ class DashboardScreen extends ConsumerWidget {
                       ),
                       decoration: BoxDecoration(
                         color: isConnected
-                            ? AquaColors.success.withValues(alpha: 0.10)
-                            : AquaColors.slate400.withValues(alpha: 0.10),
+                            ? RayyanColors.success.withValues(alpha: 0.10)
+                            : RayyanColors.slate400.withValues(alpha: 0.10),
                         borderRadius: BorderRadius.circular(6),
                       ),
                       child: Row(
@@ -116,8 +116,8 @@ class DashboardScreen extends ConsumerWidget {
                             decoration: BoxDecoration(
                               shape: BoxShape.circle,
                               color: isConnected
-                                  ? AquaColors.success
-                                  : AquaColors.error,
+                                  ? RayyanColors.success
+                                  : RayyanColors.error,
                             ),
                           ),
                           const SizedBox(width: 6),
@@ -128,8 +128,8 @@ class DashboardScreen extends ConsumerWidget {
                             style: Theme.of(context).textTheme.labelSmall
                                 ?.copyWith(
                                   color: isConnected
-                                      ? AquaColors.success
-                                      : AquaColors.error,
+                                      ? RayyanColors.success
+                                      : RayyanColors.error,
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 1.0,
                                   fontSize: 10,
@@ -169,7 +169,7 @@ class DashboardScreen extends ConsumerWidget {
                       spacing: 16,
                       runSpacing: 16,
                       children: [
-                        AquaSensorCard(
+                        RayyanSensorCard(
                           width: cardWidth,
                           icon: 'water_ph',
                           value: ValueFormatter.formatDouble(sensors?.ph),
@@ -179,8 +179,8 @@ class DashboardScreen extends ConsumerWidget {
                             AppLocalizations.of(context)!,
                           ),
                           statusColor: VitalityUtils.getStatusColor(phStatus),
-                          iconColor: AquaColors.primary,
-                          iconBg: AquaColors.primary.withValues(alpha: 0.10),
+                          iconColor: RayyanColors.primary,
+                          iconBg: RayyanColors.primary.withValues(alpha: 0.10),
                           onTap: () {
                             ref.read(analyticsTabProvider.notifier).state =
                                 'pH Level';
@@ -188,7 +188,7 @@ class DashboardScreen extends ConsumerWidget {
                           },
                           labelUppercase: true,
                         ),
-                        AquaSensorCard(
+                        RayyanSensorCard(
                           width: cardWidth,
                           icon: 'bolt',
                           value: ValueFormatter.formatDouble(sensors?.ec),
@@ -198,8 +198,8 @@ class DashboardScreen extends ConsumerWidget {
                             AppLocalizations.of(context)!,
                           ),
                           statusColor: VitalityUtils.getStatusColor(ecStatus),
-                          iconColor: AquaColors.warning,
-                          iconBg: AquaColors.warning.withValues(alpha: 0.10),
+                          iconColor: RayyanColors.warning,
+                          iconBg: RayyanColors.warning.withValues(alpha: 0.10),
                           onTap: () {
                             ref.read(analyticsTabProvider.notifier).state =
                                 'EC Level';
@@ -207,7 +207,7 @@ class DashboardScreen extends ConsumerWidget {
                           },
                           labelUppercase: true,
                         ),
-                        AquaSensorCard(
+                        RayyanSensorCard(
                           width: cardWidth,
                           icon: 'device_thermostat',
                           value: ValueFormatter.formatWithSuffix(
@@ -220,8 +220,8 @@ class DashboardScreen extends ConsumerWidget {
                             AppLocalizations.of(context)!,
                           ),
                           statusColor: VitalityUtils.getStatusColor(tempStatus),
-                          iconColor: AquaColors.info,
-                          iconBg: AquaColors.info.withValues(alpha: 0.10),
+                          iconColor: RayyanColors.info,
+                          iconBg: RayyanColors.info.withValues(alpha: 0.10),
                           onTap: () {
                             ref.read(analyticsTabProvider.notifier).state =
                                 'Temperature';
@@ -229,7 +229,7 @@ class DashboardScreen extends ConsumerWidget {
                           },
                           labelUppercase: true,
                         ),
-                        AquaSensorCard(
+                        RayyanSensorCard(
                           width: cardWidth,
                           icon: 'waves',
                           value: ValueFormatter.formatPercent(
@@ -274,8 +274,8 @@ class _TopNav extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final bg = isDark
-        ? AquaColors.backgroundDark.withValues(alpha: 0.90)
-        : AquaColors.backgroundLight.withValues(alpha: 0.90);
+        ? RayyanColors.backgroundDark.withValues(alpha: 0.90)
+        : RayyanColors.backgroundLight.withValues(alpha: 0.90);
 
     return ClipRect(
       child: BackdropFilter(
@@ -288,7 +288,7 @@ class _TopNav extends ConsumerWidget {
               bottom: BorderSide(
                 color: isDark
                     ? Colors.white.withValues(alpha: 0.05)
-                    : AquaColors.slate200,
+                    : RayyanColors.slate200,
               ),
             ),
           ),
@@ -308,7 +308,7 @@ class _TopNav extends ConsumerWidget {
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
                             border: Border.all(
-                              color: AquaColors.primary,
+                              color: RayyanColors.primary,
                               width: 2,
                             ),
                           ),
@@ -334,8 +334,8 @@ class _TopNav extends ConsumerWidget {
                                   fontWeight: FontWeight.w800,
                                   letterSpacing: 1.3,
                                   color: isDark
-                                      ? AquaColors.slate400
-                                      : AquaColors.slate500,
+                                      ? RayyanColors.slate400
+                                      : RayyanColors.slate500,
                                 ),
                           ),
                           Text(
@@ -366,13 +366,13 @@ class _TopNav extends ConsumerWidget {
                           height: 40,
                           decoration: BoxDecoration(
                             color: isDark
-                                ? AquaColors.surfaceDark
+                                ? RayyanColors.surfaceDark
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: isDark
                                   ? Colors.white.withValues(alpha: 0.10)
-                                  : AquaColors.slate200,
+                                  : RayyanColors.slate200,
                             ),
                           ),
                           child: Center(
@@ -382,8 +382,8 @@ class _TopNav extends ConsumerWidget {
                                   : Icons.light_mode_rounded,
                               size: 20,
                               color: isDark
-                                  ? AquaColors.primary
-                                  : AquaColors.slate600,
+                                  ? RayyanColors.primary
+                                  : RayyanColors.slate600,
                             ),
                           ),
                         ),
@@ -397,17 +397,17 @@ class _TopNav extends ConsumerWidget {
                           height: 40,
                           decoration: BoxDecoration(
                             color: isDark
-                                ? AquaColors.surfaceDark
+                                ? RayyanColors.surfaceDark
                                 : Colors.white,
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
                               color: isDark
                                   ? Colors.white.withValues(alpha: 0.10)
-                                  : AquaColors.slate200,
+                                  : RayyanColors.slate200,
                             ),
                           ),
                           child: const Center(
-                            child: AquaSymbol('notifications'),
+                            child: RayyanSymbol('notifications'),
                           ),
                         ),
                       ),
@@ -438,7 +438,7 @@ class _VitalityRing extends StatelessWidget {
   Widget build(BuildContext context) {
     final borderBg = isDark
         ? Colors.white.withValues(alpha: 0.06)
-        : AquaColors.slate200.withValues(alpha: 0.4);
+        : RayyanColors.slate200.withValues(alpha: 0.4);
 
     // Calculate vitality score
     double progressValue = 0.0;
@@ -471,7 +471,7 @@ class _VitalityRing extends StatelessWidget {
                 value: progressValue > 0 ? progressValue : null,
                 strokeWidth: 10,
                 backgroundColor: Colors.transparent,
-                color: AquaColors.nature,
+                color: RayyanColors.nature,
                 strokeCap: StrokeCap.round,
               ),
             ),
@@ -483,8 +483,8 @@ class _VitalityRing extends StatelessWidget {
             decoration: BoxDecoration(
               shape: BoxShape.circle,
               color: isDark
-                  ? AquaColors.backgroundDark
-                  : AquaColors.backgroundLight,
+                  ? RayyanColors.backgroundDark
+                  : RayyanColors.backgroundLight,
             ),
           ),
           // Center label
@@ -502,7 +502,7 @@ class _VitalityRing extends StatelessWidget {
               Text(
                 AppLocalizations.of(context)!.vitality,
                 style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                  color: AquaColors.nature,
+                  color: RayyanColors.nature,
                   fontWeight: FontWeight.w800,
                   letterSpacing: 2.0,
                   fontSize: 11,

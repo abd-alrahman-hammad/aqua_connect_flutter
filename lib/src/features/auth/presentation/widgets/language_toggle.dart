@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/theme/aqua_colors.dart';
+import '../../../../core/theme/rayyan_colors.dart';
 import '../../../../core/localization/locale_provider.dart';
 
 /// A pill-shaped EN / AR language toggle that uses [localeProvider]
@@ -14,10 +14,10 @@ class LanguageToggle extends ConsumerWidget {
     final isEnglish = locale.languageCode == 'en';
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final trackColor = isDark ? AquaColors.cardDark : AquaColors.slate200;
+    final trackColor = isDark ? RayyanColors.cardDark : RayyanColors.slate200;
     final inactiveTextColor = isDark
-        ? AquaColors.slate400
-        : AquaColors.slate500;
+        ? RayyanColors.slate400
+        : RayyanColors.slate500;
 
     return Directionality(
       textDirection: TextDirection.ltr,
@@ -42,7 +42,7 @@ class LanguageToggle extends ConsumerWidget {
                 width: 56,
                 height: 34,
                 decoration: BoxDecoration(
-                  color: AquaColors.primary,
+                  color: RayyanColors.primary,
                   borderRadius: BorderRadius.circular(999),
                 ),
               ),

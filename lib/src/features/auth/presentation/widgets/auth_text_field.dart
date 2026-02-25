@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/aqua_colors.dart';
-import '../../../../core/widgets/aqua_symbol.dart';
+import '../../../../core/theme/rayyan_colors.dart';
+import '../../../../core/widgets/rayyan_symbol.dart';
 
 class AuthField extends StatelessWidget {
   const AuthField({
@@ -23,10 +23,10 @@ class AuthField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final fill = isDark ? AquaColors.surfaceDark : Colors.white;
+    final fill = isDark ? RayyanColors.surfaceDark : Colors.white;
     final border = isDark
         ? Colors.white.withValues(alpha: 0.10)
-        : AquaColors.slate200;
+        : RayyanColors.slate200;
 
     // Hint Color with opacity
     final hintColor = isDark
@@ -69,7 +69,7 @@ class AuthField extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(
-                color: AquaColors.primary,
+                color: RayyanColors.primary,
                 width: 1.2,
               ),
             ),
@@ -111,10 +111,10 @@ class AuthPasswordField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final fill = isDark ? AquaColors.surfaceDark : Colors.white;
+    final fill = isDark ? RayyanColors.surfaceDark : Colors.white;
     final border = isDark
         ? Colors.white.withValues(alpha: 0.10)
-        : AquaColors.slate200;
+        : RayyanColors.slate200;
 
     final hintColor = isDark
         ? Colors.white.withValues(alpha: 0.3)
@@ -155,7 +155,7 @@ class AuthPasswordField extends StatelessWidget {
             focusedBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: const BorderSide(
-                color: AquaColors.primary,
+                color: RayyanColors.primary,
                 width: 1.2,
               ),
             ),
@@ -169,9 +169,9 @@ class AuthPasswordField extends StatelessWidget {
             ),
             suffixIcon: IconButton(
               onPressed: onToggleVisibility,
-              icon: AquaSymbol(
+              icon: RayyanSymbol(
                 visible ? 'visibility' : 'visibility_off',
-                color: isDark ? AquaColors.slate300 : AquaColors.slate400,
+                color: isDark ? RayyanColors.slate300 : RayyanColors.slate400,
               ),
             ),
           ),

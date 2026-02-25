@@ -1,24 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-import 'aqua_colors.dart';
+import 'rayyan_colors.dart';
 
-class AquaTheme {
+class RayyanTheme {
   static ThemeData light() {
     final base = ThemeData(
       useMaterial3: true,
       colorScheme: const ColorScheme.light(
-        primary: AquaColors.primary,
-        secondary: AquaColors.aqua,
+        primary: RayyanColors.primary,
+        secondary: RayyanColors.rayyan,
         surface: Colors.white,
       ),
-      scaffoldBackgroundColor: AquaColors.backgroundLight,
+      scaffoldBackgroundColor: RayyanColors.backgroundLight,
     );
 
     return base.copyWith(
       textTheme: GoogleFonts.manropeTextTheme(base.textTheme).apply(
-        bodyColor: AquaColors.slate900,
-        displayColor: AquaColors.slate900,
+        bodyColor: RayyanColors.slate900,
+        displayColor: RayyanColors.slate900,
       ),
     );
   }
@@ -28,11 +28,11 @@ class AquaTheme {
       useMaterial3: true,
       brightness: Brightness.dark,
       colorScheme: const ColorScheme.dark(
-        primary: AquaColors.primary,
-        secondary: AquaColors.aqua,
-        surface: AquaColors.cardDark,
+        primary: RayyanColors.primary,
+        secondary: RayyanColors.rayyan,
+        surface: RayyanColors.cardDark,
       ),
-      scaffoldBackgroundColor: AquaColors.backgroundDark,
+      scaffoldBackgroundColor: RayyanColors.backgroundDark,
     );
 
     return base.copyWith(

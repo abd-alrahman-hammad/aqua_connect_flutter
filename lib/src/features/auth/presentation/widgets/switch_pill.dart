@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../../../../core/theme/aqua_colors.dart';
+import '../../../../core/theme/rayyan_colors.dart';
 
 class SwitchPill extends StatelessWidget {
   const SwitchPill({super.key, required this.value});
@@ -8,7 +8,7 @@ class SwitchPill extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final trackOff = isDark ? AquaColors.slate700 : AquaColors.slate200;
+    final trackOff = isDark ? RayyanColors.slate700 : RayyanColors.slate200;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeOut,
@@ -16,7 +16,7 @@ class SwitchPill extends StatelessWidget {
       height: 24,
       padding: const EdgeInsets.all(4),
       decoration: BoxDecoration(
-        color: value ? AquaColors.primary : trackOff,
+        color: value ? RayyanColors.primary : trackOff,
         borderRadius: BorderRadius.circular(999),
       ),
       child: AnimatedAlign(

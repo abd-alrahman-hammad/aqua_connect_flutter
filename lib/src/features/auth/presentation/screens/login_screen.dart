@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../app/screens.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
-import '../../../../core/theme/aqua_colors.dart';
+import '../../../../core/theme/rayyan_colors.dart';
 import '../../../../core/widgets/blur_circle.dart';
 import '../../../../core/services/firebase_auth_service.dart';
 import '../../../../core/services/auth_preferences_service.dart';
@@ -80,7 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
               content: Text(AppLocalizations.of(context)!.verifyEmailFirst),
-              backgroundColor: AquaColors.critical,
+              backgroundColor: RayyanColors.critical,
               behavior: SnackBarBehavior.floating,
             ),
           );
@@ -177,8 +177,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
       backgroundColor: isDark
-          ? AquaColors.backgroundDark
-          : AquaColors.backgroundLight,
+          ? RayyanColors.backgroundDark
+          : RayyanColors.backgroundLight,
       body: Stack(
         children: [
           Positioned(
@@ -186,7 +186,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             left: -80,
             child: BlurCircle(
               diameter: 256,
-              color: AquaColors.primary,
+              color: RayyanColors.primary,
               opacity: 0.10,
             ),
           ),
@@ -195,7 +195,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             right: -80,
             child: BlurCircle(
               diameter: 256,
-              color: AquaColors.primary,
+              color: RayyanColors.primary,
               opacity: 0.10,
             ),
           ),
@@ -296,8 +296,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                         ?.copyWith(
                                           fontWeight: FontWeight.w600,
                                           color: isDark
-                                              ? AquaColors.slate300
-                                              : AquaColors.slate600,
+                                              ? RayyanColors.slate300
+                                              : RayyanColors.slate600,
                                         ),
                                   ),
                                 ],
@@ -307,7 +307,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               onPressed: _navigateToForgotPassword,
                               style: TextButton.styleFrom(
                                 padding: EdgeInsets.zero,
-                                foregroundColor: AquaColors.primary,
+                                foregroundColor: RayyanColors.primary,
                                 textStyle: const TextStyle(
                                   fontWeight: FontWeight.w800,
                                 ),
@@ -331,8 +331,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               style: Theme.of(context).textTheme.bodyMedium
                                   ?.copyWith(
                                     color: isDark
-                                        ? AquaColors.slate400
-                                        : AquaColors.slate500,
+                                        ? RayyanColors.slate400
+                                        : RayyanColors.slate500,
                                   ),
                               children: [
                                 TextSpan(
@@ -351,7 +351,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                                           .textTheme
                                           .bodyMedium
                                           ?.copyWith(
-                                            color: AquaColors.primary,
+                                            color: RayyanColors.primary,
                                             fontWeight: FontWeight.w800,
                                           ),
                                     ),

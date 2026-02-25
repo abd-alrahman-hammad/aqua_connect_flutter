@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
-class AquaColors {
+class RayyanColors {
   // Tailwind config from `index.html`
   static const primary = Color(0xFF38A254); // Nature Green
-  static const aqua = Color(0xFF00AEEF); // Aqua Blue
+  static const rayyan = Color(0xFF00AEEF); // Rayyan Blue
   static const primaryDark = Color(0xFF26703A);
 
   static const backgroundLight = Color(0xFFF7F8F6);
@@ -14,7 +14,7 @@ class AquaColors {
   static const critical = Color(0xFFFF4D4D);
   static const error = critical; // Alias
   static const warning = Color(0xFFFFA500);
-  static const info = aqua;
+  static const info = rayyan;
   static const nature = primary;
   static const success = nature; // Alias
 

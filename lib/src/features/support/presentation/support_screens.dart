@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
-import '../../../core/theme/aqua_colors.dart';
-import '../../../core/widgets/aqua_header.dart';
-import '../../../core/widgets/aqua_page_scaffold.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/theme/rayyan_colors.dart';
+import '../../../core/widgets/rayyan_header.dart';
+import '../../../core/widgets/rayyan_page_scaffold.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 import '../../chat/presentation/chat_screen.dart';
 
 class FaqItem {
@@ -76,11 +76,11 @@ class _SupportScreenState extends State<SupportScreen> {
     final faqs = _filteredFaqs(l10n);
     return Scaffold(
       backgroundColor: isDark
-          ? AquaColors.backgroundDark
-          : AquaColors.backgroundLight,
+          ? RayyanColors.backgroundDark
+          : RayyanColors.backgroundLight,
       body: Stack(
         children: [
-          AquaPageScaffold(
+          RayyanPageScaffold(
             includeBottomNav: false,
             currentScreen: AppScreen.support,
             onNavigate: widget.onNavigate,
@@ -104,7 +104,7 @@ class _SupportScreenState extends State<SupportScreen> {
                           Text(
                             l10n.visualWalkthroughs,
                             style: Theme.of(context).textTheme.bodyMedium
-                                ?.copyWith(color: AquaColors.slate500),
+                                ?.copyWith(color: RayyanColors.slate500),
                           ),
                           const SizedBox(height: 16),
                           SizedBox(
@@ -147,11 +147,11 @@ class _SupportScreenState extends State<SupportScreen> {
                                                   decoration:
                                                       const BoxDecoration(
                                                         color:
-                                                            AquaColors.primary,
+                                                            RayyanColors.primary,
                                                         shape: BoxShape.circle,
                                                       ),
                                                   child: const Center(
-                                                    child: AquaSymbol(
+                                                    child: RayyanSymbol(
                                                       'play_arrow',
                                                       color: Colors.white,
                                                     ),
@@ -208,7 +208,7 @@ class _SupportScreenState extends State<SupportScreen> {
                                             .textTheme
                                             .bodySmall
                                             ?.copyWith(
-                                              color: AquaColors.slate500,
+                                              color: RayyanColors.slate500,
                                             ),
                                       ),
                                     ],
@@ -234,7 +234,7 @@ class _SupportScreenState extends State<SupportScreen> {
                               l10n.noResultsFound,
                               textAlign: TextAlign.center,
                               style: Theme.of(context).textTheme.bodyMedium
-                                  ?.copyWith(color: AquaColors.slate500),
+                                  ?.copyWith(color: RayyanColors.slate500),
                             ),
                           )
                         else
@@ -261,10 +261,10 @@ class _SupportScreenState extends State<SupportScreen> {
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => const ChatScreen()),
                       ),
-                      icon: const AquaSymbol('smart_toy', color: Colors.white),
+                      icon: const RayyanSymbol('smart_toy', color: Colors.white),
                       label: Text(l10n.chatWithRayyan),
                       style: ElevatedButton.styleFrom(
-                        backgroundColor: AquaColors.primary,
+                        backgroundColor: RayyanColors.primary,
                         foregroundColor: Colors.white,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(16),
@@ -290,13 +290,13 @@ class _SupportScreenState extends State<SupportScreen> {
         padding: const EdgeInsets.symmetric(horizontal: 16),
         decoration: BoxDecoration(
           color: isDark
-              ? AquaColors.backgroundDark.withValues(alpha: 0.80)
+              ? RayyanColors.backgroundDark.withValues(alpha: 0.80)
               : Colors.white.withValues(alpha: 0.80),
           border: Border(
             bottom: BorderSide(
               color: isDark
                   ? Colors.white.withValues(alpha: 0.05)
-                  : AquaColors.slate200,
+                  : RayyanColors.slate200,
             ),
           ),
         ),
@@ -312,10 +312,10 @@ class _SupportScreenState extends State<SupportScreen> {
                   decoration: InputDecoration(
                     hintText: l10n.searchFaqsHint,
                     border: InputBorder.none,
-                    hintStyle: const TextStyle(color: AquaColors.slate400),
-                    icon: const AquaSymbol(
+                    hintStyle: const TextStyle(color: RayyanColors.slate400),
+                    icon: const RayyanSymbol(
                       'search',
-                      color: AquaColors.slate400,
+                      color: RayyanColors.slate400,
                     ),
                   ),
                   style: Theme.of(context).textTheme.bodyLarge,
@@ -327,12 +327,12 @@ class _SupportScreenState extends State<SupportScreen> {
         ),
       );
     }
-    return AquaHeader(
+    return RayyanHeader(
       title: l10n.supportAndLearning,
       onBack: () => widget.onNavigate(AppScreen.more),
       rightAction: IconButton(
         onPressed: _toggleSearch,
-        icon: const AquaSymbol('search'),
+        icon: const RayyanSymbol('search'),
       ),
     );
   }
@@ -353,12 +353,12 @@ class _FaqTileState extends State<_FaqTile> {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.cardDark : Colors.white,
+        color: isDark ? RayyanColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.05)
-              : AquaColors.slate200,
+              : RayyanColors.slate200,
         ),
       ),
       child: InkWell(
@@ -380,9 +380,9 @@ class _FaqTileState extends State<_FaqTile> {
                   AnimatedRotation(
                     turns: open ? 0.5 : 0,
                     duration: const Duration(milliseconds: 200),
-                    child: const AquaSymbol(
+                    child: const RayyanSymbol(
                       'expand_more',
-                      color: AquaColors.slate400,
+                      color: RayyanColors.slate400,
                     ),
                   ),
                 ],
@@ -392,14 +392,14 @@ class _FaqTileState extends State<_FaqTile> {
                 Divider(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.05)
-                      : AquaColors.slate100,
+                      : RayyanColors.slate100,
                   height: 1,
                 ),
                 const SizedBox(height: 12),
                 Text(
                   widget.item.answer,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: isDark ? AquaColors.slate400 : AquaColors.slate500,
+                    color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
                   ),
                 ),
               ],

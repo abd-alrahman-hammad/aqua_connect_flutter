@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:material_symbols_icons/material_symbols_icons.dart';
 
-class AquaSymbol extends StatelessWidget {
-  const AquaSymbol(
+class RayyanSymbol extends StatelessWidget {
+  const RayyanSymbol(
     this.name, {
     super.key,
     this.size,

@@ -2,10 +2,10 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app/screens.dart';
-import '../../../core/theme/aqua_colors.dart';
-import '../../../core/widgets/aqua_bottom_nav.dart';
-import '../../../core/widgets/aqua_header.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/theme/rayyan_colors.dart';
+import '../../../core/widgets/rayyan_bottom_nav.dart';
+import '../../../core/widgets/rayyan_header.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 
 class VisionScreen extends StatelessWidget {
   const VisionScreen({
@@ -42,7 +42,7 @@ class VisionScreen extends StatelessWidget {
                       top: 0,
                       left: 0,
                       right: 0,
-                      child: AquaHeader(
+                      child: RayyanHeader(
                         title: 'Plant Health AI Vision',
                         onBack: () => onNavigate(AppScreen.dashboard),
                         
@@ -60,13 +60,13 @@ class VisionScreen extends StatelessWidget {
                           Container(
                             decoration: BoxDecoration(
                               border: Border.all(
-                                color: AquaColors.info,
+                                color: RayyanColors.info,
                                 width: 2,
                               ),
                               borderRadius: BorderRadius.circular(12),
                               boxShadow: [
                                 BoxShadow(
-                                  color: AquaColors.info.withValues(
+                                  color: RayyanColors.info.withValues(
                                     alpha: 0.40,
                                   ),
                                   blurRadius: 20,
@@ -83,7 +83,7 @@ class VisionScreen extends StatelessWidget {
                                 vertical: 6,
                               ),
                               decoration: const BoxDecoration(
-                                color: AquaColors.info,
+                                color: RayyanColors.info,
                                 borderRadius: BorderRadius.only(
                                   topLeft: Radius.circular(12),
                                   topRight: Radius.circular(12),
@@ -117,7 +117,7 @@ class VisionScreen extends StatelessWidget {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: AquaColors.nature.withValues(alpha: 0.90),
+                              color: RayyanColors.nature.withValues(alpha: 0.90),
                               borderRadius: BorderRadius.circular(999),
                               border: Border.all(
                                 color: Colors.white.withValues(alpha: 0.20),
@@ -131,7 +131,7 @@ class VisionScreen extends StatelessWidget {
                             ),
                             child: Row(
                               children: [
-                                const AquaSymbol(
+                                const RayyanSymbol(
                                   'check_circle',
                                   size: 16,
                                   color: Colors.white,
@@ -170,7 +170,7 @@ class VisionScreen extends StatelessWidget {
                             ),
                             child: Row(
                               children: [
-                                const AquaSymbol(
+                                const RayyanSymbol(
                                   'analytics',
                                   size: 16,
                                   color: Colors.white,
@@ -200,7 +200,7 @@ class VisionScreen extends StatelessWidget {
                 padding: const EdgeInsets.fromLTRB(24, 32, 24, 24),
                 decoration: BoxDecoration(
                   color: Theme.of(context).brightness == Brightness.dark
-                      ? AquaColors.cardDark
+                      ? RayyanColors.cardDark
                       : Colors.white,
                   borderRadius: const BorderRadius.only(
                     topLeft: Radius.circular(24),
@@ -224,12 +224,12 @@ class VisionScreen extends StatelessWidget {
                         _InfoTile(
                           label: 'Health Index',
                           value: 'Excellent',
-                          valueColor: AquaColors.nature,
+                          valueColor: RayyanColors.nature,
                         ),
                         _InfoTile(
                           label: 'Detection',
                           value: 'AI Active',
-                          valueColor: AquaColors.info,
+                          valueColor: RayyanColors.info,
                         ),
                       ],
                     ),
@@ -275,7 +275,7 @@ class VisionScreen extends StatelessWidget {
                                         .textTheme
                                         .labelMedium
                                         ?.copyWith(
-                                          color: AquaColors.slate300,
+                                          color: RayyanColors.slate300,
                                           fontWeight: FontWeight.w900,
                                         ),
                                   ),
@@ -285,7 +285,7 @@ class VisionScreen extends StatelessWidget {
                                         .textTheme
                                         .labelSmall
                                         ?.copyWith(
-                                          color: AquaColors.nature,
+                                          color: RayyanColors.nature,
                                           fontWeight: FontWeight.w900,
                                         ),
                                   ),
@@ -303,7 +303,7 @@ class VisionScreen extends StatelessWidget {
             ],
           ),
           // bottom nav dock
-          AquaBottomNav(current: current, onNavigate: onNavigate),
+          RayyanBottomNav(current: current, onNavigate: onNavigate),
         ],
       ),
     );
@@ -328,12 +328,12 @@ class _InfoTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? AquaColors.surfaceDark : AquaColors.backgroundLight,
+          color: isDark ? RayyanColors.surfaceDark : RayyanColors.backgroundLight,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isDark
                 ? Colors.white.withValues(alpha: 0.05)
-                : AquaColors.slate200,
+                : RayyanColors.slate200,
           ),
         ),
         child: Column(
@@ -342,7 +342,7 @@ class _InfoTile extends StatelessWidget {
             Text(
               label.toUpperCase(),
               style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                color: AquaColors.slate400,
+                color: RayyanColors.slate400,
                 fontWeight: FontWeight.w900,
                 letterSpacing: 1.2,
               ),

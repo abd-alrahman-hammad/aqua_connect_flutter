@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:rayyan/src/features/alerts/presentation/alerts_screen.dart';
 
 import '../../l10n/generated/app_localizations.dart';
-import '../core/theme/aqua_theme.dart';
+import '../core/theme/rayyan_theme.dart';
 import '../core/theme/theme_provider.dart';
 import '../core/localization/locale_provider.dart';
 import '../features/analytics/presentation/analytics_screen.dart';
@@ -38,8 +38,8 @@ class RayyanApp extends ConsumerWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Rayyan',
-      theme: AquaTheme.light(),
-      darkTheme: AquaTheme.dark(),
+      theme: RayyanTheme.light(),
+      darkTheme: RayyanTheme.dark(),
       themeMode: themeMode,
       locale: locale,
       localizationsDelegates: AppLocalizations.localizationsDelegates,

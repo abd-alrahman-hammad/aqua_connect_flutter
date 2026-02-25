@@ -5,9 +5,9 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/services/auth_preferences_service.dart';
 import '../../../core/services/firebase_auth_service.dart';
-import '../../../core/theme/aqua_colors.dart';
-import '../../../core/widgets/aqua_page_scaffold.dart';
-import '../../../core/widgets/aqua_symbol.dart';
+import '../../../core/theme/rayyan_colors.dart';
+import '../../../core/widgets/rayyan_page_scaffold.dart';
+import '../../../core/widgets/rayyan_symbol.dart';
 import '../../../core/localization/locale_provider.dart';
 // Duplicate import removed
 
@@ -35,10 +35,10 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     // userProvider was unused and undefined
-    final bg = isDark ? AquaColors.backgroundDark : AquaColors.backgroundLight;
+    final bg = isDark ? RayyanColors.backgroundDark : RayyanColors.backgroundLight;
     final l10n = AppLocalizations.of(context)!;
 
-    return AquaPageScaffold(
+    return RayyanPageScaffold(
       currentScreen: widget.current,
       onNavigate: widget.onNavigate,
       backgroundColor: bg,
@@ -54,7 +54,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 bottom: BorderSide(
                   color: isDark
                       ? Colors.white.withValues(alpha: 0.05)
-                      : AquaColors.slate200,
+                      : RayyanColors.slate200,
                 ),
               ),
             ),
@@ -81,13 +81,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                         width: 40,
                         height: 40,
                         decoration: BoxDecoration(
-                          color: AquaColors.primary.withValues(alpha: 0.10),
+                          color: RayyanColors.primary.withValues(alpha: 0.10),
                           shape: BoxShape.circle,
                         ),
                         child: const Center(
-                          child: AquaSymbol(
+                          child: RayyanSymbol(
                             'person',
-                            color: AquaColors.primary,
+                            color: RayyanColors.primary,
                           ),
                         ),
                       ),
@@ -153,7 +153,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       subtitleWidget: Text(
                         l10n.upToDate,
                         style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AquaColors.nature,
+                          color: RayyanColors.nature,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -174,7 +174,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             children: [
                               _IconBox(
                                 icon: 'language',
-                                color: AquaColors.primary,
+                                color: RayyanColors.primary,
                               ),
                               const SizedBox(width: 16),
                               Text(
@@ -209,8 +209,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
                                 color: isDark
-                                    ? AquaColors.surfaceDark
-                                    : AquaColors.slate100,
+                                    ? RayyanColors.surfaceDark
+                                    : RayyanColors.slate100,
                                 borderRadius: BorderRadius.circular(10),
                               ),
                               child: Consumer(
@@ -245,7 +245,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             children: [
                               _IconBox(
                                 icon: 'dark_mode',
-                                color: AquaColors.primary,
+                                color: RayyanColors.primary,
                               ),
                               const SizedBox(width: 16),
                               Text(
@@ -264,8 +264,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                               padding: const EdgeInsets.all(4),
                               decoration: BoxDecoration(
                                 color: isDark
-                                    ? AquaColors.primary
-                                    : AquaColors.slate300,
+                                    ? RayyanColors.primary
+                                    : RayyanColors.slate300,
                                 borderRadius: BorderRadius.circular(999),
                               ),
                               child: Align(
@@ -298,7 +298,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             Theme.of(context).brightness == Brightness.dark;
                         return AlertDialog(
                           backgroundColor: isDark
-                              ? AquaColors.cardDark
+                              ? RayyanColors.cardDark
                               : Colors.white,
                           title: Text(
                             l10n.signOutConfirmationTitle,
@@ -313,8 +313,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   color: isDark
-                                      ? AquaColors.slate400
-                                      : AquaColors.slate600,
+                                      ? RayyanColors.slate400
+                                      : RayyanColors.slate600,
                                 ),
                           ),
                           actions: [
@@ -324,7 +324,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 l10n.cancel,
                                 style: Theme.of(context).textTheme.labelLarge
                                     ?.copyWith(
-                                      color: AquaColors.slate500,
+                                      color: RayyanColors.slate500,
                                       fontWeight: FontWeight.w900,
                                     ),
                               ),
@@ -335,7 +335,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 l10n.signOut,
                                 style: Theme.of(context).textTheme.labelLarge
                                     ?.copyWith(
-                                      color: AquaColors.critical,
+                                      color: RayyanColors.critical,
                                       fontWeight: FontWeight.w900,
                                     ),
                               ),
@@ -362,7 +362,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                                 context,
                               )!.errorSigningOut(e.toString()),
                             ),
-                            backgroundColor: AquaColors.critical,
+                            backgroundColor: RayyanColors.critical,
                             behavior: SnackBarBehavior.floating,
                           ),
                         );
@@ -373,17 +373,17 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   child: Container(
                     padding: const EdgeInsets.symmetric(vertical: 16),
                     decoration: BoxDecoration(
-                      color: AquaColors.critical.withValues(alpha: 0.10),
+                      color: RayyanColors.critical.withValues(alpha: 0.10),
                       borderRadius: BorderRadius.circular(12),
                       border: Border.all(
-                        color: AquaColors.critical.withValues(alpha: 0.20),
+                        color: RayyanColors.critical.withValues(alpha: 0.20),
                       ),
                     ),
                     child: Center(
                       child: Text(
                         l10n.signOut,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: AquaColors.critical,
+                          color: RayyanColors.critical,
                           fontWeight: FontWeight.w900,
                         ),
                       ),
@@ -395,7 +395,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                   child: Text(
                     l10n.appVersion,
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: AquaColors.slate400,
+                      color: RayyanColors.slate400,
                       fontWeight: FontWeight.w800,
                     ),
                   ),
@@ -419,7 +419,7 @@ class _SectionLabel extends StatelessWidget {
       child: Text(
         text.toUpperCase(),
         style: Theme.of(context).textTheme.labelSmall?.copyWith(
-          color: AquaColors.slate400,
+          color: RayyanColors.slate400,
           fontWeight: FontWeight.w900,
           letterSpacing: 2.0,
         ),
@@ -436,12 +436,12 @@ class _Card extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Container(
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.cardDark : Colors.white,
+        color: isDark ? RayyanColors.cardDark : Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
           color: isDark
               ? Colors.white.withValues(alpha: 0.05)
-              : AquaColors.slate200,
+              : RayyanColors.slate200,
         ),
       ),
       child: ClipRRect(
@@ -461,7 +461,7 @@ class _Divider extends StatelessWidget {
       thickness: 1,
       color: isDark
           ? Colors.white.withValues(alpha: 0.05)
-          : AquaColors.slate100,
+          : RayyanColors.slate100,
     );
   }
 }
@@ -477,10 +477,10 @@ class _IconBox extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: isDark ? AquaColors.surfaceDark : AquaColors.slate100,
+        color: isDark ? RayyanColors.surfaceDark : RayyanColors.slate100,
         borderRadius: BorderRadius.circular(10),
       ),
-      child: Center(child: AquaSymbol(icon, color: color)),
+      child: Center(child: RayyanSymbol(icon, color: color)),
     );
   }
 }
@@ -509,7 +509,7 @@ class _MenuItem extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: Row(
           children: [
-            _IconBox(icon: icon, color: AquaColors.primary),
+            _IconBox(icon: icon, color: RayyanColors.primary),
             const SizedBox(width: 16),
             Expanded(
               child: Column(
@@ -526,15 +526,15 @@ class _MenuItem extends StatelessWidget {
                       subtitle!,
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
                         color: isDark
-                            ? AquaColors.slate400
-                            : AquaColors.slate500,
+                            ? RayyanColors.slate400
+                            : RayyanColors.slate500,
                       ),
                     ),
                   if (subtitleWidget != null) subtitleWidget!,
                 ],
               ),
             ),
-            const AquaSymbol('chevron_right', color: AquaColors.slate300),
+            const RayyanSymbol('chevron_right', color: RayyanColors.slate300),
           ],
         ),
       ),
@@ -555,7 +555,7 @@ class _LangPill extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
         color: selected
-            ? (isDark ? AquaColors.backgroundDark : Colors.white)
+            ? (isDark ? RayyanColors.backgroundDark : Colors.white)
             : Colors.transparent,
         borderRadius: BorderRadius.circular(8),
         boxShadow: selected
@@ -571,7 +571,7 @@ class _LangPill extends StatelessWidget {
         label,
         style: Theme.of(context).textTheme.labelLarge?.copyWith(
           fontWeight: FontWeight.w900,
-          color: selected ? AquaColors.primary : AquaColors.slate400,
+          color: selected ? RayyanColors.primary : RayyanColors.slate400,
           fontSize: 12,
         ),
       ),

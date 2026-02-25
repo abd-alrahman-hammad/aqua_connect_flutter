@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 
 import '../../app/screens.dart';
 import '../../../l10n/generated/app_localizations.dart';
-import '../theme/aqua_colors.dart';
-import 'aqua_symbol.dart';
+import '../theme/rayyan_colors.dart';
+import 'rayyan_symbol.dart';
 
-class AquaBottomNav extends StatelessWidget {
-  const AquaBottomNav({
+class RayyanBottomNav extends StatelessWidget {
+  const RayyanBottomNav({
     super.key,
     required this.current,
     required this.onNavigate,
@@ -122,8 +122,8 @@ class _NavItem extends StatelessWidget {
     final isActive = current == screen;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final inactive = isDark ? AquaColors.slate500 : AquaColors.slate400;
-    final active = AquaColors.aqua;
+    final inactive = isDark ? RayyanColors.slate500 : RayyanColors.slate400;
+    final active = RayyanColors.rayyan;
 
     return Expanded(
       child: Stack(
@@ -141,7 +141,7 @@ class _NavItem extends StatelessWidget {
                     scale: isActive ? 1.10 : 1.0,
                     duration: const Duration(milliseconds: 300),
                     curve: Curves.easeOut,
-                    child: AquaSymbol(
+                    child: RayyanSymbol(
                       icon,
                       size: 26,
                       color: isActive ? active : inactive,
@@ -174,7 +174,7 @@ class _NavItem extends StatelessWidget {
                 width: 4,
                 height: 4,
                 decoration: const BoxDecoration(
-                  color: AquaColors.aqua,
+                  color: RayyanColors.rayyan,
                   shape: BoxShape.circle,
                 ),
               ),
