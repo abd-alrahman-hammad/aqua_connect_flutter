@@ -44,21 +44,6 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
           RayyanHeader(
             title: AppLocalizations.of(context)!.smartControls,
             onBack: () => widget.onNavigate(AppScreen.dashboard),
-            rightAction: InkWell(
-              onTap: () => widget.onNavigate(AppScreen.wifi),
-              borderRadius: BorderRadius.circular(999),
-              child: Container(
-                width: 40,
-                height: 40,
-                decoration: BoxDecoration(
-                  color: RayyanColors.primary.withValues(alpha: 0.10),
-                  shape: BoxShape.circle,
-                ),
-                child: const Center(
-                  child: RayyanSymbol('wifi', color: RayyanColors.primary),
-                ),
-              ),
-            ),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(16, 24, 16, 0),
@@ -71,7 +56,9 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                       context,
                     )!.systemOperationMode.toUpperCase(),
                     style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                      color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
+                      color: isDark
+                          ? RayyanColors.slate400
+                          : RayyanColors.slate500,
                       fontWeight: FontWeight.w800,
                       letterSpacing: 1.2,
                       fontSize: 10,
@@ -237,7 +224,10 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const RayyanSymbol('info', color: RayyanColors.primary),
+                          const RayyanSymbol(
+                            'info',
+                            color: RayyanColors.primary,
+                          ),
                           const SizedBox(width: 12),
                           Expanded(
                             child: Text(
@@ -353,7 +343,9 @@ class _ModuleCard extends StatelessWidget {
         : (isDark ? RayyanColors.cardDark : Colors.white);
     final borderColor = active
         ? RayyanColors.primary
-        : (isDark ? Colors.white.withValues(alpha: 0.05) : RayyanColors.slate200);
+        : (isDark
+              ? Colors.white.withValues(alpha: 0.05)
+              : RayyanColors.slate200);
     final status = active
         ? AppLocalizations.of(context)!.onStatus
         : AppLocalizations.of(context)!.offStatus;

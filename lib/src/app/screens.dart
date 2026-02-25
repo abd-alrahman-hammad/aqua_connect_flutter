@@ -8,7 +8,6 @@ enum AppScreen {
   analytics,
   insights,
   vision,
-  wifi,
   profile,
   support,
   settings,

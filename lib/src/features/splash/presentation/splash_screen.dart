@@ -112,7 +112,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     final textColor = isDark ? Colors.white : RayyanColors.slate900;
 
-    final subTitleColor = isDark ? RayyanColors.slate300 : RayyanColors.slate500;
+    final subTitleColor = isDark
+        ? RayyanColors.slate300
+        : RayyanColors.slate500;
 
     final trackColor = isDark
         ? RayyanColors.slate700.withValues(alpha: 0.3)

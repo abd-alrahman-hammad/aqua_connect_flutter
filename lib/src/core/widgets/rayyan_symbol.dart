@@ -65,12 +65,6 @@ class RayyanSymbol extends StatelessWidget {
         return Symbols.help_rounded;
       case 'person':
         return Symbols.person_rounded;
-      case 'wifi':
-        return Symbols.wifi_rounded;
-      case 'wifi_lock':
-        return Symbols.wifi_lock_rounded;
-      case 'signal_wifi_4_bar':
-        return Symbols.signal_wifi_4_bar_rounded;
       case 'close':
         return Symbols.close_rounded;
       case 'add_circle':

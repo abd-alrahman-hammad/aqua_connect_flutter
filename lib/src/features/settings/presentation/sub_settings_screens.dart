@@ -664,7 +664,9 @@ class _ThresholdField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: enabled ? hint : placeholder,
             filled: true,
-            fillColor: isDark ? RayyanColors.surfaceDark : RayyanColors.slate100,
+            fillColor: isDark
+                ? RayyanColors.surfaceDark
+                : RayyanColors.slate100,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(
@@ -930,7 +932,9 @@ class EcCalibrationScreen extends StatelessWidget {
                             color: RayyanColors.warning.withValues(alpha: 0.10),
                             borderRadius: BorderRadius.circular(12),
                             border: Border.all(
-                              color: RayyanColors.warning.withValues(alpha: 0.20),
+                              color: RayyanColors.warning.withValues(
+                                alpha: 0.20,
+                              ),
                             ),
                           ),
                           child: Row(
@@ -1276,7 +1280,6 @@ class FirmwareUpdateScreen extends StatelessWidget {
                         const SizedBox(height: 16),
                         _Bullet(AppLocalizations.of(context)!.changelogItem1),
                         _Bullet(AppLocalizations.of(context)!.changelogItem2),
-                        _Bullet(AppLocalizations.of(context)!.changelogItem3),
                       ],
                     ),
                   ),
@@ -1520,7 +1523,9 @@ class _Field extends StatelessWidget {
           decoration: InputDecoration(
             hintText: '',
             filled: true,
-            fillColor: isDark ? RayyanColors.surfaceDark : RayyanColors.slate100,
+            fillColor: isDark
+                ? RayyanColors.surfaceDark
+                : RayyanColors.slate100,
             suffixIcon: suffixIcon,
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
@@ -1632,7 +1637,9 @@ class _SensorCard extends StatelessWidget {
                   vertical: 6,
                 ),
                 decoration: BoxDecoration(
-                  color: isDark ? RayyanColors.surfaceDark : RayyanColors.slate100,
+                  color: isDark
+                      ? RayyanColors.surfaceDark
+                      : RayyanColors.slate100,
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
@@ -1740,9 +1747,9 @@ class _WizardStep extends StatelessWidget {
                   const SizedBox(height: 4),
                   Text(
                     subtitle,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: RayyanColors.slate500),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: RayyanColors.slate500,
+                    ),
                   ),
                 ],
               ),
@@ -1848,7 +1855,11 @@ class _Bullet extends StatelessWidget {
       padding: const EdgeInsets.only(bottom: 12),
       child: Row(
         children: [
-          const RayyanSymbol('check_circle', color: RayyanColors.primary, size: 18),
+          const RayyanSymbol(
+            'check_circle',
+            color: RayyanColors.primary,
+            size: 18,
+          ),
           const SizedBox(width: 12),
           Expanded(
             child: Text(

@@ -35,7 +35,9 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     // userProvider was unused and undefined
-    final bg = isDark ? RayyanColors.backgroundDark : RayyanColors.backgroundLight;
+    final bg = isDark
+        ? RayyanColors.backgroundDark
+        : RayyanColors.backgroundLight;
     final l10n = AppLocalizations.of(context)!;
 
     return RayyanPageScaffold(
@@ -125,13 +127,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                 _SectionLabel(l10n.hardwareAndIot),
                 _Card(
                   children: [
-                    _MenuItem(
-                      icon: 'wifi',
-                      title: l10n.wifiManagement,
-                      subtitle: l10n.runConnectionWizard,
-                      onTap: () => widget.onNavigate(AppScreen.wifi),
-                    ),
-                    _Divider(),
                     _MenuItem(
                       icon: 'tune',
                       title: l10n.operatingThresholds,

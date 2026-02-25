@@ -141,7 +141,9 @@ class ProfileScreen extends ConsumerWidget {
                           leading: Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: RayyanColors.critical.withValues(alpha: 0.1),
+                              color: RayyanColors.critical.withValues(
+                                alpha: 0.1,
+                              ),
                               shape: BoxShape.circle,
                             ),
                             child: const RayyanSymbol(
@@ -541,7 +543,10 @@ class _EditableFieldState extends State<_EditableField> {
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(8),
-                    borderSide: BorderSide(color: RayyanColors.primary, width: 2),
+                    borderSide: BorderSide(
+                      color: RayyanColors.primary,
+                      width: 2,
+                    ),
                   ),
                 ),
               ),

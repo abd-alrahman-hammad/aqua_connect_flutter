@@ -140,18 +140,6 @@ abstract class AppLocalizations {
   /// **'HARDWARE & IOT'**
   String get hardwareAndIot;
 
-  /// No description provided for @wifiManagement.
-  ///
-  /// In en, this message translates to:
-  /// **'WiFi Management'**
-  String get wifiManagement;
-
-  /// No description provided for @runConnectionWizard.
-  ///
-  /// In en, this message translates to:
-  /// **'Run Connection Wizard'**
-  String get runConnectionWizard;
-
   /// No description provided for @operatingThresholds.
   ///
   /// In en, this message translates to:
@@ -1448,12 +1436,6 @@ abstract class AppLocalizations {
   /// **'New \"Eco Mode\" for lighting schedule'**
   String get changelogItem2;
 
-  /// No description provided for @changelogItem3.
-  ///
-  /// In en, this message translates to:
-  /// **'Bug fixes for WiFi reconnection logic'**
-  String get changelogItem3;
-
   /// No description provided for @checkForUpdates.
   ///
   /// In en, this message translates to:
@@ -1519,66 +1501,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'pH or EC deviation outside safe range'**
   String get parameterWarningsSub;
-
-  /// No description provided for @wifiSetup.
-  ///
-  /// In en, this message translates to:
-  /// **'WiFi Setup'**
-  String get wifiSetup;
-
-  /// No description provided for @helpLabel.
-  ///
-  /// In en, this message translates to:
-  /// **'Help'**
-  String get helpLabel;
-
-  /// No description provided for @discoverStep.
-  ///
-  /// In en, this message translates to:
-  /// **'Discover'**
-  String get discoverStep;
-
-  /// No description provided for @networkStep.
-  ///
-  /// In en, this message translates to:
-  /// **'Network'**
-  String get networkStep;
-
-  /// No description provided for @finishStep.
-  ///
-  /// In en, this message translates to:
-  /// **'Finish'**
-  String get finishStep;
-
-  /// No description provided for @selectNetwork.
-  ///
-  /// In en, this message translates to:
-  /// **'Select Network'**
-  String get selectNetwork;
-
-  /// No description provided for @scanningSubtitle.
-  ///
-  /// In en, this message translates to:
-  /// **'Scanning for nearby networks. Select your 2.4GHz home network.'**
-  String get scanningSubtitle;
-
-  /// No description provided for @scanningForEsp32.
-  ///
-  /// In en, this message translates to:
-  /// **'Scanning for ESP32 module...'**
-  String get scanningForEsp32;
-
-  /// No description provided for @availableNetworks.
-  ///
-  /// In en, this message translates to:
-  /// **'Available Networks'**
-  String get availableNetworks;
-
-  /// No description provided for @rescanForNetworks.
-  ///
-  /// In en, this message translates to:
-  /// **'Rescan for Networks'**
-  String get rescanForNetworks;
 
   /// No description provided for @askMeAboutHydroponic.
   ///

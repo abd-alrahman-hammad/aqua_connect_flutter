@@ -30,12 +30,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hardwareAndIot => 'HARDWARE & IOT';
 
   @override
-  String get wifiManagement => 'WiFi Management';
-
-  @override
-  String get runConnectionWizard => 'Run Connection Wizard';
-
-  @override
   String get operatingThresholds => 'Operating Thresholds';
 
   @override
@@ -726,9 +720,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get changelogItem2 => 'New \"Eco Mode\" for lighting schedule';
 
   @override
-  String get changelogItem3 => 'Bug fixes for WiFi reconnection logic';
-
-  @override
   String get checkForUpdates => 'Check for Updates';
 
   @override
@@ -761,37 +752,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get parameterWarningsSub => 'pH or EC deviation outside safe range';
-
-  @override
-  String get wifiSetup => 'WiFi Setup';
-
-  @override
-  String get helpLabel => 'Help';
-
-  @override
-  String get discoverStep => 'Discover';
-
-  @override
-  String get networkStep => 'Network';
-
-  @override
-  String get finishStep => 'Finish';
-
-  @override
-  String get selectNetwork => 'Select Network';
-
-  @override
-  String get scanningSubtitle =>
-      'Scanning for nearby networks. Select your 2.4GHz home network.';
-
-  @override
-  String get scanningForEsp32 => 'Scanning for ESP32 module...';
-
-  @override
-  String get availableNetworks => 'Available Networks';
-
-  @override
-  String get rescanForNetworks => 'Rescan for Networks';
 
   @override
   String get askMeAboutHydroponic => 'Ask me about your hydroponic system!';

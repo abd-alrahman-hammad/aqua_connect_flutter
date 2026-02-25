@@ -30,12 +30,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hardwareAndIot => 'الأجهزة و إنترنت الأشياء';
 
   @override
-  String get wifiManagement => 'إدارة الواي فاي';
-
-  @override
-  String get runConnectionWizard => 'تشغيل معالج الاتصال';
-
-  @override
   String get operatingThresholds => 'عتبات التشغيل';
 
   @override
@@ -730,9 +724,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get changelogItem2 => 'وضع \"التوفير\" الجديد لجدول الإضاءة';
 
   @override
-  String get changelogItem3 => 'إصلاح أخطاء في منطق إعادة اتصال WiFi';
-
-  @override
   String get checkForUpdates => 'التحقق من التحديثات';
 
   @override
@@ -765,37 +756,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get parameterWarningsSub => 'انحراف pH أو EC خارج النطاق الآمن';
-
-  @override
-  String get wifiSetup => 'إعداد الواي فاي';
-
-  @override
-  String get helpLabel => 'مساعدة';
-
-  @override
-  String get discoverStep => 'اكتشاف';
-
-  @override
-  String get networkStep => 'الشبكة';
-
-  @override
-  String get finishStep => 'إنهاء';
-
-  @override
-  String get selectNetwork => 'اختر الشبكة';
-
-  @override
-  String get scanningSubtitle =>
-      'جارٍ البحث عن الشبكات القريبة. اختر شبكة 2.4GHz المنزلية.';
-
-  @override
-  String get scanningForEsp32 => 'جارٍ البحث عن وحدة ESP32...';
-
-  @override
-  String get availableNetworks => 'الشبكات المتاحة';
-
-  @override
-  String get rescanForNetworks => 'إعادة البحث عن الشبكات';
 
   @override
   String get askMeAboutHydroponic => 'اسألني عن نظام الزراعة المائية الخاص بك!';

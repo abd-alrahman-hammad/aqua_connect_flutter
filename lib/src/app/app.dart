@@ -20,7 +20,6 @@ import '../features/settings/presentation/settings_screen.dart';
 import '../features/settings/presentation/sub_settings_screens.dart';
 import '../features/support/presentation/support_screens.dart';
 import '../features/vision/presentation/vision_screen.dart';
-import '../features/wifi/presentation/wifi_wizard_screen.dart';
 import '../features/splash/presentation/splash_screen.dart';
 import 'app_controller.dart';
 import 'screens.dart';
@@ -87,8 +86,6 @@ class _AppRoot extends ConsumerWidget {
         page = InsightsScreen(current: screen, onNavigate: controller.navigate);
       case AppScreen.vision:
         page = VisionScreen(current: screen, onNavigate: controller.navigate);
-      case AppScreen.wifi:
-        page = WiFiWizardScreen(onNavigate: controller.navigate);
       case AppScreen.profile:
         page = ProfileScreen(current: screen, onNavigate: controller.navigate);
       case AppScreen.support:
