@@ -818,18 +818,6 @@ abstract class AppLocalizations {
   /// **'Error signing out: {error}'**
   String errorSigningOut(Object error);
 
-  /// No description provided for @errorPickingImage.
-  ///
-  /// In en, this message translates to:
-  /// **'Error picking image: {error}'**
-  String errorPickingImage(Object error);
-
-  /// No description provided for @alertDismissed.
-  ///
-  /// In en, this message translates to:
-  /// **'{title} dismissed'**
-  String alertDismissed(Object title);
-
   /// No description provided for @supportAndLearning.
   ///
   /// In en, this message translates to:
@@ -1687,6 +1675,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We\'re sorry — your plants miss you too.\nWe\'ll reconnect automatically once you\'re back online.'**
   String get offlineStartupMessage;
+
+  /// No description provided for @alertDismissed.
+  ///
+  /// In en, this message translates to:
+  /// **'{title} dismissed'**
+  String alertDismissed(Object title);
 }
 
 class _AppLocalizationsDelegate

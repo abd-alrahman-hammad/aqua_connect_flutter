@@ -381,16 +381,6 @@ class AppLocalizationsEn extends AppLocalizations {
   }
 
   @override
-  String errorPickingImage(Object error) {
-    return 'Error picking image: $error';
-  }
-
-  @override
-  String alertDismissed(Object title) {
-    return '$title dismissed';
-  }
-
-  @override
   String get supportAndLearning => 'Support & Learning';
 
   @override
@@ -856,4 +846,9 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get offlineStartupMessage =>
       'We\'re sorry — your plants miss you too.\nWe\'ll reconnect automatically once you\'re back online.';
+
+  @override
+  String alertDismissed(Object title) {
+    return '$title dismissed';
+  }
 }

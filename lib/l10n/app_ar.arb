@@ -119,8 +119,6 @@
   "thresholdsSavedSuccessfully": "تم حفظ الحدود بنجاح",
   "noUserData": "لم يتم العثور على بيانات المستخدم",
   "errorSigningOut": "خطأ في تسجيل الخروج: {error}",
-  "errorPickingImage": "خطأ في اختيار الصورة: {error}",
-  "alertDismissed": "تم تجاهل {title}",
 
   "supportAndLearning": "الدعم والتعلم",
   "videoGuides": "دروس فيديو",
@@ -280,5 +278,6 @@
   "noName": "بدون اسم",
   "noEmail": "بدون بريد إلكتروني",
   "offlineStartupTitle": "لا يوجد اتصال بالإنترنت",
-  "offlineStartupMessage": "نعتذر — نباتاتك تفتقدك أيضاً.\nسنعيد الاتصال تلقائياً عند عودة الإنترنت."
+  "offlineStartupMessage": "نعتذر — نباتاتك تفتقدك أيضاً.\nسنعيد الاتصال تلقائياً عند عودة الإنترنت.",
+  "alertDismissed": "تم تجاهل {title}"
 }

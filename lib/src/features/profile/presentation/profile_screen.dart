@@ -1,15 +1,10 @@
-import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:image_picker/image_picker.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/services/auth_preferences_service.dart';
 import '../../../core/services/firebase_auth_service.dart';
-import '../../../core/services/storage_service.dart';
 import '../../../core/services/user_database_service.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_header.dart';
@@ -200,29 +195,30 @@ class _ProfileHeader extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        _ProfileImage(
-          photoUrl: user.photoUrl,
-          onImageSelected: (file) async {
-            try {
-              final storageService = ref.read(storageServiceProvider);
-              final userDatabaseService = ref.read(userDatabaseServiceProvider);
-              final url = await storageService.uploadProfileImage(
-                user.uid,
-                file,
-              );
-              await userDatabaseService.updateUser(
-                user.copyWith(photoUrl: url),
-              );
-            } catch (e) {
-              if (context.mounted) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(
-                    content: Text('${AppLocalizations.of(context)!.error}: $e'),
-                  ),
-                );
-              }
-            }
-          },
+        Container(
+          width: 140, // Increased size
+          height: 140,
+          decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: RayyanColors.slate200,
+            border: Border.all(
+              color: isDark ? RayyanColors.cardDark : Colors.white,
+              width: 6,
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.15),
+                blurRadius: 20,
+                offset: const Offset(0, 10),
+              ),
+            ],
+          ),
+          clipBehavior: Clip.antiAlias,
+          child: const Icon(
+            Icons.person,
+            size: 70,
+            color: RayyanColors.slate400,
+          ),
         ),
         const SizedBox(height: 16),
         Text(
@@ -296,128 +292,6 @@ class _SectionContainer extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class _ProfileImage extends StatefulWidget {
-  const _ProfileImage({required this.photoUrl, required this.onImageSelected});
-
-  final String? photoUrl;
-  final Function(File) onImageSelected;
-
-  @override
-  State<_ProfileImage> createState() => _ProfileImageState();
-}
-
-class _ProfileImageState extends State<_ProfileImage> {
-  bool _isUploading = false;
-
-  Future<void> _pickImage() async {
-    try {
-      final picker = ImagePicker();
-      final pickedFile = await picker.pickImage(source: ImageSource.gallery);
-
-      if (pickedFile != null) {
-        if (!mounted) return;
-        setState(() => _isUploading = true);
-        try {
-          await widget.onImageSelected(File(pickedFile.path));
-        } finally {
-          if (mounted) {
-            setState(() => _isUploading = false);
-          }
-        }
-      }
-    } catch (e) {
-      if (mounted) {
-        setState(() => _isUploading = false);
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text(
-              AppLocalizations.of(context)!.errorPickingImage(e.toString()),
-            ),
-          ),
-        );
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    return GestureDetector(
-      onTap: _pickImage,
-      child: Stack(
-        children: [
-          Container(
-            width: 140, // Increased size
-            height: 140,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              border: Border.all(
-                color: isDark ? RayyanColors.cardDark : Colors.white,
-                width: 6,
-              ),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 20,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            clipBehavior: Clip.antiAlias,
-            child: widget.photoUrl != null
-                ? CachedNetworkImage(
-                    imageUrl: widget.photoUrl!,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        Container(color: RayyanColors.slate200),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  )
-                : Container(
-                    color: RayyanColors.slate200,
-                    child: const Icon(
-                      Icons.person,
-                      size: 70,
-                      color: RayyanColors.slate400,
-                    ),
-                  ),
-          ),
-          if (_isUploading)
-            Positioned.fill(
-              child: Container(
-                decoration: const BoxDecoration(
-                  color: Colors.black54,
-                  shape: BoxShape.circle,
-                ),
-                child: const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
-                ),
-              ),
-            ),
-          Positioned(
-            bottom: 0,
-            right: 0,
-            child: Container(
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: RayyanColors.primary,
-                shape: BoxShape.circle,
-                border: Border.all(
-                  color: isDark
-                      ? RayyanColors.backgroundDark
-                      : RayyanColors.backgroundLight,
-                  width: 4,
-                ),
-              ),
-              child: const RayyanSymbol('edit', size: 18, color: Colors.white),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

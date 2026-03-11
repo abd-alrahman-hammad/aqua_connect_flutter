@@ -119,8 +119,6 @@
   "thresholdsSavedSuccessfully": "Thresholds saved successfully",
   "noUserData": "No user data found",
   "errorSigningOut": "Error signing out: {error}",
-  "errorPickingImage": "Error picking image: {error}",
-  "alertDismissed": "{title} dismissed",
 
   "supportAndLearning": "Support & Learning",
   "videoGuides": "Video Guides",
@@ -307,5 +305,6 @@
   "noName": "No Name",
   "noEmail": "No Email",
   "offlineStartupTitle": "No Internet Connection",
-  "offlineStartupMessage": "We're sorry — your plants miss you too.\nWe'll reconnect automatically once you're back online."
+  "offlineStartupMessage": "We're sorry — your plants miss you too.\nWe'll reconnect automatically once you're back online.",
+  "alertDismissed": "{title} dismissed"
 }

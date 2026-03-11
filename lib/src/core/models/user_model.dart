@@ -4,7 +4,6 @@ class UserModel {
   final String uid;
   final String? email;
   final String? displayName;
-  final String? photoUrl;
 
   final DateTime? createdAt;
 
@@ -12,7 +11,6 @@ class UserModel {
     required this.uid,
     this.email,
     this.displayName,
-    this.photoUrl,
 
     this.createdAt,
   });
@@ -26,7 +24,6 @@ class UserModel {
       uid: doc.id,
       email: data['email'] as String?,
       displayName: data['displayName'] as String?,
-      photoUrl: data['photoUrl'] as String?,
 
       createdAt: (data['createdAt'] as Timestamp?)?.toDate(),
     );
@@ -37,7 +34,6 @@ class UserModel {
       uid: uid,
       email: data['email'] as String?,
       displayName: data['displayName'] as String?,
-      photoUrl: data['photoUrl'] as String?,
 
       createdAt: data['createdAt'] is int
           ? DateTime.fromMillisecondsSinceEpoch(data['createdAt'] as int)
@@ -49,7 +45,6 @@ class UserModel {
     return {
       'email': email,
       'displayName': displayName,
-      'photoUrl': photoUrl,
 
       'createdAt': createdAt != null ? Timestamp.fromDate(createdAt!) : null,
     };
@@ -59,7 +54,6 @@ class UserModel {
     return {
       'email': email,
       'displayName': displayName,
-      'photoUrl': photoUrl,
 
       'createdAt': createdAt?.millisecondsSinceEpoch,
     };
@@ -68,7 +62,6 @@ class UserModel {
   UserModel copyWith({
     String? email,
     String? displayName,
-    String? photoUrl,
 
     DateTime? createdAt,
   }) {
@@ -76,7 +69,6 @@ class UserModel {
       uid: uid,
       email: email ?? this.email,
       displayName: displayName ?? this.displayName,
-      photoUrl: photoUrl ?? this.photoUrl,
 
       createdAt: createdAt ?? this.createdAt,
     );

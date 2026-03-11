@@ -1,6 +1,4 @@
 import 'dart:ui';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -72,7 +70,9 @@ class DashboardScreen extends ConsumerWidget {
                   ),
                   textAlign: TextAlign.center,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
+                    color: isDark
+                        ? RayyanColors.slate400
+                        : RayyanColors.slate500,
                     height: 1.35,
                   ),
                 ),
@@ -94,7 +94,6 @@ class DashboardScreen extends ConsumerWidget {
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.w800,
                       ),
-                      
                     ),
                     const SizedBox(width: 8),
                     Container(
@@ -298,54 +297,32 @@ class _TopNav extends ConsumerWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      GestureDetector(
-                        onTap: onProfile,
-                        child: Container(
-                          width: 40,
-                          height: 40,
-                          decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            border: Border.all(
-                              color: RayyanColors.primary,
-                              width: 2,
-                            ),
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: CachedNetworkImage(
-                            imageUrl:
-                                user?.photoUrl ?? 'https://picsum.photos/100',
-                            fit: BoxFit.cover,
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.person),
-                          ),
+                  GestureDetector(
+                    onTap: onProfile,
+                    behavior: HitTestBehavior.opaque,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          AppLocalizations.of(context)!.welcomeBack,
+                          style: Theme.of(context).textTheme.labelSmall
+                              ?.copyWith(
+                                fontSize: 10,
+                                fontWeight: FontWeight.w800,
+                                letterSpacing: 1.3,
+                                color: isDark
+                                    ? RayyanColors.slate400
+                                    : RayyanColors.slate500,
+                              ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            AppLocalizations.of(context)!.welcomeBack,
-                            style: Theme.of(context).textTheme.labelSmall
-                                ?.copyWith(
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w800,
-                                  letterSpacing: 1.3,
-                                  color: isDark
-                                      ? RayyanColors.slate400
-                                      : RayyanColors.slate500,
-                                ),
-                          ),
-                          Text(
-                            user?.displayName ?? 'User',
-                            style: Theme.of(context).textTheme.titleMedium
-                                ?.copyWith(fontWeight: FontWeight.w800),
-                          ),
-                        ],
-                      ),
-                    ],
+                        Text(
+                          user?.displayName ?? 'User',
+                          style: Theme.of(context).textTheme.titleMedium
+                              ?.copyWith(fontWeight: FontWeight.w800),
+                        ),
+                      ],
+                    ),
                   ),
                   Row(
                     children: [

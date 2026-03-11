@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../l10n/generated/app_localizations.dart';
@@ -130,11 +129,6 @@ class _SupportScreenState extends State<SupportScreen> {
                                           child: Stack(
                                             fit: StackFit.expand,
                                             children: [
-                                              CachedNetworkImage(
-                                                imageUrl:
-                                                    'https://picsum.photos/300/170?random=$idx',
-                                                fit: BoxFit.cover,
-                                              ),
                                               Container(
                                                 color: Colors.black.withValues(
                                                   alpha: 0.30,
@@ -146,8 +140,8 @@ class _SupportScreenState extends State<SupportScreen> {
                                                   height: 48,
                                                   decoration:
                                                       const BoxDecoration(
-                                                        color:
-                                                            RayyanColors.primary,
+                                                        color: RayyanColors
+                                                            .primary,
                                                         shape: BoxShape.circle,
                                                       ),
                                                   child: const Center(
@@ -261,7 +255,10 @@ class _SupportScreenState extends State<SupportScreen> {
                       onPressed: () => Navigator.of(context).push(
                         MaterialPageRoute(builder: (_) => const ChatScreen()),
                       ),
-                      icon: const RayyanSymbol('smart_toy', color: Colors.white),
+                      icon: const RayyanSymbol(
+                        'smart_toy',
+                        color: Colors.white,
+                      ),
                       label: Text(l10n.chatWithRayyan),
                       style: ElevatedButton.styleFrom(
                         backgroundColor: RayyanColors.primary,
@@ -399,7 +396,9 @@ class _FaqTileState extends State<_FaqTile> {
                 Text(
                   widget.item.answer,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
+                    color: isDark
+                        ? RayyanColors.slate400
+                        : RayyanColors.slate500,
                   ),
                 ),
               ],

@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 
 import '../../../app/screens.dart';
@@ -30,11 +29,8 @@ class VisionScreen extends StatelessWidget {
                 child: Stack(
                   children: [
                     Positioned.fill(
-                      child: CachedNetworkImage(
-                        imageUrl: 'https://picsum.photos/800/1000',
-                        fit: BoxFit.cover,
-                        color: Colors.black.withValues(alpha: 0.20),
-                        colorBlendMode: BlendMode.darken,
+                      child: Container(
+                        color: Colors.black.withValues(alpha: 0.8),
                       ),
                     ),
                     // Header overlay
@@ -45,7 +41,7 @@ class VisionScreen extends StatelessWidget {
                       child: RayyanHeader(
                         title: 'Plant Health AI Vision',
                         onBack: () => onNavigate(AppScreen.dashboard),
-                        
+
                         forceDarkText: false,
                       ),
                     ),
@@ -117,7 +113,9 @@ class VisionScreen extends StatelessWidget {
                               vertical: 8,
                             ),
                             decoration: BoxDecoration(
-                              color: RayyanColors.nature.withValues(alpha: 0.90),
+                              color: RayyanColors.nature.withValues(
+                                alpha: 0.90,
+                              ),
                               borderRadius: BorderRadius.circular(999),
                               border: Border.all(
                                 color: Colors.white.withValues(alpha: 0.20),
@@ -189,7 +187,6 @@ class VisionScreen extends StatelessWidget {
                             ),
                           ),
                         ],
-                        
                       ),
                     ),
                   ],
@@ -234,69 +231,8 @@ class VisionScreen extends StatelessWidget {
                       ],
                     ),
                     const SizedBox(height: 16),
-                    
+
                     const SizedBox(height: 16),
-                    Text(
-                      'Hourly Snapshot History',
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w900,
-                      ),
-                    ),
-                    const SizedBox(height: 12),
-                    SizedBox(
-                      height: 150,
-                      child: ListView.separated(
-                        scrollDirection: Axis.horizontal,
-                        itemCount: 4,
-                        separatorBuilder: (_, __) => const SizedBox(width: 12),
-                        itemBuilder: (context, i) {
-                          final h = [14, 13, 12, 11][i];
-                          final faded = i > 1;
-                          return Opacity(
-                            opacity: faded ? 0.5 : 1,
-                            child: SizedBox(
-                              width: 100,
-                              child: Column(
-                                children: [
-                                  Expanded(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(12),
-                                      child: CachedNetworkImage(
-                                        imageUrl:
-                                            'https://picsum.photos/200?random=$h',
-                                        fit: BoxFit.cover,
-                                      ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 8),
-                                  Text(
-                                    '$h:00 PM',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelMedium
-                                        ?.copyWith(
-                                          color: RayyanColors.slate300,
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                  ),
-                                  Text(
-                                    '9${8 - i}% Health',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .labelSmall
-                                        ?.copyWith(
-                                          color: RayyanColors.nature,
-                                          fontWeight: FontWeight.w900,
-                                        ),
-                                  ),
-                                  const SizedBox(height: 80),
-                                ],
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
                   ],
                 ),
               ),
@@ -328,7 +264,9 @@ class _InfoTile extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: isDark ? RayyanColors.surfaceDark : RayyanColors.backgroundLight,
+          color: isDark
+              ? RayyanColors.surfaceDark
+              : RayyanColors.backgroundLight,
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: isDark

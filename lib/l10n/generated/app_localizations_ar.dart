@@ -385,16 +385,6 @@ class AppLocalizationsAr extends AppLocalizations {
   }
 
   @override
-  String errorPickingImage(Object error) {
-    return 'خطأ في اختيار الصورة: $error';
-  }
-
-  @override
-  String alertDismissed(Object title) {
-    return 'تم تجاهل $title';
-  }
-
-  @override
   String get supportAndLearning => 'الدعم والتعلم';
 
   @override
@@ -860,4 +850,9 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get offlineStartupMessage =>
       'نعتذر — نباتاتك تفتقدك أيضاً.\nسنعيد الاتصال تلقائياً عند عودة الإنترنت.';
+
+  @override
+  String alertDismissed(Object title) {
+    return 'تم تجاهل $title';
+  }
 }
