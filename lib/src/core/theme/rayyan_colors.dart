@@ -26,4 +26,13 @@ class RayyanColors {
   static const slate300 = Color(0xFFCBD5E1);
   static const slate200 = Color(0xFFE2E8F0);
   static const slate100 = Color(0xFFF1F5F9);
+
+  // Vision screen specific AI analysis colors
+  static const visionGradientTop = Color(0xFF4C6B2A);
+  static const visionGradientMid = Color(0xFF2A3D16);
+  static const visionGradientBottom = Color(0xFF131C0A);
+
+  static const visionHistoryHealthy1 = Color(0xFF386821);
+  static const visionHistoryUnderwatered = Color(0xFF141A14);
+  static const visionHistoryHealthy2 = Color(0xFF4A3824);
 }
