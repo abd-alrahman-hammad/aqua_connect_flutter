@@ -278,6 +278,24 @@
   "noName": "بدون اسم",
   "noEmail": "بدون بريد إلكتروني",
   "offlineStartupTitle": "لا يوجد اتصال بالإنترنت",
-  "offlineStartupMessage": "نعتذر — نباتاتك تفتقدك أيضاً.\nسنعيد الاتصال تلقائياً عند عودة الإنترنت.",
-  "alertDismissed": "تم تجاهل {title}"
+  "offlineStartupMessage": "عذرًا — نباتاتك تفتقدك أيضًا.\nسنقوم بإعادة الاتصال تلقائيًا بمجرد عودتك للاتصال بالإنترنت.",
+  "alertDismissed": "تم تجاهل التنبيه: {title}",
+
+  "visionTitle": "رؤية النبات الذكية",
+  "visionHealthAnalysis": "التحليل الصحي",
+  "visionLastSync": "آخر مزامنة",
+  "visionNeverSync": "لم تتم المزامنة",
+  "visionHealthStatus": "الحالة الصحية",
+  "visionCritical": "حرج",
+  "visionConfidence": "نسبة الثقة",
+  "visionUnknown": "غير معروف",
+  "visionDetectedDiseases": "الأمراض المكتشفة",
+  "visionDiseaseCritical": "تم اكتشاف {count} بقع مصابة. خطر انتشار عالي. التدخل مطلوب فوراً لإنقاذ المحصول.",
+  "visionDiseaseWarning": "تم اكتشاف بعض المناطق المثيرة للقلق. يرجى المراقبة عن كثب.",
+  "visionSpotAnalysis": "تحليل البقعة تلو الأخرى",
+  "visionRecommendedAction": "الإجراء الموصى به",
+  "visionActionCritical": "اعزل النباتات المصابة فوراً وضع مبيد فطري عضوي. تحقق من توازن العناصر الغذائية.",
+  "visionUrgency": "الأهمية:",
+  "visionUrgencyHigh": "عالية",
+  "visionUrgencyModerate": "متوسطة"
 }

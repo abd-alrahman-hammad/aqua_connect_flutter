@@ -851,4 +851,59 @@ class AppLocalizationsEn extends AppLocalizations {
   String alertDismissed(Object title) {
     return '$title dismissed';
   }
+
+  @override
+  String get visionTitle => 'AI Plant Vision';
+
+  @override
+  String get visionHealthAnalysis => 'Health Analysis';
+
+  @override
+  String get visionLastSync => 'LAST SYNC';
+
+  @override
+  String get visionNeverSync => 'Never Sync';
+
+  @override
+  String get visionHealthStatus => 'HEALTH STATUS';
+
+  @override
+  String get visionCritical => 'Critical';
+
+  @override
+  String get visionConfidence => 'CONFIDENCE';
+
+  @override
+  String get visionUnknown => 'Unknown';
+
+  @override
+  String get visionDetectedDiseases => 'Detected Diseases';
+
+  @override
+  String visionDiseaseCritical(int count) {
+    return '$count diseased spots identified. High risk of spread. Intervention required immediately to save the crop.';
+  }
+
+  @override
+  String get visionDiseaseWarning =>
+      'Some concerning areas detected. Please monitor closely.';
+
+  @override
+  String get visionSpotAnalysis => 'Spot-by-Spot Analysis';
+
+  @override
+  String get visionRecommendedAction => 'Recommended Action';
+
+  @override
+  String get visionActionCritical =>
+      'Isolate affected plants immediately and apply organic fungicide. Check nutrient balance.';
+
+  @override
+  String get visionUrgency => 'URGENCY:';
+
+  @override
+  String get visionUrgencyHigh => 'High';
+
+  @override
+  String get visionUrgencyModerate => 'Moderate';
 }

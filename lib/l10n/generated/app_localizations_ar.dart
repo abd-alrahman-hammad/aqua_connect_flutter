@@ -849,10 +849,65 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get offlineStartupMessage =>
-      'نعتذر — نباتاتك تفتقدك أيضاً.\nسنعيد الاتصال تلقائياً عند عودة الإنترنت.';
+      'عذرًا — نباتاتك تفتقدك أيضًا.\nسنقوم بإعادة الاتصال تلقائيًا بمجرد عودتك للاتصال بالإنترنت.';
 
   @override
   String alertDismissed(Object title) {
-    return 'تم تجاهل $title';
+    return 'تم تجاهل التنبيه: $title';
   }
+
+  @override
+  String get visionTitle => 'رؤية النبات الذكية';
+
+  @override
+  String get visionHealthAnalysis => 'التحليل الصحي';
+
+  @override
+  String get visionLastSync => 'آخر مزامنة';
+
+  @override
+  String get visionNeverSync => 'لم تتم المزامنة';
+
+  @override
+  String get visionHealthStatus => 'الحالة الصحية';
+
+  @override
+  String get visionCritical => 'حرج';
+
+  @override
+  String get visionConfidence => 'نسبة الثقة';
+
+  @override
+  String get visionUnknown => 'غير معروف';
+
+  @override
+  String get visionDetectedDiseases => 'الأمراض المكتشفة';
+
+  @override
+  String visionDiseaseCritical(int count) {
+    return 'تم اكتشاف $count بقع مصابة. خطر انتشار عالي. التدخل مطلوب فوراً لإنقاذ المحصول.';
+  }
+
+  @override
+  String get visionDiseaseWarning =>
+      'تم اكتشاف بعض المناطق المثيرة للقلق. يرجى المراقبة عن كثب.';
+
+  @override
+  String get visionSpotAnalysis => 'تحليل البقعة تلو الأخرى';
+
+  @override
+  String get visionRecommendedAction => 'الإجراء الموصى به';
+
+  @override
+  String get visionActionCritical =>
+      'اعزل النباتات المصابة فوراً وضع مبيد فطري عضوي. تحقق من توازن العناصر الغذائية.';
+
+  @override
+  String get visionUrgency => 'الأهمية:';
+
+  @override
+  String get visionUrgencyHigh => 'عالية';
+
+  @override
+  String get visionUrgencyModerate => 'متوسطة';
 }

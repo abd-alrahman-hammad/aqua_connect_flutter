@@ -306,5 +306,24 @@
   "noEmail": "No Email",
   "offlineStartupTitle": "No Internet Connection",
   "offlineStartupMessage": "We're sorry — your plants miss you too.\nWe'll reconnect automatically once you're back online.",
-  "alertDismissed": "{title} dismissed"
+  "alertDismissed": "{title} dismissed",
+
+  "visionTitle": "AI Plant Vision",
+  "visionHealthAnalysis": "Health Analysis",
+  "visionLastSync": "LAST SYNC",
+  "visionNeverSync": "Never Sync",
+  "visionHealthStatus": "HEALTH STATUS",
+  "visionCritical": "Critical",
+  "visionConfidence": "CONFIDENCE",
+  "visionUnknown": "Unknown",
+  "visionDetectedDiseases": "Detected Diseases",
+  "visionDiseaseCritical": "{count} diseased spots identified. High risk of spread. Intervention required immediately to save the crop.",
+  "@visionDiseaseCritical": { "placeholders": { "count": { "type": "int" } } },
+  "visionDiseaseWarning": "Some concerning areas detected. Please monitor closely.",
+  "visionSpotAnalysis": "Spot-by-Spot Analysis",
+  "visionRecommendedAction": "Recommended Action",
+  "visionActionCritical": "Isolate affected plants immediately and apply organic fungicide. Check nutrient balance.",
+  "visionUrgency": "URGENCY:",
+  "visionUrgencyHigh": "High",
+  "visionUrgencyModerate": "Moderate"
 }

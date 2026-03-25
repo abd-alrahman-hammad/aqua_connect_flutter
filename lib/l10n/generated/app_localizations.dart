@@ -1681,6 +1681,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{title} dismissed'**
   String alertDismissed(Object title);
+
+  /// No description provided for @visionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'AI Plant Vision'**
+  String get visionTitle;
+
+  /// No description provided for @visionHealthAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Health Analysis'**
+  String get visionHealthAnalysis;
+
+  /// No description provided for @visionLastSync.
+  ///
+  /// In en, this message translates to:
+  /// **'LAST SYNC'**
+  String get visionLastSync;
+
+  /// No description provided for @visionNeverSync.
+  ///
+  /// In en, this message translates to:
+  /// **'Never Sync'**
+  String get visionNeverSync;
+
+  /// No description provided for @visionHealthStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'HEALTH STATUS'**
+  String get visionHealthStatus;
+
+  /// No description provided for @visionCritical.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get visionCritical;
+
+  /// No description provided for @visionConfidence.
+  ///
+  /// In en, this message translates to:
+  /// **'CONFIDENCE'**
+  String get visionConfidence;
+
+  /// No description provided for @visionUnknown.
+  ///
+  /// In en, this message translates to:
+  /// **'Unknown'**
+  String get visionUnknown;
+
+  /// No description provided for @visionDetectedDiseases.
+  ///
+  /// In en, this message translates to:
+  /// **'Detected Diseases'**
+  String get visionDetectedDiseases;
+
+  /// No description provided for @visionDiseaseCritical.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} diseased spots identified. High risk of spread. Intervention required immediately to save the crop.'**
+  String visionDiseaseCritical(int count);
+
+  /// No description provided for @visionDiseaseWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Some concerning areas detected. Please monitor closely.'**
+  String get visionDiseaseWarning;
+
+  /// No description provided for @visionSpotAnalysis.
+  ///
+  /// In en, this message translates to:
+  /// **'Spot-by-Spot Analysis'**
+  String get visionSpotAnalysis;
+
+  /// No description provided for @visionRecommendedAction.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended Action'**
+  String get visionRecommendedAction;
+
+  /// No description provided for @visionActionCritical.
+  ///
+  /// In en, this message translates to:
+  /// **'Isolate affected plants immediately and apply organic fungicide. Check nutrient balance.'**
+  String get visionActionCritical;
+
+  /// No description provided for @visionUrgency.
+  ///
+  /// In en, this message translates to:
+  /// **'URGENCY:'**
+  String get visionUrgency;
+
+  /// No description provided for @visionUrgencyHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'High'**
+  String get visionUrgencyHigh;
+
+  /// No description provided for @visionUrgencyModerate.
+  ///
+  /// In en, this message translates to:
+  /// **'Moderate'**
+  String get visionUrgencyModerate;
 }
 
 class _AppLocalizationsDelegate

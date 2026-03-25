@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_database/firebase_database.dart';
+import 'package:intl/intl.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
+import '../../../core/models/db/live_monitoring_model.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_bottom_nav.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
@@ -29,98 +33,123 @@ class VisionScreen extends StatelessWidget {
       body: Stack(
         children: [
           // Main Scrollable Content
-          CustomScrollView(
-            slivers: [
-              SliverToBoxAdapter(
-                child: SafeArea(
-                  bottom: false,
-                  child: Column(
-                    children: [
-                      // Custom Header to match exact design
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 20,
-                          vertical: 16,
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            GestureDetector(
-                              onTap: () => onNavigate(AppScreen.dashboard),
-                              child: Icon(
-                                Icons.arrow_back_ios_new_rounded,
-                                color: isDark
-                                    ? Colors.white
-                                    : RayyanColors.slate900,
-                                size: 24,
-                              ),
+          StreamBuilder<DatabaseEvent>(
+            stream: FirebaseDatabase.instance.ref('LiveMonitoring/Plant_Master').onValue,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+                return const Center(
+                  child: CircularProgressIndicator(color: RayyanColors.rayyan),
+                );
+              }
+
+              if (snapshot.hasError) {
+                return Center(
+                  child: Text('Error: ${snapshot.error}', style: theme.textTheme.bodyMedium),
+                );
+              }
+
+              final data = snapshot.data?.snapshot.value;
+              final model = data != null
+                  ? LiveMonitoringModel.fromJson(data as Map<dynamic, dynamic>)
+                  : const LiveMonitoringModel.initial();
+
+              return CustomScrollView(
+                slivers: [
+                  SliverToBoxAdapter(
+                    child: SafeArea(
+                      bottom: false,
+                      child: Column(
+                        children: [
+                          // Custom Header to match exact design
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 20,
+                              vertical: 16,
                             ),
-                            Text(
-                              'AI Plant Vision',
-                              style: theme.textTheme.titleLarge?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                color: isDark
-                                    ? Colors.white
-                                    : RayyanColors.slate900,
-                                letterSpacing: -0.5,
-                              ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                GestureDetector(
+                                  onTap: () => onNavigate(AppScreen.dashboard),
+                                  child: Icon(
+                                    Icons.arrow_back_ios_new_rounded,
+                                    color: isDark
+                                        ? Colors.white
+                                        : RayyanColors.slate900,
+                                    size: 24,
+                                  ),
+                                ),
+                                Text(
+                                  AppLocalizations.of(context)!.visionTitle,
+                                  style: theme.textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.w900,
+                                    color: isDark
+                                        ? Colors.white
+                                        : RayyanColors.slate900,
+                                    letterSpacing: -0.5,
+                                  ),
+                                ),
+                                const SizedBox(width: 24),
+                              ],
                             ),
-                            const SizedBox(width: 24),
+                          ),
+
+                          const SizedBox(height: 8),
+
+                          // Image Area
+                          _CameraFeedSection(model: model),
+
+                          const SizedBox(height: 48),
+
+                          const SizedBox(height: 24),
+
+                          // Health Analysis
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 20),
+                            child: _HealthAnalysisSection(model: model),
+                          ),
+
+                          const SizedBox(height: 16),
+
+                          // Detected Diseases
+                          if (model.isCritical || model.isWarning) ...[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: _DetectedDiseasesSection(model: model),
+                            ),
+                            const SizedBox(height: 16),
                           ],
-                        ),
+
+                          // Spot-by-Spot Analysis
+                          if (model.hasSpots) ...[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: _SpotBySpotAnalysisSection(model: model),
+                            ),
+                            const SizedBox(height: 16),
+                          ],
+
+                          // Recommended Action
+                          if (model.isCritical || model.isWarning) ...[
+                            Padding(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: _RecommendedActionSection(model: model),
+                            ),
+                            const SizedBox(height: 32),
+                          ],
+
+                          // Snapshot History
+                          const _SnapshotHistorySection(),
+
+                          // Spacing for bottom nav
+                          const SizedBox(height: 120),
+                        ],
                       ),
-
-                      const SizedBox(height: 8),
-
-                      // Image Area
-                      const _CameraFeedSection(),
-
-                      const SizedBox(height: 48),
-
-                      const SizedBox(height: 24),
-
-                      // Health Analysis
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: _HealthAnalysisSection(),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Detected Diseases
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: _DetectedDiseasesSection(),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Spot-by-Spot Analysis
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: _SpotBySpotAnalysisSection(),
-                      ),
-
-                      const SizedBox(height: 16),
-
-                      // Recommended Action
-                      const Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
-                        child: _RecommendedActionSection(),
-                      ),
-
-                      const SizedBox(height: 32),
-
-                      // Snapshot History
-                      const _SnapshotHistorySection(),
-
-                      // Spacing for bottom nav
-                      const SizedBox(height: 120),
-                    ],
+                    ),
                   ),
-                ),
-              ),
-            ],
+                ],
+              );
+            },
           ),
 
           // Bottom Nav
@@ -132,16 +161,11 @@ class VisionScreen extends StatelessWidget {
 }
 
 class _CameraFeedSection extends StatelessWidget {
-  const _CameraFeedSection();
+  final LiveMonitoringModel model;
+  const _CameraFeedSection({required this.model});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    final isDark = theme.brightness == Brightness.dark;
-    final bgColor = isDark
-        ? RayyanColors.backgroundDark
-        : RayyanColors.backgroundLight;
-
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Stack(
@@ -155,17 +179,25 @@ class _CameraFeedSection extends StatelessWidget {
             decoration: BoxDecoration(
               color: RayyanColors.slate900,
               borderRadius: BorderRadius.circular(24),
-              // Subtly simulate a dark, grassy leafy background using gradients
-              gradient: const LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  RayyanColors.visionGradientTop,
-                  RayyanColors.visionGradientMid,
-                  RayyanColors.visionGradientBottom,
-                ],
-                stops: [0.0, 0.5, 1.0],
-              ),
+              image: model.imageUrl.isNotEmpty
+                  ? DecorationImage(
+                      image: NetworkImage(model.imageUrl),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+              // Fallback gradient if there's no image
+              gradient: model.imageUrl.isEmpty
+                  ? const LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        RayyanColors.visionGradientTop,
+                        RayyanColors.visionGradientMid,
+                        RayyanColors.visionGradientBottom,
+                      ],
+                      stops: [0.0, 0.5, 1.0],
+                    )
+                  : null,
               boxShadow: [
                 BoxShadow(
                   color: Colors.black.withValues(alpha: 0.15),
@@ -176,52 +208,7 @@ class _CameraFeedSection extends StatelessWidget {
             ),
             child: Stack(
               children: [
-                // Scan Line
-                Positioned(
-                  bottom: 100,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    height: 1.5,
-                    decoration: BoxDecoration(
-                      color: RayyanColors.critical,
-                      boxShadow: [
-                        BoxShadow(
-                          color: RayyanColors.critical.withValues(alpha: 0.6),
-                          blurRadius: 6,
-                          spreadRadius: 1,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                // Target Spots S0, S4, S2 Top
-                const Positioned(top: 80, left: 60, child: _TargetSpot('50')),
-                const Positioned(top: 80, right: 60, child: _TargetSpot('52')),
-                const Positioned(
-                  top: 80,
-                  left: 0,
-                  right: 0,
-                  child: Center(child: _TargetSpot('54')),
-                ),
 
-                // Target Spots S1, S3, S5 Bottom
-                const Positioned(
-                  bottom: 140,
-                  left: 60,
-                  child: _TargetSpot('51'),
-                ),
-                const Positioned(
-                  bottom: 140,
-                  right: 60,
-                  child: _TargetSpot('55'),
-                ),
-                const Positioned(
-                  bottom: 140,
-                  left: 0,
-                  right: 0,
-                  child: Center(child: _TargetSpot('53')),
-                ),
 
                 // Live Analysis Indicator
                 Positioned(
@@ -245,42 +232,24 @@ class _CameraFeedSection extends StatelessWidget {
   }
 }
 
-class _TargetSpot extends StatelessWidget {
-  final String label;
-  const _TargetSpot(this.label);
 
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: 32,
-      height: 32,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        border: Border.all(
-          color: RayyanColors.critical.withValues(alpha: 0.6),
-          width: 1.5,
-        ),
-      ),
-      alignment: Alignment.center,
-      child: Text(
-        label,
-        style: const TextStyle(
-          color: RayyanColors.critical,
-          fontSize: 10,
-          fontWeight: FontWeight.w600,
-        ),
-      ),
-    );
-  }
-}
 
 class _HealthAnalysisSection extends StatelessWidget {
-  const _HealthAnalysisSection();
+  final LiveMonitoringModel model;
+  const _HealthAnalysisSection({required this.model});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
+    final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+
+    final statusColor = model.isCritical
+        ? RayyanColors.critical
+        : model.isWarning
+            ? Colors.orange
+            : RayyanColors.rayyan;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -290,7 +259,7 @@ class _HealthAnalysisSection extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.end,
           children: [
             Text(
-              'Health Analysis',
+              l10n.visionHealthAnalysis,
               style: theme.textTheme.titleMedium?.copyWith(
                 fontWeight: FontWeight.w900,
                 letterSpacing: -0.3,
@@ -301,7 +270,7 @@ class _HealthAnalysisSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Text(
-                  'LAST SYNC',
+                  l10n.visionLastSync,
                   style: theme.textTheme.labelSmall?.copyWith(
                     color: RayyanColors.slate400,
                     fontWeight: FontWeight.w800,
@@ -311,7 +280,9 @@ class _HealthAnalysisSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 2),
                 Text(
-                  '2025-03-11 18:16:26',
+                  model.lastUpdate != null
+                      ? DateFormat('yyyy-MM-dd HH:mm:ss').format(model.lastUpdate!)
+                      : l10n.visionNeverSync,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: RayyanColors.slate600,
                     fontSize: 10,
@@ -335,7 +306,7 @@ class _HealthAnalysisSection extends StatelessWidget {
                   border: Border.all(
                     color: isDark
                         ? Colors.white.withValues(alpha: 0.05)
-                        : RayyanColors.critical.withValues(alpha: 0.15),
+                        : statusColor.withValues(alpha: 0.15),
                   ),
                   boxShadow: [
                     BoxShadow(
@@ -349,7 +320,7 @@ class _HealthAnalysisSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'HEALTH STATUS',
+                      l10n.visionHealthStatus,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: RayyanColors.slate400,
                         fontWeight: FontWeight.w800,
@@ -360,18 +331,28 @@ class _HealthAnalysisSection extends StatelessWidget {
                     const SizedBox(height: 8),
                     Row(
                       children: [
-                        const RayyanSymbol(
-                          'error',
-                          color: RayyanColors.critical,
+                        RayyanSymbol(
+                          model.isCritical
+                              ? 'error'
+                              : model.isWarning
+                                  ? 'warning'
+                                  : 'check_circle',
+                          color: statusColor,
                           size: 20,
                         ),
                         const SizedBox(width: 6),
-                        Text(
-                          'Critical',
-                          style: theme.textTheme.titleMedium?.copyWith(
-                            color: RayyanColors.critical,
-                            fontWeight: FontWeight.w900,
-                            letterSpacing: -0.3,
+                        Expanded(
+                          child: Text(
+                            isArabic 
+                                ? (model.statusAr.isNotEmpty ? model.statusAr : l10n.visionUnknown)
+                                : (model.statusEn.isNotEmpty ? model.statusEn : l10n.visionUnknown),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: theme.textTheme.titleMedium?.copyWith(
+                              color: statusColor,
+                              fontWeight: FontWeight.w900,
+                              letterSpacing: -0.3,
+                            ),
                           ),
                         ),
                       ],
@@ -405,7 +386,7 @@ class _HealthAnalysisSection extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'CONFIDENCE',
+                      l10n.visionConfidence,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: RayyanColors.slate400,
                         fontWeight: FontWeight.w800,
@@ -423,7 +404,7 @@ class _HealthAnalysisSection extends StatelessWidget {
                         ),
                         const SizedBox(width: 6),
                         Text(
-                          '91%',
+                          model.confidence,
                           style: theme.textTheme.titleMedium?.copyWith(
                             fontWeight: FontWeight.w900,
                             letterSpacing: -0.3,
@@ -444,12 +425,14 @@ class _HealthAnalysisSection extends StatelessWidget {
 }
 
 class _DetectedDiseasesSection extends StatelessWidget {
-  const _DetectedDiseasesSection();
+  final LiveMonitoringModel model;
+  const _DetectedDiseasesSection({required this.model});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -481,7 +464,7 @@ class _DetectedDiseasesSection extends StatelessWidget {
               ),
               const SizedBox(width: 10),
               Text(
-                'Detected Diseases',
+                l10n.visionDetectedDiseases,
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   fontSize: 15,
@@ -492,7 +475,9 @@ class _DetectedDiseasesSection extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           Text(
-            'Multiple diseased spots identified. High risk of spread. Intervention required immediately to save the crop.',
+            model.isCritical
+                ? l10n.visionDiseaseCritical(model.totalSpots)
+                : l10n.visionDiseaseWarning,
             style: theme.textTheme.bodyMedium?.copyWith(
               color: RayyanColors.slate500,
               height: 1.6,
@@ -506,12 +491,14 @@ class _DetectedDiseasesSection extends StatelessWidget {
 }
 
 class _SpotBySpotAnalysisSection extends StatelessWidget {
-  const _SpotBySpotAnalysisSection();
+  final LiveMonitoringModel model;
+  const _SpotBySpotAnalysisSection({required this.model});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -543,7 +530,7 @@ class _SpotBySpotAnalysisSection extends StatelessWidget {
               ),
               const SizedBox(width: 8),
               Text(
-                'Spot-by-Spot Analysis',
+                l10n.visionSpotAnalysis,
                 style: theme.textTheme.titleSmall?.copyWith(
                   fontWeight: FontWeight.w900,
                   fontSize: 15,
@@ -553,43 +540,25 @@ class _SpotBySpotAnalysisSection extends StatelessWidget {
             ],
           ),
           const SizedBox(height: 20),
-          const _SpotItem(
-            id: 'S0',
-            location: 'TOP LEFT',
-            status: 'Diseased (مصاب)',
-            confidence: '85%',
-          ),
-          const _SpotItem(
-            id: 'S4',
-            location: 'TOP CENTER',
-            status: 'Diseased (مصاب)',
-            confidence: '86%',
-          ),
-          const _SpotItem(
-            id: 'S2',
-            location: 'TOP RIGHT',
-            status: 'Diseased (مصاب)',
-            confidence: '90%',
-          ),
-          const _SpotItem(
-            id: 'S1',
-            location: 'BOTTOM LEFT',
-            status: 'Diseased (مصاب)',
-            confidence: '91%',
-          ),
-          const _SpotItem(
-            id: 'S3',
-            location: 'BOTTOM CENTER',
-            status: 'Diseased (مصاب)',
-            confidence: '87%',
-          ),
-          const _SpotItem(
-            id: 'S5',
-            location: 'BOTTOM RIGHT',
-            status: 'Diseased (مصاب)',
-            confidence: '86%',
-            isLast: true,
-          ),
+          ...model.spotsDetails.asMap().entries.map((entry) {
+            final index = entry.key;
+            final spot = entry.value;
+            
+            // Determine current language
+            final isArabic = Localizations.localeOf(context).languageCode == 'ar';
+            
+            return _SpotItem(
+              id: spot.spotId.replaceAll('spot_', 'SPOT '), // Clean up ID
+              location: (isArabic && spot.locationAr.isNotEmpty 
+                  ? spot.locationAr 
+                  : spot.locationEn).toUpperCase(),
+              status: isArabic && spot.statusAr.isNotEmpty 
+                  ? spot.statusAr 
+                  : spot.statusEn,
+              confidence: spot.confidence,
+              isLast: index == model.spotsDetails.length - 1,
+            );
+          }),
         ],
       ),
     );
@@ -629,7 +598,7 @@ class _SpotItem extends StatelessWidget {
         child: Row(
           children: [
             SizedBox(
-              width: 24,
+              width: 56, // Increased width to prevent text wrapping
               child: Text(
                 id,
                 style: theme.textTheme.bodyMedium?.copyWith(
@@ -688,12 +657,14 @@ class _SpotItem extends StatelessWidget {
 }
 
 class _RecommendedActionSection extends StatelessWidget {
-  const _RecommendedActionSection();
+  final LiveMonitoringModel model;
+  const _RecommendedActionSection({required this.model});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return Container(
       padding: const EdgeInsets.all(20),
@@ -730,7 +701,7 @@ class _RecommendedActionSection extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Recommended Action',
+                  l10n.visionRecommendedAction,
                   style: theme.textTheme.titleSmall?.copyWith(
                     color: RayyanColors.critical,
                     fontWeight: FontWeight.w900,
@@ -739,7 +710,7 @@ class _RecommendedActionSection extends StatelessWidget {
                 ),
                 const SizedBox(height: 8),
                 Text(
-                  'Isolate affected plants immediately and apply organic fungicide. Check nutrient balance.',
+                  l10n.visionActionCritical,
                   style: theme.textTheme.bodyMedium?.copyWith(
                     color: isDark
                         ? RayyanColors.slate300
@@ -752,7 +723,7 @@ class _RecommendedActionSection extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'URGENCY:',
+                      l10n.visionUrgency,
                       style: theme.textTheme.labelSmall?.copyWith(
                         color: RayyanColors.critical,
                         fontWeight: FontWeight.w900,
@@ -771,7 +742,7 @@ class _RecommendedActionSection extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        'High',
+                        model.isCritical ? l10n.visionUrgencyHigh : l10n.visionUrgencyModerate,
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: RayyanColors.critical,
                           fontWeight: FontWeight.w800,
