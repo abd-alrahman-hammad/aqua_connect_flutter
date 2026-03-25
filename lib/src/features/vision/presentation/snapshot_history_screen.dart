@@ -1,16 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 
+import '../../../core/models/db/detection_history_model.dart';
+import '../data/detection_history_repository.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
 
-class SnapshotHistoryScreen extends StatefulWidget {
+class SnapshotHistoryScreen extends ConsumerStatefulWidget {
   const SnapshotHistoryScreen({super.key});
 
   @override
-  State<SnapshotHistoryScreen> createState() => _SnapshotHistoryScreenState();
+  ConsumerState<SnapshotHistoryScreen> createState() => _SnapshotHistoryScreenState();
 }
 
-class _SnapshotHistoryScreenState extends State<SnapshotHistoryScreen> {
+class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
   String _selectedFilter = 'All';
 
   @override
@@ -164,61 +169,85 @@ class _SnapshotHistoryScreenState extends State<SnapshotHistoryScreen> {
           ),
           
           // Lists
+          // Lists
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            sliver: SliverList(
-              delegate: SliverChildListDelegate([
-                _DateHeader('TODAY, OCT 24'),
-                const SizedBox(height: 12),
-                const _SnapshotItem(
-                  imageColor: RayyanColors.visionHistoryHealthy1,
-                  score: '98%',
-                  title: 'Butterhead Lettuce',
-                  subtitle: 'Main Reservoir • System A',
-                  time: '14:30',
-                  status: 'HEALTHY',
-                  statusColor: RayyanColors.nature,
-                  description: 'No action needed',
+            sliver: ref.watch(detectionHistoryProvider).when(
+                  data: (items) {
+                    if (items.isEmpty) {
+                      return const SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(32.0),
+                            child: Text('No history available yet'),
+                          ),
+                        ),
+                      );
+                    }
+                    
+                    // Filter the items based on status matching chips (e.g. status == 'Healthy')
+                    final filteredItems = _selectedFilter == 'All' 
+                        ? items 
+                        : items.where((i) => i.status.toLowerCase() == _selectedFilter.toLowerCase()).toList();
+                        
+                    if (filteredItems.isEmpty) {
+                      return const SliverToBoxAdapter(
+                        child: Center(
+                          child: Padding(
+                            padding: EdgeInsets.all(32.0),
+                            child: Text('No results for selected filter'),
+                          ),
+                        ),
+                      );
+                    }
+
+                    // Group by formatted date
+                    final Map<String, List<DetectionHistoryModel>> grouped = {};
+                    for (var item in filteredItems) {
+                      final dateStr = DateFormat('MMM d, yyyy').format(item.timestamp).toUpperCase();
+                      grouped.putIfAbsent(dateStr, () => []).add(item);
+                    }
+
+                    final sliverChildren = <Widget>[];
+                    grouped.forEach((dateString, dayItems) {
+                      sliverChildren.add(_DateHeader(dateString));
+                      sliverChildren.add(const SizedBox(height: 12));
+                      for (var item in dayItems) {
+                        sliverChildren.add(Padding(
+                          padding: const EdgeInsets.only(bottom: 12),
+                          child: _SnapshotItem(item: item),
+                        ));
+                      }
+                      sliverChildren.add(const SizedBox(height: 12));
+                    });
+                    
+                    sliverChildren.add(const SizedBox(height: 20));
+
+                    return SliverList(
+                      delegate: SliverChildListDelegate(sliverChildren),
+                    );
+                  },
+                  loading: () => const SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.all(32.0),
+                        child: CircularProgressIndicator(),
+                      ),
+                    ),
+                  ),
+                  error: (err, stack) => SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.all(32.0),
+                        child: Text(
+                          'Error: $err',
+                          style: const TextStyle(color: Colors.red),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                  ),
                 ),
-                const SizedBox(height: 12),
-                const _SnapshotItem(
-                  imageColor: RayyanColors.visionHistoryUnderwatered,
-                  score: '95%',
-                  title: 'Romaine Lettuce',
-                  subtitle: 'Nursery Rack • Tier 2',
-                  time: '11:15',
-                  status: 'HEALTHY',
-                  statusColor: RayyanColors.nature,
-                  description: 'Optimal growth',
-                ),
-                
-                const SizedBox(height: 24),
-                _DateHeader('YESTERDAY, OCT 23'),
-                const SizedBox(height: 12),
-                const _SnapshotItem(
-                  imageColor: RayyanColors.visionGradientTop,
-                  score: '82%',
-                  title: 'Red Leaf Lettuce',
-                  subtitle: 'Vertical Wall • Section 4',
-                  time: '16:45',
-                  status: 'WARNING',
-                  statusColor: RayyanColors.warning,
-                  description: 'Slight tip burn',
-                ),
-                const SizedBox(height: 12),
-                const _SnapshotItem(
-                  imageColor: RayyanColors.visionHistoryHealthy2,
-                  score: '65%',
-                  title: 'Butterhead Lettuce',
-                  subtitle: 'Main Reservoir • Tray 12',
-                  time: '08:30',
-                  status: 'CRITICAL',
-                  statusColor: RayyanColors.critical,
-                  description: 'Temp stress detected',
-                ),
-                const SizedBox(height: 32),
-              ]),
-            ),
           ),
         ],
       ),
@@ -332,30 +361,37 @@ class _DateHeader extends StatelessWidget {
 }
 
 class _SnapshotItem extends StatelessWidget {
-  final Color imageColor;
-  final String score;
-  final String title;
-  final String subtitle;
-  final String time;
-  final String status;
-  final Color statusColor;
-  final String description;
+  final DetectionHistoryModel item;
 
   const _SnapshotItem({
-    required this.imageColor,
-    required this.score,
-    required this.title,
-    required this.subtitle,
-    required this.time,
-    required this.status,
-    required this.statusColor,
-    required this.description,
+    required this.item,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    
+    // Status Color
+    Color statusColor = RayyanColors.slate500;
+    final lowerStatus = item.status.toLowerCase();
+    if (lowerStatus.contains('health') || lowerStatus.contains('optimal')) {
+      statusColor = RayyanColors.nature;
+    } else if (lowerStatus.contains('warn')) {
+      statusColor = RayyanColors.warning;
+    } else if (lowerStatus.contains('critical') || lowerStatus.contains('danger') || lowerStatus.contains('disease')) {
+      statusColor = RayyanColors.critical;
+    }
+    
+    // Confidence Color
+    final confStr = item.confidence.replaceAll('%', '');
+    final confVal = int.tryParse(confStr) ?? 0;
+    Color confColor = RayyanColors.critical;
+    if (confVal >= 85) {
+      confColor = RayyanColors.nature;
+    } else if (confVal >= 60) {
+      confColor = RayyanColors.warning;
+    }
 
     return Container(
       padding: const EdgeInsets.all(12),
@@ -379,30 +415,45 @@ class _SnapshotItem extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            // Image Placeholder
+            // Image Cached
             Container(
               width: 86,
               height: 86,
               decoration: BoxDecoration(
-                color: imageColor,
+                color: isDark ? RayyanColors.slate700 : RayyanColors.slate200,
                 borderRadius: BorderRadius.circular(12),
+                image: item.imageUrl.isNotEmpty
+                    ? DecorationImage(
+                        image: CachedNetworkImageProvider(item.imageUrl),
+                        fit: BoxFit.cover,
+                      )
+                    : null,
               ),
-              alignment: Alignment.bottomRight,
-              padding: const EdgeInsets.all(6),
-              child: Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: Colors.black.withValues(alpha: 0.65),
-                  borderRadius: BorderRadius.circular(6),
-                ),
-                child: Text(
-                  score,
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 10,
-                    fontWeight: FontWeight.w900,
+              child: Stack(
+                children: [
+                  if (item.imageUrl.isEmpty)
+                    const Center(child: Icon(Icons.image_not_supported, color: Colors.grey)),
+                  // Confidence Badge Overlay
+                  Positioned(
+                    bottom: 6,
+                    right: 6,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: confColor,
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        item.confidence,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 10,
+                          fontWeight: FontWeight.w900,
+                        ),
+                      ),
+                    ),
                   ),
-                ),
+                ],
               ),
             ),
             const SizedBox(width: 14),
@@ -418,7 +469,7 @@ class _SnapshotItem extends StatelessWidget {
                     children: [
                       Expanded(
                         child: Text(
-                          title,
+                          item.title,
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w900,
                             fontSize: 15,
@@ -431,7 +482,7 @@ class _SnapshotItem extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        time,
+                        DateFormat('h:mm a').format(item.timestamp),
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: isDark ? RayyanColors.slate400 : RayyanColors.slate400,
                           fontWeight: FontWeight.w600,
@@ -442,7 +493,7 @@ class _SnapshotItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    subtitle,
+                    item.subtitle,
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: RayyanColors.slate500,
                       fontSize: 11,
@@ -464,7 +515,7 @@ class _SnapshotItem extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          status,
+                          item.status.toUpperCase(),
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: statusColor,
                             fontWeight: FontWeight.w900,
@@ -476,7 +527,7 @@ class _SnapshotItem extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          description,
+                          item.description,
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: RayyanColors.slate400,
                             fontSize: 11,
