@@ -1783,6 +1783,102 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Moderate'**
   String get visionUrgencyModerate;
+
+  /// No description provided for @snapshotHistoryTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Snapshot History'**
+  String get snapshotHistoryTitle;
+
+  /// No description provided for @snapshotSearchHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search sketches or details...'**
+  String get snapshotSearchHint;
+
+  /// No description provided for @snapshotFilterAll.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get snapshotFilterAll;
+
+  /// No description provided for @snapshotFilterHealthy.
+  ///
+  /// In en, this message translates to:
+  /// **'Healthy'**
+  String get snapshotFilterHealthy;
+
+  /// No description provided for @snapshotFilterWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get snapshotFilterWarning;
+
+  /// No description provided for @snapshotFilterCritical.
+  ///
+  /// In en, this message translates to:
+  /// **'Critical'**
+  String get snapshotFilterCritical;
+
+  /// No description provided for @snapshotNoHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'No history available yet'**
+  String get snapshotNoHistory;
+
+  /// No description provided for @snapshotNoResults.
+  ///
+  /// In en, this message translates to:
+  /// **'No results for selected filter'**
+  String get snapshotNoResults;
+
+  /// No description provided for @snapshotError.
+  ///
+  /// In en, this message translates to:
+  /// **'Error: {error}'**
+  String snapshotError(String error);
+
+  /// No description provided for @detectionDetailsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Detection Details'**
+  String get detectionDetailsTitle;
+
+  /// No description provided for @visionHealthy.
+  ///
+  /// In en, this message translates to:
+  /// **'Healthy'**
+  String get visionHealthy;
+
+  /// No description provided for @visionWarning.
+  ///
+  /// In en, this message translates to:
+  /// **'Warning'**
+  String get visionWarning;
+
+  /// No description provided for @visionViewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View All'**
+  String get visionViewAll;
+
+  /// No description provided for @visionSpotsDetected.
+  ///
+  /// In en, this message translates to:
+  /// **'Spots Detected {count}'**
+  String visionSpotsDetected(int count);
+
+  /// No description provided for @visionOptimalGrowth.
+  ///
+  /// In en, this message translates to:
+  /// **'Optimal growth'**
+  String get visionOptimalGrowth;
+
+  /// No description provided for @visionActionRequiresAttention.
+  ///
+  /// In en, this message translates to:
+  /// **'Action requires attention'**
+  String get visionActionRequiresAttention;
 }
 
 class _AppLocalizationsDelegate

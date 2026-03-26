@@ -906,4 +906,56 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get visionUrgencyModerate => 'Moderate';
+
+  @override
+  String get snapshotHistoryTitle => 'Snapshot History';
+
+  @override
+  String get snapshotSearchHint => 'Search sketches or details...';
+
+  @override
+  String get snapshotFilterAll => 'All';
+
+  @override
+  String get snapshotFilterHealthy => 'Healthy';
+
+  @override
+  String get snapshotFilterWarning => 'Warning';
+
+  @override
+  String get snapshotFilterCritical => 'Critical';
+
+  @override
+  String get snapshotNoHistory => 'No history available yet';
+
+  @override
+  String get snapshotNoResults => 'No results for selected filter';
+
+  @override
+  String snapshotError(String error) {
+    return 'Error: $error';
+  }
+
+  @override
+  String get detectionDetailsTitle => 'Detection Details';
+
+  @override
+  String get visionHealthy => 'Healthy';
+
+  @override
+  String get visionWarning => 'Warning';
+
+  @override
+  String get visionViewAll => 'View All';
+
+  @override
+  String visionSpotsDetected(int count) {
+    return 'Spots Detected $count';
+  }
+
+  @override
+  String get visionOptimalGrowth => 'Optimal growth';
+
+  @override
+  String get visionActionRequiresAttention => 'Action requires attention';
 }

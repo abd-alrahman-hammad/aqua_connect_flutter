@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'live_monitoring_model.dart';
 
 class DetectionHistoryModel {
   final String id;
@@ -9,6 +10,10 @@ class DetectionHistoryModel {
   final String title;
   final String subtitle;
   final String description;
+  final String rootCause;
+  final String recommendedTreatment;
+  final List<SpotDetailModel> spotsDetails;
+  final int totalSpots;
 
   DetectionHistoryModel({
     required this.id,
@@ -19,6 +24,10 @@ class DetectionHistoryModel {
     required this.title,
     required this.subtitle,
     required this.description,
+    required this.rootCause,
+    required this.recommendedTreatment,
+    required this.spotsDetails,
+    required this.totalSpots,
   });
 
   factory DetectionHistoryModel.fromFirestore(DocumentSnapshot doc) {
@@ -54,12 +63,23 @@ class DetectionHistoryModel {
     
     // Derive status from spots_details
     String derivedStatus = data['status'] ?? 'Healthy';
-    final spotsMap = data['spots_details'] as Map<String, dynamic>? ?? {};
+    
+    // Safely parse spotsMap
+    Map<dynamic, dynamic> spotsMap = {};
+    final rawSpots = data['spots_details'];
+    if (rawSpots is Map) {
+      spotsMap = rawSpots;
+    } else if (rawSpots is List) {
+      for (int i = 0; i < rawSpots.length; i++) {
+        spotsMap['spot_${i + 1}'] = rawSpots[i];
+      }
+    }
+    
     if (data['status'] == null && spotsMap.isNotEmpty) {
       bool hasCritical = false;
       bool hasWarning = false;
       for (var spot in spotsMap.values) {
-        if (spot is Map<String, dynamic>) {
+        if (spot is Map) {
            final statusEn = (spot['status_en'] ?? '').toString().toLowerCase();
            final statusAr = (spot['status_ar'] ?? '').toString().toLowerCase();
            if (statusEn.contains('disease') || statusEn.contains('critical') || statusAr.contains('مصاب')) {
@@ -74,9 +94,24 @@ class DetectionHistoryModel {
       else if (hasWarning) derivedStatus = 'Warning';
     }
 
+    // Parse spots strictly as SpotDetailModels for UI processing
+    final parsedSpots = <SpotDetailModel>[];
+    if (spotsMap.isNotEmpty) {
+      final sortedKeys = spotsMap.keys.toList()..sort((a, b) => a.compareTo(b));
+      for (final key in sortedKeys) {
+        final spotData = spotsMap[key];
+        if (spotData is Map) {
+          parsedSpots.add(SpotDetailModel.fromJson(
+            Map<dynamic, dynamic>.from(spotData),
+            key.toString(),
+          ));
+        }
+      }
+    }
+
     // Default titles if not provided
     final String deviceId = data['device_id']?.toString().replaceAll('_', ' ') ?? 'Plant Device';
-    final int totalSpots = spotsMap.length;
+    final int totalSpotsCount = spotsMap.length;
 
     return DetectionHistoryModel(
       id: doc.id,
@@ -85,8 +120,12 @@ class DetectionHistoryModel {
       timestamp: parsedTimestamp,
       status: derivedStatus,
       title: data['title'] ?? deviceId,
-      subtitle: data['subtitle'] ?? (totalSpots > 0 ? '$totalSpots Spots Detected' : 'No issues found'),
+      subtitle: data['subtitle'] ?? (totalSpotsCount > 0 ? '$totalSpotsCount Spots Detected' : 'No issues found'),
       description: data['description'] ?? (derivedStatus == 'Healthy' ? 'Optimal growth' : 'Action requires attention'),
+      rootCause: data['root_cause'] ?? 'Unknown',
+      recommendedTreatment: data['recommended_treatment'] ?? 'Consult an agronomist',
+      spotsDetails: parsedSpots,
+      totalSpots: totalSpotsCount,
     );
   }
 }

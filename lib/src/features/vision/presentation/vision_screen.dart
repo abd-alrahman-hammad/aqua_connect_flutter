@@ -8,7 +8,12 @@ import '../../../core/models/db/live_monitoring_model.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_bottom_nav.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import '../data/detection_history_repository.dart';
+import '../../../core/models/db/detection_history_model.dart';
 import 'snapshot_history_screen.dart';
+import 'detection_details_screen.dart';
 
 class VisionScreen extends StatelessWidget {
   const VisionScreen({
@@ -71,8 +76,8 @@ class VisionScreen extends StatelessWidget {
                               children: [
                                 GestureDetector(
                                   onTap: () => onNavigate(AppScreen.dashboard),
-                                  child: Icon(
-                                    Icons.arrow_back_ios_new_rounded,
+                                  child: RayyanSymbol(
+                                    'arrow_back_ios_new',
                                     color: isDark
                                         ? Colors.white
                                         : RayyanColors.slate900,
@@ -174,7 +179,7 @@ class _CameraFeedSection extends StatelessWidget {
         children: [
           // Image Container
           Container(
-            height: 380,
+            height: 250,
             width: double.infinity,
             decoration: BoxDecoration(
               color: RayyanColors.slate900,
@@ -761,12 +766,13 @@ class _RecommendedActionSection extends StatelessWidget {
   }
 }
 
-class _SnapshotHistorySection extends StatelessWidget {
+class _SnapshotHistorySection extends ConsumerWidget {
   const _SnapshotHistorySection();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final theme = Theme.of(context);
+    final l10n = AppLocalizations.of(context)!;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -777,7 +783,7 @@ class _SnapshotHistorySection extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Snapshot History',
+                l10n.snapshotHistoryTitle,
                 style: theme.textTheme.titleMedium?.copyWith(
                   fontWeight: FontWeight.w900,
                   fontSize: 16,
@@ -794,7 +800,7 @@ class _SnapshotHistorySection extends StatelessWidget {
                   );
                 },
                 child: Text(
-                  'View All',
+                  l10n.visionViewAll,
                   style: theme.textTheme.labelMedium?.copyWith(
                     color: RayyanColors.nature,
                     fontWeight: FontWeight.w800,
@@ -808,34 +814,34 @@ class _SnapshotHistorySection extends StatelessWidget {
         const SizedBox(height: 16),
         SizedBox(
           height: 154,
-          child: ListView(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            scrollDirection: Axis.horizontal,
-            children: const [
-              _SnapshotCard(
-                imageColor: RayyanColors.visionHistoryHealthy1,
-                date: 'Oct 24, 10:20 AM',
-                status: 'Healthy',
-                score: '92%',
-                scoreColor: RayyanColors.nature,
-              ),
-              SizedBox(width: 16),
-              _SnapshotCard(
-                imageColor: RayyanColors.visionHistoryUnderwatered,
-                date: 'Oct 23, 04:15 PM',
-                status: 'Under-watered',
-                score: '45%',
-                scoreColor: RayyanColors.warning,
-              ),
-              SizedBox(width: 16),
-              _SnapshotCard(
-                imageColor: RayyanColors.visionHistoryHealthy2,
-                date: 'Oct 15, 08:30 AM',
-                status: 'Healthy',
-                score: '90%',
-                scoreColor: RayyanColors.nature,
-              ),
-            ],
+          child: ref.watch(detectionHistoryProvider).when(
+            data: (items) {
+              if (items.isEmpty) {
+                return const Center(child: Text('No history available'));
+              }
+              final recentItems = items.take(3).toList();
+              return ListView.separated(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                scrollDirection: Axis.horizontal,
+                itemCount: recentItems.length,
+                separatorBuilder: (context, index) => const SizedBox(width: 16),
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => DetectionDetailsScreen(item: recentItems[index]),
+                        ),
+                      );
+                    },
+                    child: _SnapshotCard(item: recentItems[index]),
+                  );
+                },
+              );
+            },
+            loading: () => const Center(child: CircularProgressIndicator()),
+            error: (err, stack) => Center(child: Text('Error loading history', style: TextStyle(color: RayyanColors.critical))),
           ),
         ),
       ],
@@ -844,24 +850,36 @@ class _SnapshotHistorySection extends StatelessWidget {
 }
 
 class _SnapshotCard extends StatelessWidget {
-  final Color imageColor;
-  final String date;
-  final String status;
-  final String score;
-  final Color scoreColor;
+  final DetectionHistoryModel item;
 
   const _SnapshotCard({
-    required this.imageColor,
-    required this.date,
-    required this.status,
-    required this.score,
-    required this.scoreColor,
+    required this.item,
   });
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
+
+    String translatedStatus = item.status;
+    final lowerStatus = item.status.toLowerCase();
+    if (lowerStatus.contains('health') || lowerStatus.contains('optimal')) {
+      translatedStatus = l10n.visionHealthy;
+    } else if (lowerStatus.contains('warn')) {
+      translatedStatus = l10n.visionWarning;
+    } else if (lowerStatus.contains('critical') || lowerStatus.contains('danger') || lowerStatus.contains('disease')) {
+      translatedStatus = l10n.visionCritical;
+    }
+
+    final confStr = item.confidence.replaceAll('%', '');
+    final confVal = int.tryParse(confStr) ?? 0;
+    Color confColor = RayyanColors.critical;
+    if (confVal >= 85) {
+      confColor = RayyanColors.nature;
+    } else if (confVal >= 60) {
+      confColor = RayyanColors.warning;
+    }
 
     return Container(
       width: 124,
@@ -888,19 +906,25 @@ class _SnapshotCard extends StatelessWidget {
           Container(
             height: 90,
             decoration: BoxDecoration(
-              color: imageColor,
+              color: isDark ? RayyanColors.slate700 : RayyanColors.slate200,
               borderRadius: BorderRadius.circular(10),
+              image: item.imageUrl.isNotEmpty
+                  ? DecorationImage(
+                      image: CachedNetworkImageProvider(item.imageUrl),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
             ),
             padding: const EdgeInsets.all(6),
             alignment: Alignment.topRight,
             child: Container(
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
               decoration: BoxDecoration(
-                color: scoreColor,
+                color: confColor,
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(
-                score,
+                item.confidence,
                 style: const TextStyle(
                   color: Colors.white,
                   fontSize: 9,
@@ -911,7 +935,7 @@ class _SnapshotCard extends StatelessWidget {
           ),
           const Spacer(),
           Text(
-            date,
+            DateFormat('MMM d, h:mm a', l10n.localeName).format(item.timestamp),
             style: theme.textTheme.labelSmall?.copyWith(
               fontWeight: FontWeight.w900,
               fontSize: 9,
@@ -922,7 +946,7 @@ class _SnapshotCard extends StatelessWidget {
           ),
           const SizedBox(height: 2),
           Text(
-            status,
+            translatedStatus,
             style: theme.textTheme.bodySmall?.copyWith(
               color: RayyanColors.slate500,
               fontSize: 10,

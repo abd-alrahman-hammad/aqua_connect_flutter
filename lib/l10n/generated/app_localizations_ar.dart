@@ -910,4 +910,56 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get visionUrgencyModerate => 'متوسطة';
+
+  @override
+  String get snapshotHistoryTitle => 'سجل اللقطات';
+
+  @override
+  String get snapshotSearchHint => 'البحث عن لقطات أو تفاصيل...';
+
+  @override
+  String get snapshotFilterAll => 'الكل';
+
+  @override
+  String get snapshotFilterHealthy => 'سليم';
+
+  @override
+  String get snapshotFilterWarning => 'تحذير';
+
+  @override
+  String get snapshotFilterCritical => 'حرج';
+
+  @override
+  String get snapshotNoHistory => 'لا يوجد سجل متاح حتى الآن';
+
+  @override
+  String get snapshotNoResults => 'لا توجد نتائج للفلتر المحدد';
+
+  @override
+  String snapshotError(String error) {
+    return 'خطأ: $error';
+  }
+
+  @override
+  String get detectionDetailsTitle => 'تفاصيل الفحص';
+
+  @override
+  String get visionHealthy => 'سليم';
+
+  @override
+  String get visionWarning => 'تحذير';
+
+  @override
+  String get visionViewAll => 'عرض الكل';
+
+  @override
+  String visionSpotsDetected(int count) {
+    return 'تم اكتشاف $count بقع';
+  }
+
+  @override
+  String get visionOptimalGrowth => 'نمو مثالي';
+
+  @override
+  String get visionActionRequiresAttention => 'يتطلب اهتمامًا';
 }

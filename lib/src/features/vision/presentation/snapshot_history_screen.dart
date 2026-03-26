@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../core/models/db/detection_history_model.dart';
 import '../data/detection_history_repository.dart';
+import 'detection_details_screen.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
 
@@ -17,11 +19,21 @@ class SnapshotHistoryScreen extends ConsumerStatefulWidget {
 
 class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
   String _selectedFilter = 'All';
+  String _searchQuery = '';
+  DateTime? _selectedDate;
+  final TextEditingController _searchController = TextEditingController();
+
+  @override
+  void dispose() {
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
     final bgColor = isDark
         ? RayyanColors.backgroundDark
         : RayyanColors.backgroundLight;
@@ -33,15 +45,14 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
         elevation: 0,
         scrolledUnderElevation: 0,
         leading: IconButton(
-          icon: Icon(
-            Icons.arrow_back_ios_new_rounded,
+          icon: RayyanSymbol(
+            'arrow_back_ios_new',
             color: isDark ? Colors.white : RayyanColors.slate900,
-            size: 20,
           ),
           onPressed: () => Navigator.of(context).pop(),
         ),
         title: Text(
-          'Snapshot History',
+          l10n.snapshotHistoryTitle,
           style: theme.textTheme.titleLarge?.copyWith(
             fontWeight: FontWeight.w900,
             color: isDark ? Colors.white : RayyanColors.slate900,
@@ -53,10 +64,50 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
           IconButton(
             icon: RayyanSymbol(
               'calendar_month',
-              color: isDark ? RayyanColors.slate400 : RayyanColors.slate600,
+              color: _selectedDate != null 
+                  ? RayyanColors.rayyan 
+                  : (isDark ? RayyanColors.slate400 : RayyanColors.slate600),
               size: 24,
             ),
-            onPressed: () {},
+            onPressed: () async {
+              final DateTime? picked = await showDatePicker(
+                context: context,
+                initialDate: _selectedDate ?? DateTime.now(),
+                firstDate: DateTime(2020),
+                lastDate: DateTime.now(),
+                builder: (context, child) {
+                  return Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: isDark
+                          ? const ColorScheme.dark(
+                              primary: RayyanColors.rayyan,
+                              onPrimary: Colors.white,
+                              surface: RayyanColors.surfaceDark,
+                              onSurface: Colors.white,
+                            )
+                          : const ColorScheme.light(
+                              primary: RayyanColors.rayyan,
+                              onPrimary: Colors.white,
+                              surface: Colors.white,
+                              onSurface: RayyanColors.slate900,
+                            ),
+                    ),
+                    child: child!,
+                  );
+                },
+              );
+              if (picked != null) {
+                setState(() {
+                  _selectedDate = picked;
+                });
+              } else {
+                // If they cancel out, we can choose to clear it or keep it
+                // Let's keep it to clear it when tapping again:
+                setState(() {
+                  _selectedDate = null;
+                });
+              }
+            },
           ),
           const SizedBox(width: 8),
         ],
@@ -95,9 +146,15 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                         const SizedBox(width: 12),
                         Expanded(
                           child: TextField(
+                            controller: _searchController,
+                            onChanged: (value) {
+                              setState(() {
+                                _searchQuery = value.toLowerCase();
+                              });
+                            },
                             decoration: InputDecoration(
                               border: InputBorder.none,
-                              hintText: 'Search lettuce snapshots...',
+                              hintText: l10n.snapshotSearchHint,
                               hintStyle: theme.textTheme.bodyMedium?.copyWith(
                                 color: RayyanColors.slate500,
                                 fontSize: 14,
@@ -122,13 +179,13 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                   child: Row(
                     children: [
                       _FilterChip(
-                        label: 'All',
+                        label: l10n.snapshotFilterAll,
                         isSelected: _selectedFilter == 'All',
                         onTap: () => setState(() => _selectedFilter = 'All'),
                       ),
                       const SizedBox(width: 12),
                       _FilterChip(
-                        label: 'Healthy',
+                        label: l10n.snapshotFilterHealthy,
                         icon: 'check_circle',
                         iconColor: RayyanColors.nature,
                         isSelected: _selectedFilter == 'Healthy',
@@ -136,7 +193,7 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                       ),
                       const SizedBox(width: 12),
                       _FilterChip(
-                        label: 'Warning',
+                        label: l10n.snapshotFilterWarning,
                         icon: 'warning',
                         iconColor: RayyanColors.warning,
                         isSelected: _selectedFilter == 'Warning',
@@ -144,7 +201,7 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                       ),
                       const SizedBox(width: 12),
                       _FilterChip(
-                        label: 'Critical',
+                        label: l10n.snapshotFilterCritical,
                         icon: 'error',
                         iconColor: RayyanColors.critical,
                         isSelected: _selectedFilter == 'Critical',
@@ -175,27 +232,45 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
             sliver: ref.watch(detectionHistoryProvider).when(
                   data: (items) {
                     if (items.isEmpty) {
-                      return const SliverToBoxAdapter(
+                      return SliverToBoxAdapter(
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.all(32.0),
-                            child: Text('No history available yet'),
+                            padding: const EdgeInsets.all(32.0),
+                            child: Text(l10n.snapshotNoHistory),
                           ),
                         ),
                       );
                     }
                     
                     // Filter the items based on status matching chips (e.g. status == 'Healthy')
-                    final filteredItems = _selectedFilter == 'All' 
+                    var filteredItems = _selectedFilter == 'All' 
                         ? items 
                         : items.where((i) => i.status.toLowerCase() == _selectedFilter.toLowerCase()).toList();
+
+                    // Apply text search
+                    if (_searchQuery.isNotEmpty) {
+                      filteredItems = filteredItems.where((i) => 
+                        i.title.toLowerCase().contains(_searchQuery) ||
+                        i.subtitle.toLowerCase().contains(_searchQuery) ||
+                        i.description.toLowerCase().contains(_searchQuery)
+                      ).toList();
+                    }
+
+                    // Apply date filter
+                    if (_selectedDate != null) {
+                      filteredItems = filteredItems.where((i) {
+                        return i.timestamp.year == _selectedDate!.year &&
+                               i.timestamp.month == _selectedDate!.month &&
+                               i.timestamp.day == _selectedDate!.day;
+                      }).toList();
+                    }
                         
                     if (filteredItems.isEmpty) {
-                      return const SliverToBoxAdapter(
+                      return SliverToBoxAdapter(
                         child: Center(
                           child: Padding(
-                            padding: EdgeInsets.all(32.0),
-                            child: Text('No results for selected filter'),
+                            padding: const EdgeInsets.all(32.0),
+                            child: Text(l10n.snapshotNoResults),
                           ),
                         ),
                       );
@@ -215,7 +290,17 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                       for (var item in dayItems) {
                         sliverChildren.add(Padding(
                           padding: const EdgeInsets.only(bottom: 12),
-                          child: _SnapshotItem(item: item),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => DetectionDetailsScreen(item: item),
+                                ),
+                              );
+                            },
+                            child: _SnapshotItem(item: item),
+                          ),
                         ));
                       }
                       sliverChildren.add(const SizedBox(height: 12));
@@ -240,7 +325,7 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                       child: Padding(
                         padding: const EdgeInsets.all(32.0),
                         child: Text(
-                          'Error: $err',
+                          l10n.snapshotError(err.toString()),
                           style: const TextStyle(color: Colors.red),
                           textAlign: TextAlign.center,
                         ),
@@ -371,16 +456,21 @@ class _SnapshotItem extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
     
     // Status Color
     Color statusColor = RayyanColors.slate500;
+    String translatedStatus = item.status;
     final lowerStatus = item.status.toLowerCase();
     if (lowerStatus.contains('health') || lowerStatus.contains('optimal')) {
       statusColor = RayyanColors.nature;
+      translatedStatus = l10n.visionHealthy;
     } else if (lowerStatus.contains('warn')) {
       statusColor = RayyanColors.warning;
+      translatedStatus = l10n.visionWarning;
     } else if (lowerStatus.contains('critical') || lowerStatus.contains('danger') || lowerStatus.contains('disease')) {
       statusColor = RayyanColors.critical;
+      translatedStatus = l10n.visionCritical;
     }
     
     // Confidence Color
@@ -482,7 +572,7 @@ class _SnapshotItem extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        DateFormat('h:mm a').format(item.timestamp),
+                        DateFormat('h:mm a', l10n.localeName).format(item.timestamp),
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: isDark ? RayyanColors.slate400 : RayyanColors.slate400,
                           fontWeight: FontWeight.w600,
@@ -493,7 +583,7 @@ class _SnapshotItem extends StatelessWidget {
                   ),
                   const SizedBox(height: 2),
                   Text(
-                    item.subtitle,
+                    l10n.visionSpotsDetected(item.totalSpots),
                     style: theme.textTheme.bodySmall?.copyWith(
                       color: RayyanColors.slate500,
                       fontSize: 11,
@@ -515,7 +605,7 @@ class _SnapshotItem extends StatelessWidget {
                           borderRadius: BorderRadius.circular(20),
                         ),
                         child: Text(
-                          item.status.toUpperCase(),
+                          translatedStatus.toUpperCase(),
                           style: theme.textTheme.labelSmall?.copyWith(
                             color: statusColor,
                             fontWeight: FontWeight.w900,
@@ -527,7 +617,7 @@ class _SnapshotItem extends StatelessWidget {
                       const SizedBox(width: 8),
                       Expanded(
                         child: Text(
-                          item.description,
+                          _localizedDescription(item.description, l10n),
                           style: theme.textTheme.bodySmall?.copyWith(
                             color: RayyanColors.slate400,
                             fontSize: 11,
@@ -546,5 +636,16 @@ class _SnapshotItem extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  String _localizedDescription(String description, AppLocalizations l10n) {
+    switch (description) {
+      case 'Action requires attention':
+        return l10n.visionActionRequiresAttention;
+      case 'Optimal growth':
+        return l10n.visionOptimalGrowth;
+      default:
+        return description;
+    }
   }
 }
