@@ -819,11 +819,10 @@ class _SnapshotHistorySection extends ConsumerWidget {
               if (items.isEmpty) {
                 return const Center(child: Text('No history available'));
               }
-              final recentItems = items.take(3).toList();
               return ListView.separated(
                 padding: const EdgeInsets.symmetric(horizontal: 20),
                 scrollDirection: Axis.horizontal,
-                itemCount: recentItems.length,
+                itemCount: items.length,
                 separatorBuilder: (context, index) => const SizedBox(width: 16),
                 itemBuilder: (context, index) {
                   return GestureDetector(
@@ -831,11 +830,11 @@ class _SnapshotHistorySection extends ConsumerWidget {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => DetectionDetailsScreen(item: recentItems[index]),
+                          builder: (context) => DetectionDetailsScreen(item: items[index]),
                         ),
                       );
                     },
-                    child: _SnapshotCard(item: recentItems[index]),
+                    child: _SnapshotCard(item: items[index]),
                   );
                 },
               );
