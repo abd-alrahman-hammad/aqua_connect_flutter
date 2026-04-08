@@ -8,10 +8,6 @@
   "hardwareAndIot": "HARDWARE & IOT",
   "operatingThresholds": "Operating Thresholds",
   "thresholdsSubtitle": "Fan, Heater, pH pump, Feeding pump limits",
-  "sensorCalibration": "Sensor Calibration",
-  "calibrationSubtitle": "pH, EC, and Temperature",
-  "firmwareUpdate": "Firmware Update",
-  "upToDate": "Up to date: v2.4.1",
   "appPreferences": "APP PREFERENCES",
   "language": "Language",
   "darkMode": "Dark Mode",
@@ -119,7 +115,6 @@
   "thresholdsSavedSuccessfully": "Thresholds saved successfully",
   "noUserData": "No user data found",
   "errorSigningOut": "Error signing out: {error}",
-
   "supportAndLearning": "Support & Learning",
   "videoGuides": "Video Guides",
   "visualWalkthroughs": "Visual walkthroughs for your system",
@@ -129,7 +124,6 @@
   "frequentlyAskedQuestions": "Frequently Asked Questions",
   "searchFaqsHint": "Search FAQs...",
   "noResultsFound": "No results found.",
-
   "faqQuestion1": "What is the ideal pH range?",
   "faqAnswer1": "For most hydroponic plants, keep the pH between 5.5 and 6.5. Regular testing is essential for nutrient uptake.",
   "faqQuestion2": "How do I maintain my pump?",
@@ -148,7 +142,6 @@
   "faqAnswer8": "Space lettuce and herbs 6-8 inches apart. Larger fruiting plants like tomatoes need 12-18 inches of space.",
   "faqQuestion9": "How often should I clean the system?",
   "faqAnswer9": "Perform a full system flush and cleaning every 2-3 weeks to prevent algae buildup and salt accumulation.",
-
   "accountSecurityTitle": "Account Security",
   "changePasswordTitle": "Change Password",
   "currentPassword": "Current Password",
@@ -162,20 +155,6 @@
   "updating": "Updating...",
   "updatePasswordButton": "Update Password",
   "somethingWentWrong": "Something went wrong",
-
-  "sensorCalibrationTitle": "Sensor Calibration",
-  "logLabel": "Log",
-  "calibrationInfoMessage": "For accurate readings, calibrate sensors monthly using standard buffer solutions.",
-  "phSensor": "pH Sensor",
-  "ecSensor": "EC Sensor",
-  "currentValue": "Current: {value}",
-  "@currentValue": { "placeholders": { "value": { "type": "String" } } },
-  "lastCalibration": "Last: {time}",
-  "@lastCalibration": { "placeholders": { "time": { "type": "String" } } },
-  "calibrateNow": "Calibrate Now",
-  "daysAgo2": "2 days ago",
-  "daysAgo5": "5 days ago",
-
   "operatingThresholdsTitle": "Operating Thresholds",
   "thresholdsInfoMessage": "These limits control when fans, heaters, and pumps operate automatically.",
   "fanLimitHighLabel": "Fan Limit (temp_high)",
@@ -191,51 +170,6 @@
   "ecLowLimitLabel": "Feeding Pump Limit (ec_low)",
   "ecLowLimitHint": "mS/cm - Feeding pump operating limit",
   "saveThresholds": "Save Thresholds",
-
-  "phCalibrationTitle": "pH Calibration",
-  "currentReading": "Current Reading",
-  "signalStable": "Signal Stable",
-  "calibrationWizard": "Calibration Wizard",
-  "prepareBuffer7": "Prepare Buffer 7.0",
-  "prepareBuffer7Sub": "Clean probe with distilled water and place in pH 7.0 solution.",
-  "prepareBuffer4": "Prepare Buffer 4.0",
-  "prepareBuffer4Sub": "Rinse probe again and place in pH 4.0 solution.",
-  "finalizeCalibration": "Finalize",
-  "finalizeCalibrationSub": "Save new calibration data to flash memory.",
-  "calibratePoint7": "Calibrate Point 7.0",
-  "calibratePoint4": "Calibrate Point 4.0",
-  "saveCalibration": "Save Calibration",
-
-  "ecCalibrationTitle": "EC Calibration",
-  "currentConductivity": "Current Conductivity",
-  "ecProbeWarning": "Ensure the probe is clean and free of organic buildup before calibrating.",
-  "calibrationStandard": "Calibration Standard",
-  "calibrationStandardValue": "1.413 mS/cm (Standard)",
-  "tempCompensation": "Temperature Compensation",
-  "tempCompensationValue": "2.0% / °C",
-  "fixedLabel": "Fixed",
-  "startOnePointCalibration": "Start 1-Point Calibration",
-
-  "tempCalibrationTitle": "Temp Calibration",
-  "sensorReading": "Sensor Reading",
-  "rawValue": "Raw Value: {value}°C",
-  "@rawValue": { "placeholders": { "value": { "type": "String" } } },
-  "manualOffsetAdjustment": "Manual Offset Adjustment",
-  "offsetInstructions": "Use a certified reference thermometer to determine the offset required.",
-  "offsetLabel": "OFFSET °C",
-  "applyOffset": "Apply Offset",
-
-  "firmwareUpdateTitle": "Firmware Update",
-  "systemUpToDate": "System is Up to Date",
-  "installedVersion": "Installed Version: {version}",
-  "@installedVersion": { "placeholders": { "version": { "type": "String" } } },
-  "changelogTitle": "Changelog {version}",
-  "@changelogTitle": { "placeholders": { "version": { "type": "String" } } },
-  "releasedDate": "Released Oct 24, 2023",
-  "changelogItem1": "Improved pH sensor stability algorithm",
-  "changelogItem2": "New \"Eco Mode\" for lighting schedule",
-  "checkForUpdates": "Check for Updates",
-
   "notificationSettingsTitle": "Notification Settings",
   "pushNotifications": "Push Notifications",
   "pushNotificationsSub": "Enable or disable all notifications",
@@ -246,11 +180,16 @@
   "waterLevelAlertsSub": "Low water level, refilling required",
   "parameterWarnings": "Parameter Warnings",
   "parameterWarningsSub": "pH or EC deviation outside safe range",
-
   "askMeAboutHydroponic": "Ask me about your hydroponic system!",
   "typeYourQuestion": "Type your question...",
   "errorMessage": "Error: {error}",
-  "@errorMessage": { "placeholders": { "error": { "type": "String" } } },
+  "@errorMessage": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "smartControls": "Smart Controls",
   "systemOperationMode": "System Operation Mode",
   "smartAuto": "Smart Auto",
@@ -270,33 +209,33 @@
   "offStatus": "OFF",
   "alertCriticalTitle": "🚨 Critical: {label} Issue",
   "@alertCriticalTitle": {
-      "placeholders": {
-          "label": {
-              "type": "String"
-          }
+    "placeholders": {
+      "label": {
+        "type": "String"
       }
+    }
   },
   "alertWarningTitle": "⚠️ Warning: {label} Issue",
   "@alertWarningTitle": {
-      "placeholders": {
-          "label": {
-              "type": "String"
-          }
+    "placeholders": {
+      "label": {
+        "type": "String"
       }
+    }
   },
   "alertBody": "{label} is currently at {value}{unit}. Check system immediately.",
   "@alertBody": {
-      "placeholders": {
-          "label": {
-              "type": "String"
-          },
-          "value": {
-              "type": "String"
-          },
-          "unit": {
-              "type": "String"
-          }
+    "placeholders": {
+      "label": {
+        "type": "String"
+      },
+      "value": {
+        "type": "String"
+      },
+      "unit": {
+        "type": "String"
       }
+    }
   },
   "defaultDailyTip": "Consistency is key to a healthy harvest.",
   "profileTitle": "Profile",
@@ -307,7 +246,6 @@
   "offlineStartupTitle": "No Internet Connection",
   "offlineStartupMessage": "We're sorry — your plants miss you too.\nWe'll reconnect automatically once you're back online.",
   "alertDismissed": "{title} dismissed",
-
   "visionTitle": "AI Plant Vision",
   "visionHealthAnalysis": "Health Analysis",
   "visionLastSync": "LAST SYNC",
@@ -318,7 +256,13 @@
   "visionUnknown": "Unknown",
   "visionDetectedDiseases": "Detected Diseases",
   "visionDiseaseCritical": "{count} diseased spots identified. High risk of spread. Intervention required immediately to save the crop.",
-  "@visionDiseaseCritical": { "placeholders": { "count": { "type": "int" } } },
+  "@visionDiseaseCritical": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "visionDiseaseWarning": "Some concerning areas detected. Please monitor closely.",
   "visionSpotAnalysis": "Spot-by-Spot Analysis",
   "visionRecommendedAction": "Recommended Action",
@@ -335,13 +279,25 @@
   "snapshotNoHistory": "No history available yet",
   "snapshotNoResults": "No results for selected filter",
   "snapshotError": "Error: {error}",
-  "@snapshotError": { "placeholders": { "error": { "type": "String" } } },
+  "@snapshotError": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
   "detectionDetailsTitle": "Detection Details",
   "visionHealthy": "Healthy",
   "visionWarning": "Warning",
   "visionViewAll": "View All",
   "visionSpotsDetected": "Spots Detected {count}",
-  "@visionSpotsDetected": { "placeholders": { "count": { "type": "int" } } },
+  "@visionSpotsDetected": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
   "visionOptimalGrowth": "Optimal growth",
   "visionActionRequiresAttention": "Action requires attention"
 }

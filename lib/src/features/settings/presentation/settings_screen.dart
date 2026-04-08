@@ -133,27 +133,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       subtitle: l10n.thresholdsSubtitle,
                       onTap: () => widget.onNavigate(AppScreen.thresholds),
                     ),
-                    _Divider(),
-                    _MenuItem(
-                      icon: 'precision_manufacturing',
-                      title: l10n.sensorCalibration,
-                      subtitle: l10n.calibrationSubtitle,
-                      onTap: () =>
-                          widget.onNavigate(AppScreen.sensorCalibration),
-                    ),
-                    _Divider(),
-                    _MenuItem(
-                      icon: 'update',
-                      title: l10n.firmwareUpdate,
-                      subtitleWidget: Text(
-                        l10n.upToDate,
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: RayyanColors.nature,
-                          fontWeight: FontWeight.w900,
-                        ),
-                      ),
-                      onTap: () => widget.onNavigate(AppScreen.firmwareUpdate),
-                    ),
+
                   ],
                 ),
                 const SizedBox(height: 24),

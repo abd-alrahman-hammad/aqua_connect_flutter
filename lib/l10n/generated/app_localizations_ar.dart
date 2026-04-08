@@ -37,19 +37,6 @@ class AppLocalizationsAr extends AppLocalizations {
       'حدود المروحة، السخان، مضخة الأس الهيدروجيني، مضخة التغذية';
 
   @override
-  String get sensorCalibration => 'معايرة المستشعرات';
-
-  @override
-  String get calibrationSubtitle =>
-      'الأس الهيدروجيني، التوصيل الكهربائي، ودرجة الحرارة';
-
-  @override
-  String get firmwareUpdate => 'تحديث البرنامج الثابت';
-
-  @override
-  String get upToDate => 'محدث: v2.4.1';
-
-  @override
   String get appPreferences => 'تفضيلات التطبيق';
 
   @override
@@ -515,41 +502,6 @@ class AppLocalizationsAr extends AppLocalizations {
   String get somethingWentWrong => 'حدث خطأ ما';
 
   @override
-  String get sensorCalibrationTitle => 'معايرة المستشعرات';
-
-  @override
-  String get logLabel => 'السجل';
-
-  @override
-  String get calibrationInfoMessage =>
-      'للحصول على قراءات دقيقة، قم بمعايرة المستشعرات شهرياً باستخدام محاليل معيارية.';
-
-  @override
-  String get phSensor => 'مستشعر الأس الهيدروجيني';
-
-  @override
-  String get ecSensor => 'مستشعر التوصيل الكهربائي';
-
-  @override
-  String currentValue(String value) {
-    return 'الحالي: $value';
-  }
-
-  @override
-  String lastCalibration(String time) {
-    return 'آخر: $time';
-  }
-
-  @override
-  String get calibrateNow => 'معايرة الآن';
-
-  @override
-  String get daysAgo2 => 'منذ يومين';
-
-  @override
-  String get daysAgo5 => 'منذ 5 أيام';
-
-  @override
   String get operatingThresholdsTitle => 'عتبات التشغيل';
 
   @override
@@ -594,127 +546,6 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get saveThresholds => 'حفظ الحدود';
-
-  @override
-  String get phCalibrationTitle => 'معايرة الأس الهيدروجيني';
-
-  @override
-  String get currentReading => 'القراءة الحالية';
-
-  @override
-  String get signalStable => 'الإشارة مستقرة';
-
-  @override
-  String get calibrationWizard => 'معالج المعايرة';
-
-  @override
-  String get prepareBuffer7 => 'تحضير المحلول المعياري 7.0';
-
-  @override
-  String get prepareBuffer7Sub =>
-      'نظّف المسبار بالماء المقطر وضعه في محلول pH 7.0.';
-
-  @override
-  String get prepareBuffer4 => 'تحضير المحلول المعياري 4.0';
-
-  @override
-  String get prepareBuffer4Sub => 'اشطف المسبار مرة أخرى وضعه في محلول pH 4.0.';
-
-  @override
-  String get finalizeCalibration => 'إنهاء';
-
-  @override
-  String get finalizeCalibrationSub =>
-      'حفظ بيانات المعايرة الجديدة في الذاكرة.';
-
-  @override
-  String get calibratePoint7 => 'معايرة النقطة 7.0';
-
-  @override
-  String get calibratePoint4 => 'معايرة النقطة 4.0';
-
-  @override
-  String get saveCalibration => 'حفظ المعايرة';
-
-  @override
-  String get ecCalibrationTitle => 'معايرة التوصيل الكهربائي';
-
-  @override
-  String get currentConductivity => 'التوصيل الكهربائي الحالي';
-
-  @override
-  String get ecProbeWarning =>
-      'تأكد من أن المسبار نظيف وخالٍ من التراكم العضوي قبل المعايرة.';
-
-  @override
-  String get calibrationStandard => 'المعيار القياسي';
-
-  @override
-  String get calibrationStandardValue => '1.413 mS/cm (قياسي)';
-
-  @override
-  String get tempCompensation => 'تعويض الحرارة';
-
-  @override
-  String get tempCompensationValue => '2.0% / °م';
-
-  @override
-  String get fixedLabel => 'ثابت';
-
-  @override
-  String get startOnePointCalibration => 'بدء معايرة النقطة الواحدة';
-
-  @override
-  String get tempCalibrationTitle => 'معايرة الحرارة';
-
-  @override
-  String get sensorReading => 'قراءة المستشعر';
-
-  @override
-  String rawValue(String value) {
-    return 'القراءة الخام: $value°م';
-  }
-
-  @override
-  String get manualOffsetAdjustment => 'ضبط الإزاحة اليدوي';
-
-  @override
-  String get offsetInstructions =>
-      'استخدم مقياس حرارة مرجعي معتمد لتحديد الإزاحة المطلوبة.';
-
-  @override
-  String get offsetLabel => 'الإزاحة °م';
-
-  @override
-  String get applyOffset => 'تطبيق الإزاحة';
-
-  @override
-  String get firmwareUpdateTitle => 'تحديث البرنامج الثابت';
-
-  @override
-  String get systemUpToDate => 'النظام محدث';
-
-  @override
-  String installedVersion(String version) {
-    return 'الإصدار المثبت: $version';
-  }
-
-  @override
-  String changelogTitle(String version) {
-    return 'سجل التغييرات $version';
-  }
-
-  @override
-  String get releasedDate => 'صدر في 24 أكتوبر 2023';
-
-  @override
-  String get changelogItem1 => 'تحسين خوارزمية استقرار مستشعر pH';
-
-  @override
-  String get changelogItem2 => 'وضع \"التوفير\" الجديد لجدول الإضاءة';
-
-  @override
-  String get checkForUpdates => 'التحقق من التحديثات';
 
   @override
   String get notificationSettingsTitle => 'إعدادات الإشعارات';

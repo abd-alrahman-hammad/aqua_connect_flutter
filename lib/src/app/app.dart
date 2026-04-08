@@ -104,18 +104,8 @@ class _AppRoot extends ConsumerWidget {
         );
       case AppScreen.accountSecurity:
         page = AccountSecurityScreen(onNavigate: controller.navigate);
-      case AppScreen.sensorCalibration:
-        page = SensorCalibrationScreen(onNavigate: controller.navigate);
       case AppScreen.thresholds:
         page = ThresholdsScreen(onNavigate: controller.navigate);
-      case AppScreen.calibrationPh:
-        page = PhCalibrationScreen(onNavigate: controller.navigate);
-      case AppScreen.calibrationEc:
-        page = EcCalibrationScreen(onNavigate: controller.navigate);
-      case AppScreen.calibrationTemp:
-        page = TempCalibrationScreen(onNavigate: controller.navigate);
-      case AppScreen.firmwareUpdate:
-        page = FirmwareUpdateScreen(onNavigate: controller.navigate);
       case AppScreen.notificationSettings:
         page = NotificationSettingsScreen(onNavigate: controller.navigate);
       case AppScreen.reports:

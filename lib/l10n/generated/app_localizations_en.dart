@@ -36,18 +36,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get thresholdsSubtitle => 'Fan, Heater, pH pump, Feeding pump limits';
 
   @override
-  String get sensorCalibration => 'Sensor Calibration';
-
-  @override
-  String get calibrationSubtitle => 'pH, EC, and Temperature';
-
-  @override
-  String get firmwareUpdate => 'Firmware Update';
-
-  @override
-  String get upToDate => 'Up to date: v2.4.1';
-
-  @override
   String get appPreferences => 'APP PREFERENCES';
 
   @override
@@ -510,41 +498,6 @@ class AppLocalizationsEn extends AppLocalizations {
   String get somethingWentWrong => 'Something went wrong';
 
   @override
-  String get sensorCalibrationTitle => 'Sensor Calibration';
-
-  @override
-  String get logLabel => 'Log';
-
-  @override
-  String get calibrationInfoMessage =>
-      'For accurate readings, calibrate sensors monthly using standard buffer solutions.';
-
-  @override
-  String get phSensor => 'pH Sensor';
-
-  @override
-  String get ecSensor => 'EC Sensor';
-
-  @override
-  String currentValue(String value) {
-    return 'Current: $value';
-  }
-
-  @override
-  String lastCalibration(String time) {
-    return 'Last: $time';
-  }
-
-  @override
-  String get calibrateNow => 'Calibrate Now';
-
-  @override
-  String get daysAgo2 => '2 days ago';
-
-  @override
-  String get daysAgo5 => '5 days ago';
-
-  @override
   String get operatingThresholdsTitle => 'Operating Thresholds';
 
   @override
@@ -589,128 +542,6 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get saveThresholds => 'Save Thresholds';
-
-  @override
-  String get phCalibrationTitle => 'pH Calibration';
-
-  @override
-  String get currentReading => 'Current Reading';
-
-  @override
-  String get signalStable => 'Signal Stable';
-
-  @override
-  String get calibrationWizard => 'Calibration Wizard';
-
-  @override
-  String get prepareBuffer7 => 'Prepare Buffer 7.0';
-
-  @override
-  String get prepareBuffer7Sub =>
-      'Clean probe with distilled water and place in pH 7.0 solution.';
-
-  @override
-  String get prepareBuffer4 => 'Prepare Buffer 4.0';
-
-  @override
-  String get prepareBuffer4Sub =>
-      'Rinse probe again and place in pH 4.0 solution.';
-
-  @override
-  String get finalizeCalibration => 'Finalize';
-
-  @override
-  String get finalizeCalibrationSub =>
-      'Save new calibration data to flash memory.';
-
-  @override
-  String get calibratePoint7 => 'Calibrate Point 7.0';
-
-  @override
-  String get calibratePoint4 => 'Calibrate Point 4.0';
-
-  @override
-  String get saveCalibration => 'Save Calibration';
-
-  @override
-  String get ecCalibrationTitle => 'EC Calibration';
-
-  @override
-  String get currentConductivity => 'Current Conductivity';
-
-  @override
-  String get ecProbeWarning =>
-      'Ensure the probe is clean and free of organic buildup before calibrating.';
-
-  @override
-  String get calibrationStandard => 'Calibration Standard';
-
-  @override
-  String get calibrationStandardValue => '1.413 mS/cm (Standard)';
-
-  @override
-  String get tempCompensation => 'Temperature Compensation';
-
-  @override
-  String get tempCompensationValue => '2.0% / °C';
-
-  @override
-  String get fixedLabel => 'Fixed';
-
-  @override
-  String get startOnePointCalibration => 'Start 1-Point Calibration';
-
-  @override
-  String get tempCalibrationTitle => 'Temp Calibration';
-
-  @override
-  String get sensorReading => 'Sensor Reading';
-
-  @override
-  String rawValue(String value) {
-    return 'Raw Value: $value°C';
-  }
-
-  @override
-  String get manualOffsetAdjustment => 'Manual Offset Adjustment';
-
-  @override
-  String get offsetInstructions =>
-      'Use a certified reference thermometer to determine the offset required.';
-
-  @override
-  String get offsetLabel => 'OFFSET °C';
-
-  @override
-  String get applyOffset => 'Apply Offset';
-
-  @override
-  String get firmwareUpdateTitle => 'Firmware Update';
-
-  @override
-  String get systemUpToDate => 'System is Up to Date';
-
-  @override
-  String installedVersion(String version) {
-    return 'Installed Version: $version';
-  }
-
-  @override
-  String changelogTitle(String version) {
-    return 'Changelog $version';
-  }
-
-  @override
-  String get releasedDate => 'Released Oct 24, 2023';
-
-  @override
-  String get changelogItem1 => 'Improved pH sensor stability algorithm';
-
-  @override
-  String get changelogItem2 => 'New \"Eco Mode\" for lighting schedule';
-
-  @override
-  String get checkForUpdates => 'Check for Updates';
 
   @override
   String get notificationSettingsTitle => 'Notification Settings';
