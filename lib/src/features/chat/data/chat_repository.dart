@@ -47,9 +47,9 @@ class ChatRepository {
 
   String _getSystemPrompt(String languageCode) {
     if (languageCode.toLowerCase() == 'ar') {
-      return "أنت مساعد ذكي لتطبيق زراعة مائية يسمى ريان. مهمتك الإجابة فقط عن أسئلة الزراعة المائية أو الزراعة. إذا سُئلت عن أي موضوع آخر فاعتذر بلطف وارفض الإجابة.";
+      return "أنت مساعد ذكي لتطبيق زراعة مائية يسمى ريان. مهمتك الإجابة فقط عن أسئلة الزراعة المائية . يجب أن تكون جميع إجاباتك باللغة العربية فقط. يُمنع منعاً باتاً استخدام أي لغة أخرى مثل الإنجليزية أو الصينية أو غيرها. إذا سُئلت عن أي موضوع آخر فاعتذر بلطف وارفض الإجابة.";
     } else {
-      return "You are a smart assistant for a hydroponic app named Rayyan. You must only answer agriculture or hydroponic-related questions. If asked about anything else, politely apologize and refuse.";
+      return "You are a smart assistant for a hydroponic app named Rayyan. You must only answer hydroponic-related questions. Your responses must be entirely in English. Do not use any other languages. If asked about anything else, politely apologize and refuse.";
     }
   }
 }

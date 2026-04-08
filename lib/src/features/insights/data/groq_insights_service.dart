@@ -46,6 +46,7 @@ class GroqInsightsService {
       loc,
     );
 
+    final langName = languageCode.toLowerCase() == 'ar' ? 'Arabic (العربية)' : 'English';
     final prompt =
         '''
 Analyze these hydroponic system readings and provide insights.
@@ -57,9 +58,11 @@ Context:
 - pH: ${sensors.ph ?? '--'} ($phStatus) (Target: ${settings.phLow}-${settings.phHigh})
 - EC: ${sensors.ec ?? '--'} mS/cm ($ecStatus) (Target: ${settings.ecLow}-${settings.ecHigh} mS/cm)
 
-Output the values of the JSON in ${languageCode.toLowerCase() == 'ar' ? 'Arabic' : 'English'} based on languageCode. 
-Strictly keep the JSON keys (analysis, action_required, daily_tip) in English
-Return ONLY valid JSON with no extra text, no markdown, no code blocks.
+CRITICAL INSTRUCTIONS:
+1. Output the values of the JSON STRICTLY in $langName language.
+2. DO NOT include any words, characters, or text in any other language (e.g., no English words in Arabic values, no Chinese, etc).
+3. Strictly keep the JSON keys (analysis, action_required, daily_tip) in English.
+4. Return ONLY valid JSON with no extra text, no markdown, no code blocks.
 
 JSON Schema:
 {
@@ -70,11 +73,14 @@ JSON Schema:
 ''';
 
     try {
+      final systemContent = languageCode.toLowerCase() == 'ar'
+          ? 'You are a hydroponic system expert. Respond with valid JSON. JSON Keys must be English. JSON Values MUST be exclusively in Arabic. Generating Chinese characters, English words, or any other language in the values is strictly forbidden.'
+          : 'You are a hydroponic system expert. Respond with valid JSON. Keys and values must be in English. No other languages allowed.';
+
       final messages = [
         {
           'role': 'system',
-          'content':
-              'You are a hydroponic system expert. Always respond with valid JSON only, no extra text.',
+          'content': systemContent,
         },
         {'role': 'user', 'content': prompt},
       ];
