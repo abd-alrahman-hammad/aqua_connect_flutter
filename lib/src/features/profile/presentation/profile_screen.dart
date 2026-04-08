@@ -95,7 +95,7 @@ class ProfileScreen extends ConsumerWidget {
                 );
               }
               return SingleChildScrollView(
-                padding: const EdgeInsets.fromLTRB(24, 16, 24, 40),
+                padding: const EdgeInsets.fromLTRB(24, 40, 24, 40),
                 child: Column(
                   children: [
                     _ProfileHeader(user: user, isDark: isDark),
@@ -183,44 +183,13 @@ class ProfileScreen extends ConsumerWidget {
 class _ProfileHeader extends ConsumerWidget {
   const _ProfileHeader({required this.user, required this.isDark});
 
-  final dynamic
-  user; // Using dynamic because UserModel isn't imported explicitly but we know the shape.
-  // Actually, better to use the specific type if possible, but standard 'user' in this file context was inferred.
-  // I will rely on dynamic or inferred type, but to be safe I'll cast inside.
-  // Wait, I can import UserModel properly. But I don't want to break the pattern if it was excluded for a reason.
-  // The previous file had it commented out. I'll import it.
+  final dynamic user;
   final bool isDark;
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       children: [
-        Container(
-          width: 140, // Increased size
-          height: 140,
-          decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            color: RayyanColors.slate200,
-            border: Border.all(
-              color: isDark ? RayyanColors.cardDark : Colors.white,
-              width: 6,
-            ),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withValues(alpha: 0.15),
-                blurRadius: 20,
-                offset: const Offset(0, 10),
-              ),
-            ],
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: const Icon(
-            Icons.person,
-            size: 70,
-            color: RayyanColors.slate400,
-          ),
-        ),
-        const SizedBox(height: 16),
         Text(
           user.displayName ?? AppLocalizations.of(context)!.defaultUser,
           style: Theme.of(context).textTheme.headlineSmall?.copyWith(
