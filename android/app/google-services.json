@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "197572962595",
+    "firebase_url": "https://rayyan-cf0b7-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "rayyan-cf0b7",
+    "storage_bucket": "rayyan-cf0b7.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:197572962595:android:74dd9fcc94e479143d8496",
+        "android_client_info": {
+          "package_name": "com.Rayyan.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCldrqdKr5jDhuWcoJBuQGoxnOdenNEKhE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

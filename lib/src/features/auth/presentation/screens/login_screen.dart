@@ -14,6 +14,7 @@ import '../widgets/switch_pill.dart';
 import '../widgets/language_toggle.dart';
 import 'sign_up_screen.dart';
 import 'forgot_password_screen.dart';
+import 'verify_account_screen.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({super.key, required this.onNavigate});
@@ -74,8 +75,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         _passwordController.text,
       );
 
-      if (!user.emailVerified) {
-        await authService.signOut();
+      // Check if user exists in DB and save if needed (first login after verification)
+      final userDbService = ref.read(userDatabaseServiceProvider);
+      final userExists = await userDbService.userExists(user.uid);
+
+      if (!user.emailVerified && !userExists) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(
@@ -84,13 +88,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               behavior: SnackBarBehavior.floating,
             ),
           );
+          // Navigate to OTP verification screen
+          Navigator.push(context, MaterialPageRoute(builder: (_) => VerifyAccountScreen(email: user.email!)));
         }
         return;
       }
-
-      // Check if user exists in DB and save if needed (first login after verification)
-      final userDbService = ref.read(userDatabaseServiceProvider);
-      final userExists = await userDbService.userExists(user.uid);
 
       if (!userExists) {
         await userDbService.saveUser(user);

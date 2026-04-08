@@ -4,6 +4,7 @@ import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../../core/theme/rayyan_colors.dart';
 import '../../../../core/widgets/rayyan_symbol.dart';
 import '../../../../core/services/firebase_auth_service.dart';
+import '../widgets/auth_brand_header.dart';
 import '../widgets/auth_text_field.dart';
 import '../widgets/auth_button.dart';
 
@@ -91,14 +92,6 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Positioned(
-              top: 16,
-              left: 16,
-              child: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const RayyanSymbol('arrow_back_ios_new'),
-              ),
-            ),
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
@@ -112,25 +105,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
-                        Text(
-                          AppLocalizations.of(context)!.resetPasswordTitle,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.headlineSmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.w900,
-                                letterSpacing: -0.3,
-                              ),
-                        ),
-                        const SizedBox(height: 8),
-                        Text(
-                          AppLocalizations.of(context)!.resetPasswordSubtitle,
-                          textAlign: TextAlign.center,
-                          style: Theme.of(context).textTheme.bodyMedium
-                              ?.copyWith(
-                                color: isDark
-                                    ? RayyanColors.slate400
-                                    : RayyanColors.slate500,
-                              ),
+                        AuthBrandHeader(
+                          title: AppLocalizations.of(context)!.resetPasswordTitle,
+                          subtitle: AppLocalizations.of(context)!.resetPasswordSubtitle,
+                          iconSize: 64,
+                          compact: true,
                         ),
                         const SizedBox(height: 24),
                         AuthField(
@@ -168,6 +147,14 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                     ),
                   ),
                 ),
+              ),
+            ),
+            Positioned(
+              top: 16,
+              left: 16,
+              child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const RayyanSymbol('arrow_back_ios_new'),
               ),
             ),
           ],

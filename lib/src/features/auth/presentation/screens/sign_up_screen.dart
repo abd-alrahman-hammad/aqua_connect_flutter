@@ -7,6 +7,7 @@ import '../../../../core/services/firebase_auth_service.dart';
 import '../widgets/auth_brand_header.dart';
 import '../widgets/auth_text_field.dart';
 import '../widgets/auth_button.dart';
+import 'verify_account_screen.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -56,32 +57,21 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
     try {
       final authService = ref.read(firebaseAuthServiceProvider);
 
-      final user = await authService.createUserWithEmailAndPassword(
+      await authService.createUserWithEmailAndPassword(
         _emailController.text.trim(),
         _passwordController.text,
       );
 
-      await authService.sendEmailVerification(user);
       await authService.updateDisplayName(_nameController.text.trim());
+      await authService.sendEmailOtp(_emailController.text.trim(), lang: 'ar');
 
       if (mounted) {
-        showDialog(
-          context: context,
-          barrierDismissible: false,
-          builder: (dialogContext) => AlertDialog(
-            title: Text(AppLocalizations.of(context)!.verificationSent),
-            content: Text(
-              AppLocalizations.of(context)!.verificationSentMessage,
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(
+            builder: (context) => VerifyAccountScreen(
+              email: _emailController.text.trim(),
             ),
-            actions: [
-              TextButton(
-                onPressed: () {
-                  Navigator.pop(dialogContext); // Close dialog
-                  Navigator.pop(context); // Go back to login
-                },
-                child: Text(AppLocalizations.of(context)!.ok),
-              ),
-            ],
           ),
         );
       }
@@ -116,14 +106,6 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
       body: SafeArea(
         child: Stack(
           children: [
-            Positioned(
-              top: 16,
-              left: 16,
-              child: IconButton(
-                onPressed: () => Navigator.pop(context),
-                icon: const RayyanSymbol('arrow_back_ios_new'),
-              ),
-            ),
             Center(
               child: SingleChildScrollView(
                 padding: const EdgeInsets.symmetric(
@@ -247,6 +229,14 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                     ),
                   ),
                 ),
+              ),
+            ),
+            Positioned(
+              top: 16,
+              left: 16,
+              child: IconButton(
+                onPressed: () => Navigator.pop(context),
+                icon: const RayyanSymbol('arrow_back_ios_new'),
               ),
             ),
           ],

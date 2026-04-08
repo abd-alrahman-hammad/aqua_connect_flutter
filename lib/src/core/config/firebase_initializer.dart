@@ -1,9 +1,7 @@
-import 'dart:io';
-
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
 
 import 'firebase_config.dart';
+import '../../../../firebase_options.dart';
 
 /// Exception thrown when Firebase initialization fails
 class FirebaseInitException implements Exception {
@@ -40,6 +38,10 @@ class FirebaseInitializer {
   /// Throws [FirebaseInitException] if initialization fails.
   static Future<bool> initialize() async {
     try {
+      if (isInitialized) {
+        return true;
+      }
+
       // Get platform-specific Firebase options
       final options = _getPlatformOptions();
 
@@ -69,18 +71,7 @@ class FirebaseInitializer {
   ///
   /// Throws [FirebaseInitException] if platform is not supported.
   static FirebaseOptions _getPlatformOptions() {
-    if (kIsWeb) {
-      return FirebaseConfig.web;
-    } else if (Platform.isIOS) {
-      return FirebaseConfig.ios;
-    } else if (Platform.isAndroid) {
-      return FirebaseConfig.android;
-    } else {
-      throw const FirebaseInitException(
-        'Unsupported platform for Firebase. '
-        'Only Android, iOS, and Web are supported.',
-      );
-    }
+    return DefaultFirebaseOptions.currentPlatform;
   }
 
   /// Checks if Firebase has been initialized

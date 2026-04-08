@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:cloud_functions/cloud_functions.dart';
 
 /// Custom exception for authentication errors
 class AuthException implements Exception {
@@ -177,6 +178,38 @@ class FirebaseAuthService {
       );
     } catch (e) {
       throw AuthException('Failed to send verification email: $e');
+    }
+  }
+
+  /// Sends an email OTP via Cloud Function.
+  Future<void> sendEmailOtp(String email, {String lang = 'ar'}) async {
+    try {
+      final HttpsCallable callable =
+          FirebaseFunctions.instance.httpsCallable('send_email_otp');
+      final result = await callable.call(<String, dynamic>{
+        'email': email,
+        'lang': lang,
+      });
+
+      final Object? dataObj = result.data;
+      if (dataObj is Map) {
+        final Map<String, dynamic> data = Map<String, dynamic>.from(dataObj);
+        final bool success = data['success'] == true;
+
+        if (!success) {
+          final errorMessage = data['error']?.toString() ?? data['message']?.toString() ?? 'Failed to send OTP email';
+          throw AuthException(errorMessage);
+        }
+      } else {
+         throw const AuthException('Invalid response format from server');
+      }
+    } on FirebaseFunctionsException catch (e) {
+      throw AuthException(
+        'Failed to send OTP: ${e.message}',
+        e.code,
+      );
+    } catch (e) {
+      throw AuthException('Failed to send OTP email: $e');
     }
   }
 
