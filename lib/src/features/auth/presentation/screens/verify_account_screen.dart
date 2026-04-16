@@ -13,20 +13,18 @@ import '../../../../core/services/user_database_service.dart';
 class VerifyAccountScreen extends ConsumerStatefulWidget {
   final String email;
 
-  const VerifyAccountScreen({
-    super.key, 
-    required this.email,
-  });
+  const VerifyAccountScreen({super.key, required this.email});
 
   @override
-  ConsumerState<VerifyAccountScreen> createState() => _VerifyAccountScreenState();
+  ConsumerState<VerifyAccountScreen> createState() =>
+      _VerifyAccountScreenState();
 }
 
 class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
   String _otp = '';
   bool _isLoading = false;
   Timer? _timer;
-  int _secondsRemaining = 300;
+  int _secondsRemaining = 60;
 
   @override
   void initState() {
@@ -36,7 +34,7 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
 
   void _startTimer() {
     _timer?.cancel();
-    setState(() => _secondsRemaining = 300);
+    setState(() => _secondsRemaining = 60);
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!mounted) return;
       if (_secondsRemaining > 0) {
@@ -61,46 +59,55 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
 
   Future<void> _verifyOtp() async {
     if (_otp.length < 6) return;
-    
+
     setState(() => _isLoading = true);
-    
+
     try {
       final docSnapshot = await FirebaseFirestore.instance
           .collection('otps')
           .doc(widget.email)
           .get();
-          
+
       if (!docSnapshot.exists) {
-        _showErrorDialog(AppLocalizations.of(context)?.invalidOrExpiredOtp ?? 'Invalid or expired OTP code.');
+        _showErrorDialog(
+          AppLocalizations.of(context)?.invalidOrExpiredOtp ??
+              'Invalid or expired OTP code.',
+        );
         setState(() => _isLoading = false);
         return;
       }
-      
+
       final data = docSnapshot.data()!;
       final storedOtp = data['otp'] as String?;
       final expiresAt = data['expiresAt'] as Timestamp?;
-      
+
       if (storedOtp != _otp) {
-        _showErrorDialog(AppLocalizations.of(context)?.invalidOtp ?? 'Invalid OTP code. Please check and try again.');
+        _showErrorDialog(
+          AppLocalizations.of(context)?.invalidOtp ??
+              'Invalid OTP code. Please check and try again.',
+        );
         setState(() => _isLoading = false);
         return;
       }
-      
+
       if (expiresAt != null && expiresAt.toDate().isBefore(DateTime.now())) {
-        _showErrorDialog(AppLocalizations.of(context)?.expiredOtp ?? 'This OTP code has expired. Please request a new one.');
+        _showErrorDialog(
+          AppLocalizations.of(context)?.expiredOtp ??
+              'This OTP code has expired. Please request a new one.',
+        );
         setState(() => _isLoading = false);
         return;
       }
-      
+
       // Delete the document after successful verification
       await FirebaseFirestore.instance
           .collection('otps')
           .doc(widget.email)
           .delete();
-          
+
       try {
         final authService = ref.read(firebaseAuthServiceProvider);
-        
+
         final user = authService.currentUser;
         if (user != null) {
           final userDbService = ref.read(userDatabaseServiceProvider);
@@ -109,18 +116,25 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
       } catch (e) {
         debugPrint('Failed to save verified user: $e');
       }
-          
+
       if (!mounted) return;
-      
+
       // Optionally show success dialog and navigate to login
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(AppLocalizations.of(context)?.accountVerifiedSuccess ?? 'Account verified successfully!')),
+        SnackBar(
+          content: Text(
+            AppLocalizations.of(context)?.accountVerifiedSuccess ??
+                'Account verified successfully!',
+          ),
+        ),
       );
-      
+
       Navigator.of(context).pop();
-      
     } catch (e) {
-      _showErrorDialog(AppLocalizations.of(context)?.errorVerifyingCode(e.toString()) ?? 'Error verifying code: $e');
+      _showErrorDialog(
+        AppLocalizations.of(context)?.errorVerifyingCode(e.toString()) ??
+            'Error verifying code: $e',
+      );
       setState(() => _isLoading = false);
     }
   }
@@ -131,17 +145,25 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
       final authService = ref.read(firebaseAuthServiceProvider);
       // using default 'ar' as requested
       await authService.sendEmailOtp(widget.email, lang: 'ar');
-      
+
       _startTimer();
-      
+
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(AppLocalizations.of(context)?.verificationCodeResent ?? 'Verification code resent!')),
+          SnackBar(
+            content: Text(
+              AppLocalizations.of(context)?.verificationCodeResent ??
+                  'Verification code resent!',
+            ),
+          ),
         );
       }
     } catch (e) {
       if (mounted) {
-        _showErrorDialog(AppLocalizations.of(context)?.failedToResendCode(e.toString()) ?? 'Failed to resend code: $e');
+        _showErrorDialog(
+          AppLocalizations.of(context)?.failedToResendCode(e.toString()) ??
+              'Failed to resend code: $e',
+        );
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -168,15 +190,20 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Scaffold(
-      backgroundColor: isDark ? RayyanColors.backgroundDark : RayyanColors.backgroundLight,
+      backgroundColor: isDark
+          ? RayyanColors.backgroundDark
+          : RayyanColors.backgroundLight,
       body: SafeArea(
         child: Stack(
           children: [
             Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 48),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 48,
+                ),
                 child: ConstrainedBox(
                   constraints: const BoxConstraints(maxWidth: 448),
                   child: Column(
@@ -190,33 +217,44 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
                           width: 80,
                           height: 80,
                           errorBuilder: (context, error, stackTrace) {
-                            return const Icon(Icons.water_drop, size: 80, color: RayyanColors.primary);
+                            return const Icon(
+                              Icons.water_drop,
+                              size: 80,
+                              color: RayyanColors.primary,
+                            );
                           },
                         ),
                       ),
                       const SizedBox(height: 32),
-                      
+
                       // Title
                       Text(
-                        AppLocalizations.of(context)?.verifyAccountTitle ?? 'Verify Your Account',
+                        AppLocalizations.of(context)?.verifyAccountTitle ??
+                            'Verify Your Account',
                         textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          color: isDark ? Colors.white : RayyanColors.slate900,
-                        ),
+                        style: Theme.of(context).textTheme.headlineMedium
+                            ?.copyWith(
+                              fontWeight: FontWeight.bold,
+                              color: isDark
+                                  ? Colors.white
+                                  : RayyanColors.slate900,
+                            ),
                       ),
                       const SizedBox(height: 8),
-                      
+
                       // Subtitle
                       Text(
-                        AppLocalizations.of(context)?.verifyAccountSubtitle ?? 'Enter the 6-digit code sent to your email',
+                        AppLocalizations.of(context)?.verifyAccountSubtitle ??
+                            'Enter the 6-digit code sent to your email',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
+                          color: isDark
+                              ? RayyanColors.slate400
+                              : RayyanColors.slate500,
                         ),
                       ),
                       const SizedBox(height: 48),
-                      
+
                       // OTP Input
                       OtpInputField(
                         length: 6,
@@ -229,40 +267,52 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
                           _verifyOtp();
                         },
                       ),
-                      
+
                       const SizedBox(height: 48),
-                      
+
                       // Verify Button
                       AuthButton(
-                        label: AppLocalizations.of(context)?.verifyButton ?? 'VERIFY',
+                        label:
+                            AppLocalizations.of(context)?.verifyButton ??
+                            'VERIFY',
                         isLoading: _isLoading,
                         onPressed: _otp.length == 6 ? _verifyOtp : () {},
                       ),
-                      
+
                       const SizedBox(height: 24),
-                      
+
                       // Timer text
                       Center(
                         child: Text(
-                          AppLocalizations.of(context)?.codeExpiresIn(_formattedTime) ?? 'Code expires in $_formattedTime',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
-                            fontWeight: FontWeight.w500,
-                          ),
+                          AppLocalizations.of(
+                                context,
+                              )?.codeExpiresIn(_formattedTime) ??
+                              'Code expires in $_formattedTime',
+                          style: Theme.of(context).textTheme.bodyMedium
+                              ?.copyWith(
+                                color: isDark
+                                    ? RayyanColors.slate400
+                                    : RayyanColors.slate500,
+                                fontWeight: FontWeight.w500,
+                              ),
                         ),
                       ),
                       const SizedBox(height: 8),
-                      
+
                       // Resend Code
                       Center(
                         child: TextButton(
                           onPressed: _isLoading ? null : _resendCode,
                           child: Text(
-                            AppLocalizations.of(context)?.resendCode ?? 'Resend Code',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                              color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
-                              decoration: TextDecoration.underline,
-                            ),
+                            AppLocalizations.of(context)?.resendCode ??
+                                'Resend Code',
+                            style: Theme.of(context).textTheme.bodyMedium
+                                ?.copyWith(
+                                  color: isDark
+                                      ? RayyanColors.slate400
+                                      : RayyanColors.slate500,
+                                  decoration: TextDecoration.underline,
+                                ),
                           ),
                         ),
                       ),

@@ -10,6 +10,7 @@ import '../../../app/screens.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/services/auth_preferences_service.dart';
 import '../../../core/services/firebase_auth_service.dart';
+import '../../../core/services/user_database_service.dart';
 import 'offline_startup_screen.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -67,14 +68,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       return;
     }
 
-    final user = authService.currentUser;
+    final user = authService.currentUser ?? await authService.authStateChanges.first;
 
     if (user == null) {
       widget.onNavigate(AppScreen.login);
       return;
     }
 
-    if (!user.emailVerified) {
+    final userDbService = ref.read(userDatabaseServiceProvider);
+    final userExists = await userDbService.userExists(user.uid);
+
+    if (!user.emailVerified && !userExists) {
       await authService.signOut();
       widget.onNavigate(AppScreen.login);
       return;
