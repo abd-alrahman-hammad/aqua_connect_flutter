@@ -793,4 +793,48 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get visionActionRequiresAttention => 'يتطلب اهتمامًا';
+
+  @override
+  String get verifyAccountTitle => 'تأكيد حسابك';
+
+  @override
+  String get verifyAccountSubtitle =>
+      'أدخل الرمز المكون من 6 أرقام المرسل إلى بريدك الإلكتروني';
+
+  @override
+  String get verifyButton => 'تأكيد';
+
+  @override
+  String codeExpiresIn(String time) {
+    return 'تنتهي صلاحية الرمز خلال $time';
+  }
+
+  @override
+  String get resendCode => 'إعادة إرسال الرمز';
+
+  @override
+  String get invalidOrExpiredOtp => 'رمز التحقق غير صالح أو منتهي الصلاحية.';
+
+  @override
+  String get invalidOtp =>
+      'رمز التحقق غير صالح. يرجى التحقق والمحاولة مرة أخرى.';
+
+  @override
+  String get expiredOtp => 'رمز التحقق هذا منتهي الصلاحية. يرجى طلب رمز جديد.';
+
+  @override
+  String get accountVerifiedSuccess => 'تم تأكيد الحساب بنجاح!';
+
+  @override
+  String errorVerifyingCode(String error) {
+    return 'خطأ في تأكيد الرمز: $error';
+  }
+
+  @override
+  String get verificationCodeResent => 'تم إعادة إرسال رمز التحقق!';
+
+  @override
+  String failedToResendCode(String error) {
+    return 'فشل إعادة إرسال الرمز: $error';
+  }
 }

@@ -299,5 +299,38 @@
     }
   },
   "visionOptimalGrowth": "Optimal growth",
-  "visionActionRequiresAttention": "Action requires attention"
+  "visionActionRequiresAttention": "Action requires attention",
+  "verifyAccountTitle": "Verify Your Account",
+  "verifyAccountSubtitle": "Enter the 6-digit code sent to your email",
+  "verifyButton": "VERIFY",
+  "codeExpiresIn": "Code expires in {time}",
+  "@codeExpiresIn": {
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "resendCode": "Resend Code",
+  "invalidOrExpiredOtp": "Invalid or expired OTP code.",
+  "invalidOtp": "Invalid OTP code. Please check and try again.",
+  "expiredOtp": "This OTP code has expired. Please request a new one.",
+  "accountVerifiedSuccess": "Account verified successfully!",
+  "errorVerifyingCode": "Error verifying code: {error}",
+  "@errorVerifyingCode": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  },
+  "verificationCodeResent": "Verification code resent!",
+  "failedToResendCode": "Failed to resend code: {error}",
+  "@failedToResendCode": {
+    "placeholders": {
+      "error": {
+        "type": "String"
+      }
+    }
+  }
 }

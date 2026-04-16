@@ -71,7 +71,7 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
           .get();
           
       if (!docSnapshot.exists) {
-        _showErrorDialog('Invalid or expired OTP code.');
+        _showErrorDialog(AppLocalizations.of(context)?.invalidOrExpiredOtp ?? 'Invalid or expired OTP code.');
         setState(() => _isLoading = false);
         return;
       }
@@ -81,13 +81,13 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
       final expiresAt = data['expiresAt'] as Timestamp?;
       
       if (storedOtp != _otp) {
-        _showErrorDialog('Invalid OTP code. Please check and try again.');
+        _showErrorDialog(AppLocalizations.of(context)?.invalidOtp ?? 'Invalid OTP code. Please check and try again.');
         setState(() => _isLoading = false);
         return;
       }
       
       if (expiresAt != null && expiresAt.toDate().isBefore(DateTime.now())) {
-        _showErrorDialog('This OTP code has expired. Please request a new one.');
+        _showErrorDialog(AppLocalizations.of(context)?.expiredOtp ?? 'This OTP code has expired. Please request a new one.');
         setState(() => _isLoading = false);
         return;
       }
@@ -114,13 +114,13 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
       
       // Optionally show success dialog and navigate to login
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Account verified successfully!')),
+        SnackBar(content: Text(AppLocalizations.of(context)?.accountVerifiedSuccess ?? 'Account verified successfully!')),
       );
       
       Navigator.of(context).pop();
       
     } catch (e) {
-      _showErrorDialog('Error verifying code: $e');
+      _showErrorDialog(AppLocalizations.of(context)?.errorVerifyingCode(e.toString()) ?? 'Error verifying code: $e');
       setState(() => _isLoading = false);
     }
   }
@@ -136,12 +136,12 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
       
       if (mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Verification code resent!')),
+          SnackBar(content: Text(AppLocalizations.of(context)?.verificationCodeResent ?? 'Verification code resent!')),
         );
       }
     } catch (e) {
       if (mounted) {
-        _showErrorDialog('Failed to resend code: $e');
+        _showErrorDialog(AppLocalizations.of(context)?.failedToResendCode(e.toString()) ?? 'Failed to resend code: $e');
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -198,7 +198,7 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
                       
                       // Title
                       Text(
-                        'Verify Your Account',
+                        AppLocalizations.of(context)?.verifyAccountTitle ?? 'Verify Your Account',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                           fontWeight: FontWeight.bold,
@@ -209,7 +209,7 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
                       
                       // Subtitle
                       Text(
-                        'Enter the 6-digit code sent to your email',
+                        AppLocalizations.of(context)?.verifyAccountSubtitle ?? 'Enter the 6-digit code sent to your email',
                         textAlign: TextAlign.center,
                         style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
@@ -234,7 +234,7 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
                       
                       // Verify Button
                       AuthButton(
-                        label: 'VERIFY',
+                        label: AppLocalizations.of(context)?.verifyButton ?? 'VERIFY',
                         isLoading: _isLoading,
                         onPressed: _otp.length == 6 ? _verifyOtp : () {},
                       ),
@@ -244,7 +244,7 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
                       // Timer text
                       Center(
                         child: Text(
-                          'Code expires in $_formattedTime',
+                          AppLocalizations.of(context)?.codeExpiresIn(_formattedTime) ?? 'Code expires in $_formattedTime',
                           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                             color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
                             fontWeight: FontWeight.w500,
@@ -258,7 +258,7 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
                         child: TextButton(
                           onPressed: _isLoading ? null : _resendCode,
                           child: Text(
-                            'Resend Code',
+                            AppLocalizations.of(context)?.resendCode ?? 'Resend Code',
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                               color: isDark ? RayyanColors.slate400 : RayyanColors.slate500,
                               decoration: TextDecoration.underline,

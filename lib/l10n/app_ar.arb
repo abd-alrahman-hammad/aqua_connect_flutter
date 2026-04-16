@@ -265,5 +265,17 @@
     }
   },
   "visionOptimalGrowth": "نمو مثالي",
-  "visionActionRequiresAttention": "يتطلب اهتمامًا"
+  "visionActionRequiresAttention": "يتطلب اهتمامًا",
+  "verifyAccountTitle": "تأكيد حسابك",
+  "verifyAccountSubtitle": "أدخل الرمز المكون من 6 أرقام المرسل إلى بريدك الإلكتروني",
+  "verifyButton": "تأكيد",
+  "codeExpiresIn": "تنتهي صلاحية الرمز خلال {time}",
+  "resendCode": "إعادة إرسال الرمز",
+  "invalidOrExpiredOtp": "رمز التحقق غير صالح أو منتهي الصلاحية.",
+  "invalidOtp": "رمز التحقق غير صالح. يرجى التحقق والمحاولة مرة أخرى.",
+  "expiredOtp": "رمز التحقق هذا منتهي الصلاحية. يرجى طلب رمز جديد.",
+  "accountVerifiedSuccess": "تم تأكيد الحساب بنجاح!",
+  "errorVerifyingCode": "خطأ في تأكيد الرمز: {error}",
+  "verificationCodeResent": "تم إعادة إرسال رمز التحقق!",
+  "failedToResendCode": "فشل إعادة إرسال الرمز: {error}"
 }

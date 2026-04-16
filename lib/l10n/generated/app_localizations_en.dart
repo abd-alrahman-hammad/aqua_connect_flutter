@@ -789,4 +789,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get visionActionRequiresAttention => 'Action requires attention';
+
+  @override
+  String get verifyAccountTitle => 'Verify Your Account';
+
+  @override
+  String get verifyAccountSubtitle =>
+      'Enter the 6-digit code sent to your email';
+
+  @override
+  String get verifyButton => 'VERIFY';
+
+  @override
+  String codeExpiresIn(String time) {
+    return 'Code expires in $time';
+  }
+
+  @override
+  String get resendCode => 'Resend Code';
+
+  @override
+  String get invalidOrExpiredOtp => 'Invalid or expired OTP code.';
+
+  @override
+  String get invalidOtp => 'Invalid OTP code. Please check and try again.';
+
+  @override
+  String get expiredOtp =>
+      'This OTP code has expired. Please request a new one.';
+
+  @override
+  String get accountVerifiedSuccess => 'Account verified successfully!';
+
+  @override
+  String errorVerifyingCode(String error) {
+    return 'Error verifying code: $error';
+  }
+
+  @override
+  String get verificationCodeResent => 'Verification code resent!';
+
+  @override
+  String failedToResendCode(String error) {
+    return 'Failed to resend code: $error';
+  }
 }

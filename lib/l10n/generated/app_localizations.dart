@@ -1573,6 +1573,78 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Action requires attention'**
   String get visionActionRequiresAttention;
+
+  /// No description provided for @verifyAccountTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Account'**
+  String get verifyAccountTitle;
+
+  /// No description provided for @verifyAccountSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digit code sent to your email'**
+  String get verifyAccountSubtitle;
+
+  /// No description provided for @verifyButton.
+  ///
+  /// In en, this message translates to:
+  /// **'VERIFY'**
+  String get verifyButton;
+
+  /// No description provided for @codeExpiresIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Code expires in {time}'**
+  String codeExpiresIn(String time);
+
+  /// No description provided for @resendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend Code'**
+  String get resendCode;
+
+  /// No description provided for @invalidOrExpiredOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid or expired OTP code.'**
+  String get invalidOrExpiredOtp;
+
+  /// No description provided for @invalidOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid OTP code. Please check and try again.'**
+  String get invalidOtp;
+
+  /// No description provided for @expiredOtp.
+  ///
+  /// In en, this message translates to:
+  /// **'This OTP code has expired. Please request a new one.'**
+  String get expiredOtp;
+
+  /// No description provided for @accountVerifiedSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Account verified successfully!'**
+  String get accountVerifiedSuccess;
+
+  /// No description provided for @errorVerifyingCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Error verifying code: {error}'**
+  String errorVerifyingCode(String error);
+
+  /// No description provided for @verificationCodeResent.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification code resent!'**
+  String get verificationCodeResent;
+
+  /// No description provided for @failedToResendCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Failed to resend code: {error}'**
+  String failedToResendCode(String error);
 }
 
 class _AppLocalizationsDelegate
