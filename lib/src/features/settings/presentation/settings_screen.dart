@@ -133,7 +133,6 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                       subtitle: l10n.thresholdsSubtitle,
                       onTap: () => widget.onNavigate(AppScreen.thresholds),
                     ),
-
                   ],
                 ),
                 const SizedBox(height: 24),

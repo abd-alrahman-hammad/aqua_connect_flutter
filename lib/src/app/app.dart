@@ -21,6 +21,14 @@ import '../features/settings/presentation/sub_settings_screens.dart';
 import '../features/support/presentation/support_screens.dart';
 import '../features/vision/presentation/vision_screen.dart';
 import '../features/splash/presentation/splash_screen.dart';
+import '../features/onboarding/presentation/welcome_screen.dart';
+import '../features/onboarding/presentation/add_device_screen.dart';
+import '../features/onboarding/presentation/device_list_screen.dart';
+import '../features/onboarding/presentation/wifi_instructions_screen.dart';
+import '../features/onboarding/presentation/qr_instructions_screen.dart';
+import '../features/onboarding/presentation/device_scan_qr_screen.dart';
+import '../features/onboarding/presentation/device_manual_entry_screen.dart';
+import '../features/onboarding/presentation/device_scan_error_screen.dart';
 import 'app_controller.dart';
 import 'screens.dart';
 
@@ -61,6 +69,22 @@ class _AppRoot extends ConsumerWidget {
     switch (screen) {
       case AppScreen.splash:
         page = SplashScreen(onNavigate: controller.navigate);
+      case AppScreen.welcome:
+        page = WelcomeScreen(onNavigate: controller.navigate);
+      case AppScreen.addDevice:
+        page = AddDeviceScreen(onNavigate: controller.navigate);
+      case AppScreen.deviceList:
+        page = DeviceListScreen(onNavigate: controller.navigate);
+      case AppScreen.wifiInstructions:
+        page = WifiInstructionsScreen(onNavigate: controller.navigate);
+      case AppScreen.qrInstructions:
+        page = QrInstructionsScreen(onNavigate: controller.navigate);
+      case AppScreen.deviceScanQr:
+        page = DeviceScanQrScreen(onNavigate: controller.navigate);
+      case AppScreen.deviceManualEntry:
+        page = DeviceManualEntryScreen(onNavigate: controller.navigate);
+      case AppScreen.deviceScanError:
+        page = DeviceScanErrorScreen(onNavigate: controller.navigate);
       case AppScreen.login:
         page = LoginScreen(onNavigate: controller.navigate);
       case AppScreen.signup:

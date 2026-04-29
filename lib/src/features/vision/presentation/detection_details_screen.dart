@@ -22,14 +22,16 @@ class DetectionDetailsScreen extends StatelessWidget {
     Color statusColor = RayyanColors.slate500;
     String translatedStatus = item.status;
     final lowerStatus = item.status.toLowerCase();
-    
+
     if (lowerStatus.contains('health') || lowerStatus.contains('optimal')) {
       statusColor = RayyanColors.nature;
       translatedStatus = l10n.visionHealthy;
     } else if (lowerStatus.contains('warn')) {
       statusColor = RayyanColors.warning;
       translatedStatus = l10n.visionWarning;
-    } else if (lowerStatus.contains('critical') || lowerStatus.contains('danger') || lowerStatus.contains('disease')) {
+    } else if (lowerStatus.contains('critical') ||
+        lowerStatus.contains('danger') ||
+        lowerStatus.contains('disease')) {
       statusColor = RayyanColors.critical;
       translatedStatus = l10n.visionCritical;
     }
@@ -44,7 +46,9 @@ class DetectionDetailsScreen extends StatelessWidget {
     }
 
     return Scaffold(
-      backgroundColor: isDark ? RayyanColors.backgroundDark : RayyanColors.backgroundLight,
+      backgroundColor: isDark
+          ? RayyanColors.backgroundDark
+          : RayyanColors.backgroundLight,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -94,13 +98,28 @@ class DetectionDetailsScreen extends StatelessWidget {
                       : null,
                 ),
                 child: item.imageUrl.isEmpty
-                   ? const Center(child: Icon(Icons.image_not_supported, size: 60, color: Colors.grey))
-                   : null,
+                    ? const Center(
+                        child: Icon(
+                          Icons.image_not_supported,
+                          size: 60,
+                          color: Colors.grey,
+                        ),
+                      )
+                    : null,
               ),
               const SizedBox(height: 24),
 
               // Health Analysis Section
-              _buildHealthAnalysisSection(context, theme, isDark, statusColor, confColor, lowerStatus, translatedStatus, l10n),
+              _buildHealthAnalysisSection(
+                context,
+                theme,
+                isDark,
+                statusColor,
+                confColor,
+                lowerStatus,
+                translatedStatus,
+                l10n,
+              ),
               const SizedBox(height: 16),
 
               // Detected Diseases & Spots Analysis
@@ -109,7 +128,7 @@ class DetectionDetailsScreen extends StatelessWidget {
                 const SizedBox(height: 16),
                 _SpotBySpotAnalysisSection(item: item),
               ],
-              
+
               const SizedBox(height: 32),
             ],
           ),
@@ -118,7 +137,16 @@ class DetectionDetailsScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildHealthAnalysisSection(BuildContext context, ThemeData theme, bool isDark, Color statusColor, Color confColor, String lowerStatus, String translatedStatus, AppLocalizations l10n) {
+  Widget _buildHealthAnalysisSection(
+    BuildContext context,
+    ThemeData theme,
+    bool isDark,
+    Color statusColor,
+    Color confColor,
+    String lowerStatus,
+    String translatedStatus,
+    AppLocalizations l10n,
+  ) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -176,9 +204,9 @@ class DetectionDetailsScreen extends StatelessWidget {
                   ),
                   boxShadow: [
                     BoxShadow(
-                       color: Colors.black.withValues(alpha: 0.02),
-                       blurRadius: 8,
-                       offset: const Offset(0, 2),
+                      color: Colors.black.withValues(alpha: 0.02),
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
                     ),
                   ],
                 ),
@@ -284,7 +312,8 @@ class DetectionDetailsScreen extends StatelessWidget {
   }
 
   String _getSymbolName(String lowerStatus) {
-    if (lowerStatus.contains('health') || lowerStatus.contains('optimal')) return 'check_circle';
+    if (lowerStatus.contains('health') || lowerStatus.contains('optimal'))
+      return 'check_circle';
     if (lowerStatus.contains('warn')) return 'warning';
     return 'error';
   }
@@ -299,8 +328,9 @@ class _DetectedDiseasesSection extends StatelessWidget {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
-    
-    final isCritical = item.status.toLowerCase() == 'critical' || item.status == 'حرج';
+
+    final isCritical =
+        item.status.toLowerCase() == 'critical' || item.status == 'حرج';
 
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
@@ -411,17 +441,20 @@ class _SpotBySpotAnalysisSection extends StatelessWidget {
           ...item.spotsDetails.asMap().entries.map((entry) {
             final index = entry.key;
             final spot = entry.value;
-            
+
             // Determine current language
-            final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-            
+            final isArabic =
+                Localizations.localeOf(context).languageCode == 'ar';
+
             return _SpotItem(
               id: spot.spotId.replaceAll('spot_', 'SPOT '), // Clean up ID
-              location: (isArabic && spot.locationAr.isNotEmpty 
-                  ? spot.locationAr 
-                  : spot.locationEn).toUpperCase(),
-              status: isArabic && spot.statusAr.isNotEmpty 
-                  ? spot.statusAr 
+              location:
+                  (isArabic && spot.locationAr.isNotEmpty
+                          ? spot.locationAr
+                          : spot.locationEn)
+                      .toUpperCase(),
+              status: isArabic && spot.statusAr.isNotEmpty
+                  ? spot.statusAr
                   : spot.statusEn,
               confidence: spot.confidence,
               isLast: index == item.spotsDetails.length - 1,

@@ -35,4 +35,15 @@ class RayyanColors {
   static const visionHistoryHealthy1 = Color(0xFF386821);
   static const visionHistoryUnderwatered = Color(0xFF141A14);
   static const visionHistoryHealthy2 = Color(0xFF4A3824);
+
+  // Onboarding specific colors
+  static const onboardBackgroundLight = Color(0xFFF9FBF7);
+  static const onboardCardLight = Color(0xFFF2F4EF);
+  static const onboardTextDark = Color(0xFF414939);
+  static const onboardIconTint = Color(0xFFB5C0A8);
+  static const onboardSuccess = Color(0xFF5D8F2A);
+  static const onboardError = Color(0xFFD32F2F);
+  static const onboardErrorLight = Color(0xFFFAF1F1);
+  static const onboardErrorSurface = Color(0xFFFDE8E8);
+  static const onboardTagBlue = Color(0xFF0077B6);
 }

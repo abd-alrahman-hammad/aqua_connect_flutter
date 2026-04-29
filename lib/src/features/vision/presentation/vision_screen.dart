@@ -39,9 +39,12 @@ class VisionScreen extends StatelessWidget {
         children: [
           // Main Scrollable Content
           StreamBuilder<DatabaseEvent>(
-            stream: FirebaseDatabase.instance.ref('LiveMonitoring/Plant_Master').onValue,
+            stream: FirebaseDatabase.instance
+                .ref('LiveMonitoring/Plant_Master')
+                .onValue,
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
+              if (snapshot.connectionState == ConnectionState.waiting &&
+                  !snapshot.hasData) {
                 return const Center(
                   child: CircularProgressIndicator(color: RayyanColors.rayyan),
                 );
@@ -49,7 +52,10 @@ class VisionScreen extends StatelessWidget {
 
               if (snapshot.hasError) {
                 return Center(
-                  child: Text('Error: ${snapshot.error}', style: theme.textTheme.bodyMedium),
+                  child: Text(
+                    'Error: ${snapshot.error}',
+                    style: theme.textTheme.bodyMedium,
+                  ),
                 );
               }
 
@@ -119,7 +125,9 @@ class VisionScreen extends StatelessWidget {
                           // Detected Diseases
                           if (model.isCritical || model.isWarning) ...[
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
                               child: _DetectedDiseasesSection(model: model),
                             ),
                             const SizedBox(height: 16),
@@ -128,7 +136,9 @@ class VisionScreen extends StatelessWidget {
                           // Spot-by-Spot Analysis
                           if (model.hasSpots) ...[
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
                               child: _SpotBySpotAnalysisSection(model: model),
                             ),
                             const SizedBox(height: 16),
@@ -137,7 +147,9 @@ class VisionScreen extends StatelessWidget {
                           // Recommended Action
                           if (model.isCritical || model.isWarning) ...[
                             Padding(
-                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 20,
+                              ),
                               child: _RecommendedActionSection(model: model),
                             ),
                             const SizedBox(height: 32),
@@ -213,8 +225,6 @@ class _CameraFeedSection extends StatelessWidget {
             ),
             child: Stack(
               children: [
-
-
                 // Live Analysis Indicator
                 Positioned(
                   bottom: 24,
@@ -237,8 +247,6 @@ class _CameraFeedSection extends StatelessWidget {
   }
 }
 
-
-
 class _HealthAnalysisSection extends StatelessWidget {
   final LiveMonitoringModel model;
   const _HealthAnalysisSection({required this.model});
@@ -253,8 +261,8 @@ class _HealthAnalysisSection extends StatelessWidget {
     final statusColor = model.isCritical
         ? RayyanColors.critical
         : model.isWarning
-            ? Colors.orange
-            : RayyanColors.rayyan;
+        ? Colors.orange
+        : RayyanColors.rayyan;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -286,7 +294,9 @@ class _HealthAnalysisSection extends StatelessWidget {
                 const SizedBox(height: 2),
                 Text(
                   model.lastUpdate != null
-                      ? DateFormat('yyyy-MM-dd HH:mm:ss').format(model.lastUpdate!)
+                      ? DateFormat(
+                          'yyyy-MM-dd HH:mm:ss',
+                        ).format(model.lastUpdate!)
                       : l10n.visionNeverSync,
                   style: theme.textTheme.bodySmall?.copyWith(
                     color: RayyanColors.slate600,
@@ -340,17 +350,21 @@ class _HealthAnalysisSection extends StatelessWidget {
                           model.isCritical
                               ? 'error'
                               : model.isWarning
-                                  ? 'warning'
-                                  : 'check_circle',
+                              ? 'warning'
+                              : 'check_circle',
                           color: statusColor,
                           size: 20,
                         ),
                         const SizedBox(width: 6),
                         Expanded(
                           child: Text(
-                            isArabic 
-                                ? (model.statusAr.isNotEmpty ? model.statusAr : l10n.visionUnknown)
-                                : (model.statusEn.isNotEmpty ? model.statusEn : l10n.visionUnknown),
+                            isArabic
+                                ? (model.statusAr.isNotEmpty
+                                      ? model.statusAr
+                                      : l10n.visionUnknown)
+                                : (model.statusEn.isNotEmpty
+                                      ? model.statusEn
+                                      : l10n.visionUnknown),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                             style: theme.textTheme.titleMedium?.copyWith(
@@ -548,17 +562,20 @@ class _SpotBySpotAnalysisSection extends StatelessWidget {
           ...model.spotsDetails.asMap().entries.map((entry) {
             final index = entry.key;
             final spot = entry.value;
-            
+
             // Determine current language
-            final isArabic = Localizations.localeOf(context).languageCode == 'ar';
-            
+            final isArabic =
+                Localizations.localeOf(context).languageCode == 'ar';
+
             return _SpotItem(
               id: spot.spotId.replaceAll('spot_', 'SPOT '), // Clean up ID
-              location: (isArabic && spot.locationAr.isNotEmpty 
-                  ? spot.locationAr 
-                  : spot.locationEn).toUpperCase(),
-              status: isArabic && spot.statusAr.isNotEmpty 
-                  ? spot.statusAr 
+              location:
+                  (isArabic && spot.locationAr.isNotEmpty
+                          ? spot.locationAr
+                          : spot.locationEn)
+                      .toUpperCase(),
+              status: isArabic && spot.statusAr.isNotEmpty
+                  ? spot.statusAr
                   : spot.statusEn,
               confidence: spot.confidence,
               isLast: index == model.spotsDetails.length - 1,
@@ -747,7 +764,9 @@ class _RecommendedActionSection extends StatelessWidget {
                         borderRadius: BorderRadius.circular(4),
                       ),
                       child: Text(
-                        model.isCritical ? l10n.visionUrgencyHigh : l10n.visionUrgencyModerate,
+                        model.isCritical
+                            ? l10n.visionUrgencyHigh
+                            : l10n.visionUrgencyModerate,
                         style: theme.textTheme.labelSmall?.copyWith(
                           color: RayyanColors.critical,
                           fontWeight: FontWeight.w800,
@@ -814,34 +833,43 @@ class _SnapshotHistorySection extends ConsumerWidget {
         const SizedBox(height: 16),
         SizedBox(
           height: 154,
-          child: ref.watch(detectionHistoryProvider).when(
-            data: (items) {
-              if (items.isEmpty) {
-                return const Center(child: Text('No history available'));
-              }
-              return ListView.separated(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                scrollDirection: Axis.horizontal,
-                itemCount: items.length,
-                separatorBuilder: (context, index) => const SizedBox(width: 16),
-                itemBuilder: (context, index) {
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => DetectionDetailsScreen(item: items[index]),
-                        ),
+          child: ref
+              .watch(detectionHistoryProvider)
+              .when(
+                data: (items) {
+                  if (items.isEmpty) {
+                    return const Center(child: Text('No history available'));
+                  }
+                  return ListView.separated(
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
+                    scrollDirection: Axis.horizontal,
+                    itemCount: items.length,
+                    separatorBuilder: (context, index) =>
+                        const SizedBox(width: 16),
+                    itemBuilder: (context, index) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  DetectionDetailsScreen(item: items[index]),
+                            ),
+                          );
+                        },
+                        child: _SnapshotCard(item: items[index]),
                       );
                     },
-                    child: _SnapshotCard(item: items[index]),
                   );
                 },
-              );
-            },
-            loading: () => const Center(child: CircularProgressIndicator()),
-            error: (err, stack) => Center(child: Text('Error loading history', style: TextStyle(color: RayyanColors.critical))),
-          ),
+                loading: () => const Center(child: CircularProgressIndicator()),
+                error: (err, stack) => Center(
+                  child: Text(
+                    'Error loading history',
+                    style: TextStyle(color: RayyanColors.critical),
+                  ),
+                ),
+              ),
         ),
       ],
     );
@@ -851,9 +879,7 @@ class _SnapshotHistorySection extends ConsumerWidget {
 class _SnapshotCard extends StatelessWidget {
   final DetectionHistoryModel item;
 
-  const _SnapshotCard({
-    required this.item,
-  });
+  const _SnapshotCard({required this.item});
 
   @override
   Widget build(BuildContext context) {
@@ -867,7 +893,9 @@ class _SnapshotCard extends StatelessWidget {
       translatedStatus = l10n.visionHealthy;
     } else if (lowerStatus.contains('warn')) {
       translatedStatus = l10n.visionWarning;
-    } else if (lowerStatus.contains('critical') || lowerStatus.contains('danger') || lowerStatus.contains('disease')) {
+    } else if (lowerStatus.contains('critical') ||
+        lowerStatus.contains('danger') ||
+        lowerStatus.contains('disease')) {
       translatedStatus = l10n.visionCritical;
     }
 

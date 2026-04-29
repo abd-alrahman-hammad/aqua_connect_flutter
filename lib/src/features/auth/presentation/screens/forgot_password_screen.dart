@@ -106,8 +106,12 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         AuthBrandHeader(
-                          title: AppLocalizations.of(context)!.resetPasswordTitle,
-                          subtitle: AppLocalizations.of(context)!.resetPasswordSubtitle,
+                          title: AppLocalizations.of(
+                            context,
+                          )!.resetPasswordTitle,
+                          subtitle: AppLocalizations.of(
+                            context,
+                          )!.resetPasswordSubtitle,
                           iconSize: 64,
                           compact: true,
                         ),

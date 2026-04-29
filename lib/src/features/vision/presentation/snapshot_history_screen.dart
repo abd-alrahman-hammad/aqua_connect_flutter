@@ -14,7 +14,8 @@ class SnapshotHistoryScreen extends ConsumerStatefulWidget {
   const SnapshotHistoryScreen({super.key});
 
   @override
-  ConsumerState<SnapshotHistoryScreen> createState() => _SnapshotHistoryScreenState();
+  ConsumerState<SnapshotHistoryScreen> createState() =>
+      _SnapshotHistoryScreenState();
 }
 
 class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
@@ -64,8 +65,8 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
           IconButton(
             icon: RayyanSymbol(
               'calendar_month',
-              color: _selectedDate != null 
-                  ? RayyanColors.rayyan 
+              color: _selectedDate != null
+                  ? RayyanColors.rayyan
                   : (isDark ? RayyanColors.slate400 : RayyanColors.slate600),
               size: 24,
             ),
@@ -161,7 +162,9 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                               ),
                             ),
                             style: theme.textTheme.bodyMedium?.copyWith(
-                              color: isDark ? Colors.white : RayyanColors.slate900,
+                              color: isDark
+                                  ? Colors.white
+                                  : RayyanColors.slate900,
                               fontSize: 14,
                             ),
                           ),
@@ -171,7 +174,7 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                   ),
                 ),
                 const SizedBox(height: 16),
-                
+
                 // Filter Chips
                 SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
@@ -189,7 +192,8 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                         icon: 'check_circle',
                         iconColor: RayyanColors.nature,
                         isSelected: _selectedFilter == 'Healthy',
-                        onTap: () => setState(() => _selectedFilter = 'Healthy'),
+                        onTap: () =>
+                            setState(() => _selectedFilter = 'Healthy'),
                       ),
                       const SizedBox(width: 12),
                       _FilterChip(
@@ -197,7 +201,8 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                         icon: 'warning',
                         iconColor: RayyanColors.warning,
                         isSelected: _selectedFilter == 'Warning',
-                        onTap: () => setState(() => _selectedFilter = 'Warning'),
+                        onTap: () =>
+                            setState(() => _selectedFilter = 'Warning'),
                       ),
                       const SizedBox(width: 12),
                       _FilterChip(
@@ -205,12 +210,13 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                         icon: 'error',
                         iconColor: RayyanColors.critical,
                         isSelected: _selectedFilter == 'Critical',
-                        onTap: () => setState(() => _selectedFilter = 'Critical'),
+                        onTap: () =>
+                            setState(() => _selectedFilter = 'Critical'),
                       ),
                     ],
                   ),
                 ),
-                
+
                 // Divider
                 Padding(
                   padding: const EdgeInsets.only(top: 20, bottom: 16),
@@ -224,12 +230,14 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
               ],
             ),
           ),
-          
+
           // Lists
           // Lists
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
-            sliver: ref.watch(detectionHistoryProvider).when(
+            sliver: ref
+                .watch(detectionHistoryProvider)
+                .when(
                   data: (items) {
                     if (items.isEmpty) {
                       return SliverToBoxAdapter(
@@ -241,30 +249,43 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                         ),
                       );
                     }
-                    
+
                     // Filter the items based on status matching chips (e.g. status == 'Healthy')
-                    var filteredItems = _selectedFilter == 'All' 
-                        ? items 
-                        : items.where((i) => i.status.toLowerCase() == _selectedFilter.toLowerCase()).toList();
+                    var filteredItems = _selectedFilter == 'All'
+                        ? items
+                        : items
+                              .where(
+                                (i) =>
+                                    i.status.toLowerCase() ==
+                                    _selectedFilter.toLowerCase(),
+                              )
+                              .toList();
 
                     // Apply text search
                     if (_searchQuery.isNotEmpty) {
-                      filteredItems = filteredItems.where((i) => 
-                        i.title.toLowerCase().contains(_searchQuery) ||
-                        i.subtitle.toLowerCase().contains(_searchQuery) ||
-                        i.description.toLowerCase().contains(_searchQuery)
-                      ).toList();
+                      filteredItems = filteredItems
+                          .where(
+                            (i) =>
+                                i.title.toLowerCase().contains(_searchQuery) ||
+                                i.subtitle.toLowerCase().contains(
+                                  _searchQuery,
+                                ) ||
+                                i.description.toLowerCase().contains(
+                                  _searchQuery,
+                                ),
+                          )
+                          .toList();
                     }
 
                     // Apply date filter
                     if (_selectedDate != null) {
                       filteredItems = filteredItems.where((i) {
                         return i.timestamp.year == _selectedDate!.year &&
-                               i.timestamp.month == _selectedDate!.month &&
-                               i.timestamp.day == _selectedDate!.day;
+                            i.timestamp.month == _selectedDate!.month &&
+                            i.timestamp.day == _selectedDate!.day;
                       }).toList();
                     }
-                        
+
                     if (filteredItems.isEmpty) {
                       return SliverToBoxAdapter(
                         child: Center(
@@ -279,7 +300,9 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                     // Group by formatted date
                     final Map<String, List<DetectionHistoryModel>> grouped = {};
                     for (var item in filteredItems) {
-                      final dateStr = DateFormat('MMM d, yyyy').format(item.timestamp).toUpperCase();
+                      final dateStr = DateFormat(
+                        'MMM d, yyyy',
+                      ).format(item.timestamp).toUpperCase();
                       grouped.putIfAbsent(dateStr, () => []).add(item);
                     }
 
@@ -288,24 +311,27 @@ class _SnapshotHistoryScreenState extends ConsumerState<SnapshotHistoryScreen> {
                       sliverChildren.add(_DateHeader(dateString));
                       sliverChildren.add(const SizedBox(height: 12));
                       for (var item in dayItems) {
-                        sliverChildren.add(Padding(
-                          padding: const EdgeInsets.only(bottom: 12),
-                          child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => DetectionDetailsScreen(item: item),
-                                ),
-                              );
-                            },
-                            child: _SnapshotItem(item: item),
+                        sliverChildren.add(
+                          Padding(
+                            padding: const EdgeInsets.only(bottom: 12),
+                            child: GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        DetectionDetailsScreen(item: item),
+                                  ),
+                                );
+                              },
+                              child: _SnapshotItem(item: item),
+                            ),
                           ),
-                        ));
+                        );
                       }
                       sliverChildren.add(const SizedBox(height: 12));
                     });
-                    
+
                     sliverChildren.add(const SizedBox(height: 20));
 
                     return SliverList(
@@ -359,7 +385,7 @@ class _FilterChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
-    
+
     // Custom color for the "All" chip as seen in mock (an orange/reddish hue)
     const orangeColor = Color(0xFFF05D23);
 
@@ -448,16 +474,14 @@ class _DateHeader extends StatelessWidget {
 class _SnapshotItem extends StatelessWidget {
   final DetectionHistoryModel item;
 
-  const _SnapshotItem({
-    required this.item,
-  });
+  const _SnapshotItem({required this.item});
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     final isDark = theme.brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
-    
+
     // Status Color
     Color statusColor = RayyanColors.slate500;
     String translatedStatus = item.status;
@@ -468,11 +492,13 @@ class _SnapshotItem extends StatelessWidget {
     } else if (lowerStatus.contains('warn')) {
       statusColor = RayyanColors.warning;
       translatedStatus = l10n.visionWarning;
-    } else if (lowerStatus.contains('critical') || lowerStatus.contains('danger') || lowerStatus.contains('disease')) {
+    } else if (lowerStatus.contains('critical') ||
+        lowerStatus.contains('danger') ||
+        lowerStatus.contains('disease')) {
       statusColor = RayyanColors.critical;
       translatedStatus = l10n.visionCritical;
     }
-    
+
     // Confidence Color
     final confStr = item.confidence.replaceAll('%', '');
     final confVal = int.tryParse(confStr) ?? 0;
@@ -522,13 +548,21 @@ class _SnapshotItem extends StatelessWidget {
               child: Stack(
                 children: [
                   if (item.imageUrl.isEmpty)
-                    const Center(child: Icon(Icons.image_not_supported, color: Colors.grey)),
+                    const Center(
+                      child: Icon(
+                        Icons.image_not_supported,
+                        color: Colors.grey,
+                      ),
+                    ),
                   // Confidence Badge Overlay
                   Positioned(
                     bottom: 6,
                     right: 6,
                     child: Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 6,
+                        vertical: 2,
+                      ),
                       decoration: BoxDecoration(
                         color: confColor,
                         borderRadius: BorderRadius.circular(6),
@@ -563,7 +597,9 @@ class _SnapshotItem extends StatelessWidget {
                           style: theme.textTheme.titleSmall?.copyWith(
                             fontWeight: FontWeight.w900,
                             fontSize: 15,
-                            color: isDark ? Colors.white : RayyanColors.slate900,
+                            color: isDark
+                                ? Colors.white
+                                : RayyanColors.slate900,
                             letterSpacing: -0.2,
                           ),
                           maxLines: 1,
@@ -572,9 +608,14 @@ class _SnapshotItem extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        DateFormat('h:mm a', l10n.localeName).format(item.timestamp),
+                        DateFormat(
+                          'h:mm a',
+                          l10n.localeName,
+                        ).format(item.timestamp),
                         style: theme.textTheme.labelSmall?.copyWith(
-                          color: isDark ? RayyanColors.slate400 : RayyanColors.slate400,
+                          color: isDark
+                              ? RayyanColors.slate400
+                              : RayyanColors.slate400,
                           fontWeight: FontWeight.w600,
                           fontSize: 10,
                         ),

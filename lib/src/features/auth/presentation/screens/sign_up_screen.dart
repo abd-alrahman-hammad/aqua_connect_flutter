@@ -1,4 +1,4 @@
-import 'package:flutter/material.dart';
+﻿import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../../core/theme/rayyan_colors.dart';
@@ -69,9 +69,8 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
         Navigator.pushReplacement(
           context,
           MaterialPageRoute(
-            builder: (context) => VerifyAccountScreen(
-              email: _emailController.text.trim(),
-            ),
+            builder: (context) =>
+                VerifyAccountScreen(email: _emailController.text.trim()),
           ),
         );
       }

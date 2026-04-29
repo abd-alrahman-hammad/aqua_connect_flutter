@@ -114,7 +114,6 @@ class _SupportScreenState extends State<SupportScreen> {
                               separatorBuilder: (_, __) =>
                                   const SizedBox(width: 16),
                               itemBuilder: (context, i) {
-                                final idx = i + 1;
                                 return SizedBox(
                                   width: 280,
                                   child: Column(

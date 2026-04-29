@@ -64,14 +64,14 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     if (!rememberMe) {
       await authService.signOut();
-      widget.onNavigate(AppScreen.login);
+      widget.onNavigate(AppScreen.welcome);
       return;
     }
 
     final user = authService.currentUser ?? await authService.authStateChanges.first;
 
     if (user == null) {
-      widget.onNavigate(AppScreen.login);
+      widget.onNavigate(AppScreen.welcome);
       return;
     }
 
@@ -80,7 +80,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     if (!user.emailVerified && !userExists) {
       await authService.signOut();
-      widget.onNavigate(AppScreen.login);
+      widget.onNavigate(AppScreen.welcome);
       return;
     }
 

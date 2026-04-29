@@ -89,7 +89,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           );
           // Navigate to OTP verification screen
-          Navigator.push(context, MaterialPageRoute(builder: (_) => VerifyAccountScreen(email: user.email!)));
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (_) => VerifyAccountScreen(email: user.email!),
+            ),
+          );
         }
         return;
       }
@@ -120,7 +125,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       await prefsService.setRememberMe(rememberMe);
 
       if (mounted) {
-        widget.onNavigate(AppScreen.dashboard);
+        widget.onNavigate(AppScreen.addDevice);
       }
     } on AuthException catch (e) {
       if (mounted) {

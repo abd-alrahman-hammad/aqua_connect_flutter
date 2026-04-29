@@ -1,4 +1,12 @@
 enum AppScreen {
+  welcome,
+  addDevice,
+  deviceList,
+  wifiInstructions,
+  qrInstructions,
+  deviceScanQr,
+  deviceManualEntry,
+  deviceScanError,
   login,
   signup,
   forgotPassword,

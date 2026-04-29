@@ -7,6 +7,7 @@ import '../config/firebase_config.dart';
 import '../models/hydroponic/controls_model.dart';
 import '../models/hydroponic/sensors_model.dart';
 import '../models/hydroponic/settings_model.dart';
+import '../models/db/live_monitoring_model.dart';
 
 /// Custom exception for database errors
 class DatabaseException implements Exception {
@@ -247,6 +248,46 @@ class HydroponicDatabaseService {
           });
     } catch (e) {
       throw DatabaseException('Failed to create water level stream', null, e);
+    }
+  }
+
+  /// Watches the `LiveMonitoring/Plant_Master` node for real-time updates
+  ///
+  /// Returns a stream of [LiveMonitoringModel] that emits whenever
+  /// plant image analysis results change.
+  Stream<LiveMonitoringModel> watchLiveMonitoring() {
+    try {
+      final ref = _database.child('LiveMonitoring/Plant_Master');
+
+      return ref.onValue
+          .map((event) {
+            try {
+              final data = event.snapshot.value;
+
+              if (data == null) {
+                return const LiveMonitoringModel.initial();
+              }
+
+              if (data is! Map) {
+                throw DatabaseException(
+                  'Invalid data type for LiveMonitoring: expected Map, got ${data.runtimeType}',
+                );
+              }
+
+              return LiveMonitoringModel.fromJson(data);
+            } catch (e) {
+              throw DatabaseException('Error parsing LiveMonitoring data', null, e);
+            }
+          })
+          .handleError((error) {
+            throw DatabaseException(
+              'Error watching LiveMonitoring stream',
+              null,
+              error,
+            );
+          });
+    } catch (e) {
+      throw DatabaseException('Failed to create LiveMonitoring stream', null, e);
     }
   }
 
@@ -671,6 +712,12 @@ final sensorsStreamProvider = StreamProvider<SensorsModel>((ref) {
 final waterLevelStreamProvider = StreamProvider<int>((ref) {
   final dbService = ref.watch(hydroponicDatabaseServiceProvider);
   return dbService.watchWaterLevel();
+});
+
+/// Stream provider for real-time LiveMonitoring data
+final liveMonitoringStreamProvider = StreamProvider<LiveMonitoringModel>((ref) {
+  final dbService = ref.watch(hydroponicDatabaseServiceProvider);
+  return dbService.watchLiveMonitoring();
 });
 
 /// Stream provider for connection status

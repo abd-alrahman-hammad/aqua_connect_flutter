@@ -18,6 +18,7 @@ import '../../../core/models/hydroponic/sensors_model.dart'; // [NEW] - for type
 import '../../../core/models/hydroponic/settings_model.dart'; // [NEW]
 
 import '../../alerts/application/sensor_monitor_service.dart'; // [NEW]
+import '../../alerts/application/vision_monitor_service.dart'; // [NEW]
 import '../../analytics/presentation/analytics_state.dart'; // [NEW]
 
 class DashboardScreen extends ConsumerWidget {
@@ -32,8 +33,9 @@ class DashboardScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // Initialize sensor monitor service to ensure alerts are generated
+    // Initialize monitor services to ensure alerts are generated
     ref.watch(sensorMonitorServiceProvider);
+    ref.watch(visionMonitorServiceProvider);
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final sensorsAsync = ref.watch(sensorsStreamProvider);

@@ -44,7 +44,8 @@ class RayyanSensorCard extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final effectiveWidth =
         width ?? (MediaQuery.of(context).size.width - 16 * 2 - 12) / 2;
-    final effectiveBadgeColor = statusColor ?? badgeColor ?? RayyanColors.nature;
+    final effectiveBadgeColor =
+        statusColor ?? badgeColor ?? RayyanColors.nature;
     final effectiveBadgeBg =
         badgeBg ?? effectiveBadgeColor.withValues(alpha: 0.10);
     final displayLabel = labelUppercase ? label.toUpperCase() : label;
