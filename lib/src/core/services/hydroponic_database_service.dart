@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -597,63 +598,64 @@ class HydroponicDatabaseService {
     Duration duration,
   ) async {
     try {
-      String path;
-      switch (sensorType.toLowerCase()) {
-        case 'ph':
-        case 'ph level':
-          path = FirebaseConfig.historyPhPath;
-          break;
-        case 'ec':
-        case 'ec level':
-          path = FirebaseConfig.historyEcPath;
-          break;
-        case 'temperature':
-          path = FirebaseConfig.historyTempPath;
-          break;
-        case 'water':
-        case 'water level':
-          path = FirebaseConfig.historyWaterLevelPath;
-          break;
-        default:
-          throw DatabaseException('Unknown sensor type: $sensorType');
-      }
-
       final now = DateTime.now();
-      final startTime = now.subtract(duration).millisecondsSinceEpoch;
+      // Calculate start time in seconds (matching Firestore timestamp format)
+      final startTimeSeconds = now.subtract(duration).millisecondsSinceEpoch ~/ 1000;
 
-      // Query by timestamp (key)
-      // Assuming keys are timestamps in milliseconds
-      final ref = _database
-          .child(path)
-          .orderByKey()
-          .startAt(startTime.toString());
+      final firestore = FirebaseFirestore.instance;
+      // Using HYDRO_001 as the device ID as requested
+      final deviceId = 'HYDRO_001';
 
-      final snapshot = await ref.get();
-
-      if (!snapshot.exists || snapshot.value == null) {
-        return {};
-      }
-
-      final data = snapshot.value;
-      if (data is! Map) {
-        return {};
-      }
+      final querySnapshot = await firestore
+          .collection('devices')
+          .doc(deviceId)
+          .collection(FirebaseConfig.sensorHistoryCollectionPath)
+          .where('timestamp', isGreaterThanOrEqualTo: startTimeSeconds)
+          .orderBy('timestamp')
+          .get();
 
       final result = <int, double>{};
 
-      data.forEach((key, value) {
-        final timestamp = int.tryParse(key.toString());
-        final val = double.tryParse(value.toString());
-
-        if (timestamp != null && val != null) {
-          result[timestamp] = val;
+      for (var doc in querySnapshot.docs) {
+        final data = doc.data();
+        final timestamp = data['timestamp'];
+        
+        if (timestamp == null) continue;
+        
+        final int timestampSec = timestamp is int 
+            ? timestamp 
+            : (int.tryParse(timestamp.toString()) ?? 0);
+            
+        if (timestampSec == 0) continue;
+        
+        double? val;
+        switch (sensorType.toLowerCase()) {
+          case 'ph':
+          case 'ph level':
+            val = data['ph'] != null ? double.tryParse(data['ph'].toString()) : null;
+            break;
+          case 'ec':
+          case 'ec level':
+            val = data['ec'] != null ? double.tryParse(data['ec'].toString()) : null;
+            break;
+          case 'temperature':
+            val = data['temperature'] != null ? double.tryParse(data['temperature'].toString()) : null;
+            break;
+          case 'water':
+          case 'water level':
+            val = data['water_level'] != null ? double.tryParse(data['water_level'].toString()) : null;
+            break;
+          default:
+            throw DatabaseException('Unknown sensor type: $sensorType');
         }
-      });
 
-      // Sort by timestamp just in case
-      return Map.fromEntries(
-        result.entries.toList()..sort((a, b) => a.key.compareTo(b.key)),
-      );
+        if (val != null) {
+          // Analytics charts expect map keys in milliseconds
+          result[timestampSec * 1000] = val;
+        }
+      }
+
+      return result;
     } catch (e) {
       throw DatabaseException(
         'Failed to get history for $sensorType: $e',

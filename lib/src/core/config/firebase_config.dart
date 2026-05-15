@@ -67,7 +67,7 @@ class FirebaseConfig {
 
   /// Root path for control settings
   /// Contains: auto_mode, led_light
-  static const String controlsPath = '/Controls';
+  static const String controlsPath = '/controls/HYDRO_001';
 
   /// Path for auto mode control (0 = manual, 1 = auto)
   static const String autoModePath = '$controlsPath/auto_mode';
@@ -102,7 +102,7 @@ class FirebaseConfig {
 
   /// Root path for threshold settings
   /// Contains: temp_high, temp_low, ph_high, ec_low
-  static const String settingsPath = '/Settings';
+  static const String settingsPath = '/Settings/HYDRO_001';
 
   /// Path for high temperature threshold (Float)
   static const String tempHighPath = '$settingsPath/temp_high';
@@ -118,25 +118,16 @@ class FirebaseConfig {
 
   /// Root path for sensor readings
   /// Contains: water_level
-  static const String sensorsPath = '/Sensors';
+  static const String sensorsPath = '/sensors/HYDRO_001';
 
   /// Path for water level sensor (Int 0-100%)
   static const String waterLevelPath = '$sensorsPath/water_level';
 
-  /// Root path for historical data
-  /// Structure:
-  /// /History
-  ///   /ph
-  ///     /$timestamp: value
-  ///   /ec
-  ///     /$timestamp: value
-  ///   /temperature
-  ///     /$timestamp: value
-  static const String historyPath = '/History';
-  static const String historyPhPath = '$historyPath/ph';
-  static const String historyEcPath = '$historyPath/ec';
-  static const String historyTempPath = '$historyPath/temperature';
-  static const String historyWaterLevelPath = '$historyPath/water_level';
+  /// Firestore History Paths
+  /// History is now stored in Cloud Firestore under:
+  /// devices -> [deviceId] -> sensorHistory -> [autoId]
+  static const String devicesCollectionPath = 'devices';
+  static const String sensorHistoryCollectionPath = 'sensorHistory';
 
   // ============================================================================
   // Helper Methods
