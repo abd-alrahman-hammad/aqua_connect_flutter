@@ -1,19 +1,106 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../../app/screens.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
-import 'widgets/manual_input_dot.dart';
+import '../../../core/services/firestore_database_service.dart';
 
-class DeviceManualEntryScreen extends ConsumerWidget {
+// Use the same provider defined in device_scan_qr_screen.dart if needed, 
+// or define it here if it's simpler. Assuming we can just create it.
+final firestoreServiceProvider = Provider((ref) => FirestoreDatabaseService());
+
+class DeviceManualEntryScreen extends ConsumerStatefulWidget {
   const DeviceManualEntryScreen({super.key, required this.onNavigate});
 
   final void Function(AppScreen) onNavigate;
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<DeviceManualEntryScreen> createState() => _DeviceManualEntryScreenState();
+}
+
+class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScreen> {
+  final TextEditingController _controller = TextEditingController();
+  bool _isProcessing = false;
+  String _errorMessage = '';
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _submitSerialNumber() async {
+    final rawSerialNumber = _controller.text.trim();
+    if (rawSerialNumber.length < 12) {
+      setState(() {
+        _errorMessage = 'Please enter a valid 12-character serial number.';
+      });
+      return;
+    }
+
+    final serialNumber = _formatMacAddress(rawSerialNumber);
+
+    setState(() {
+      _isProcessing = true;
+      _errorMessage = '';
+    });
+
+    try {
+      final currentUserId = FirebaseAuth.instance.currentUser?.uid;
+      if (currentUserId == null) {
+        setState(() {
+          _isProcessing = false;
+          _errorMessage = 'User not authenticated.';
+        });
+        return;
+      }
+
+      final firestoreService = ref.read(firestoreServiceProvider);
+      final status = await firestoreService.registerDevice(serialNumber, currentUserId);
+
+      if (!mounted) return;
+
+      switch (status) {
+        case DeviceRegistrationStatus.success:
+          widget.onNavigate(AppScreen.dashboard);
+          break;
+        case DeviceRegistrationStatus.notFound:
+          setState(() {
+            _errorMessage = 'Invalid serial number. Please check and try again.';
+          });
+          break;
+        case DeviceRegistrationStatus.alreadyRegistered:
+          setState(() {
+            _errorMessage = 'This device is already registered to another user.';
+          });
+          break;
+        case DeviceRegistrationStatus.error:
+          setState(() {
+            _errorMessage = 'An error occurred during registration. Please try again.';
+          });
+          break;
+      }
+    } catch (e) {
+      if (mounted) {
+        setState(() {
+          _errorMessage = 'An unexpected error occurred. Please try again.';
+        });
+      }
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isProcessing = false;
+        });
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -30,7 +117,7 @@ class DeviceManualEntryScreen extends ConsumerWidget {
             color: isDark ? Colors.white : Colors.black87,
             size: 20,
           ),
-          onPressed: () => onNavigate(AppScreen.deviceScanQr),
+          onPressed: () => widget.onNavigate(AppScreen.deviceScanQr),
         ),
         title: Text(
           'Connect Device',
@@ -47,7 +134,7 @@ class DeviceManualEntryScreen extends ConsumerWidget {
               color: isDark ? Colors.white : Colors.black87,
               size: 20,
             ),
-            onPressed: () => onNavigate(AppScreen.login),
+            onPressed: () => widget.onNavigate(AppScreen.deviceList),
           ),
         ],
       ),
@@ -85,7 +172,7 @@ class DeviceManualEntryScreen extends ConsumerWidget {
                                   Expanded(
                                     child: GestureDetector(
                                       onTap: () =>
-                                          onNavigate(AppScreen.deviceScanQr),
+                                          widget.onNavigate(AppScreen.deviceScanQr),
                                       child: Container(
                                         color: Colors.transparent,
                                         child: Center(
@@ -163,7 +250,7 @@ class DeviceManualEntryScreen extends ConsumerWidget {
                               horizontal: 24.0,
                             ),
                             child: Text(
-                              'Please type the 12-character serial code found on the sticker of your hydroponic unit.',
+                              'Please type the serial code found on the sticker of your hydroponic unit.',
                               style: GoogleFonts.manrope(
                                 fontSize: 12,
                                 color: isDark ? Colors.white60 : Colors.black54,
@@ -200,26 +287,31 @@ class DeviceManualEntryScreen extends ConsumerWidget {
 
                           const SizedBox(height: 48),
 
-                          // 12 Input Dots Placeholder
+                          // Custom Mac Address Input
                           Padding(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 24.0,
                             ),
                             child: Column(
                               children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    6,
-                                    (index) => ManualInputDot(isDark: isDark),
+                                MacAddressInput(controller: _controller),
+                                if (_errorMessage.isNotEmpty)
+                                  Padding(
+                                    padding: const EdgeInsets.only(top: 12.0),
+                                    child: Text(
+                                      _errorMessage,
+                                      style: TextStyle(
+                                        color: RayyanColors.critical,
+                                        fontSize: 12,
+                                      ),
+                                    ),
                                   ),
-                                ),
                                 const SizedBox(height: 16),
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: List.generate(
-                                    6,
-                                    (index) => ManualInputDot(isDark: isDark),
+                                Text(
+                                  'Format: XX:XX:XX:XX:XX:XX',
+                                  style: GoogleFonts.manrope(
+                                    fontSize: 12,
+                                    color: isDark ? Colors.white30 : Colors.black38,
                                   ),
                                 ),
                               ],
@@ -238,8 +330,7 @@ class DeviceManualEntryScreen extends ConsumerWidget {
                               width: double.infinity,
                               height: 56,
                               child: ElevatedButton(
-                                onPressed: () =>
-                                    onNavigate(AppScreen.dashboard),
+                                onPressed: _isProcessing ? null : _submitSerialNumber,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: RayyanColors.primary,
                                   foregroundColor: Colors.white,
@@ -248,24 +339,33 @@ class DeviceManualEntryScreen extends ConsumerWidget {
                                     borderRadius: BorderRadius.circular(12),
                                   ),
                                 ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      'CONFIRM',
-                                      style: GoogleFonts.manrope(
-                                        fontSize: 12,
-                                        fontWeight: FontWeight.bold,
-                                        letterSpacing: 1.0,
+                                child: _isProcessing
+                                    ? const SizedBox(
+                                        width: 24,
+                                        height: 24,
+                                        child: CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 2,
+                                        ),
+                                      )
+                                    : Row(
+                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            'CONFIRM',
+                                            style: GoogleFonts.manrope(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.bold,
+                                              letterSpacing: 1.0,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 8),
+                                          const Icon(
+                                            Icons.check_circle_outline,
+                                            size: 16,
+                                          ),
+                                        ],
                                       ),
-                                    ),
-                                    const SizedBox(width: 8),
-                                    const Icon(
-                                      Icons.check_circle_outline,
-                                      size: 16,
-                                    ),
-                                  ],
-                                ),
                               ),
                             ),
                           ),
@@ -279,6 +379,159 @@ class DeviceManualEntryScreen extends ConsumerWidget {
           ),
         ],
       ),
+    );
+  }
+
+  String _formatMacAddress(String raw) {
+    String formatted = '';
+    for (int i = 0; i < raw.length; i++) {
+      formatted += raw[i];
+      if (i % 2 == 1 && i != raw.length - 1) {
+        formatted += ':';
+      }
+    }
+    return formatted;
+  }
+}
+
+class MacAddressInput extends StatefulWidget {
+  final TextEditingController controller;
+  const MacAddressInput({super.key, required this.controller});
+
+  @override
+  State<MacAddressInput> createState() => _MacAddressInputState();
+}
+
+class _MacAddressInputState extends State<MacAddressInput> {
+  final FocusNode _focusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(_update);
+    _focusNode.addListener(_update);
+  }
+
+  @override
+  void dispose() {
+    widget.controller.removeListener(_update);
+    _focusNode.removeListener(_update);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  void _update() => setState(() {});
+
+  @override
+  Widget build(BuildContext context) {
+    final text = widget.controller.text;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    
+    List<Widget> blocks = [];
+    for (int i = 0; i < 6; i++) {
+      String blockText = '';
+      if (text.length > i * 2) {
+        int endIndex = (i * 2 + 2 <= text.length) ? i * 2 + 2 : text.length;
+        blockText = text.substring(i * 2, endIndex);
+      }
+      
+      bool isFocused = _focusNode.hasFocus && (text.length ~/ 2 == i || (text.length == 12 && i == 5));
+      
+      blocks.add(
+        Container(
+          width: 40,
+          height: 54,
+          decoration: BoxDecoration(
+            color: isDark ? RayyanColors.surfaceDark : RayyanColors.onboardCardLight,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: isFocused ? RayyanColors.primary : Colors.transparent,
+              width: 2,
+            ),
+          ),
+          alignment: Alignment.center,
+          child: Text(
+            blockText,
+            style: GoogleFonts.manrope(
+              fontSize: 18,
+              color: isDark ? Colors.white70 : Colors.black87,
+              fontWeight: FontWeight.w600,
+            ),
+          ),
+        )
+      );
+      
+      if (i < 5) {
+        blocks.add(
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 4.0),
+            child: Text(
+              ':',
+              style: GoogleFonts.manrope(
+                fontSize: 20,
+                color: isDark ? Colors.white54 : Colors.black54,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+        );
+      }
+    }
+
+    return GestureDetector(
+      onTap: () => _focusNode.requestFocus(),
+      child: Stack(
+        alignment: Alignment.center,
+        children: [
+          FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: blocks,
+            ),
+          ),
+          Positioned.fill(
+            child: Opacity(
+              opacity: 0,
+              child: TextField(
+                controller: widget.controller,
+                focusNode: _focusNode,
+                keyboardType: TextInputType.text,
+                textCapitalization: TextCapitalization.characters,
+                inputFormatters: [
+                  _MacAddressFormatter(),
+                ],
+                autocorrect: false,
+                enableSuggestions: false,
+                cursorColor: Colors.transparent,
+                style: const TextStyle(color: Colors.transparent),
+                decoration: const InputDecoration(
+                  border: InputBorder.none,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _MacAddressFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    String newText = newValue.text.toUpperCase().replaceAll(RegExp(r'[^0-9A-Z]'), '');
+    
+    if (newText.length > 12) {
+      newText = newText.substring(0, 12);
+    }
+    
+    return TextEditingValue(
+      text: newText,
+      selection: TextSelection.collapsed(offset: newText.length),
     );
   }
 }
