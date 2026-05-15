@@ -551,7 +551,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get notificationSettingsTitle => 'إعدادات الإشعارات';
 
   @override
-  String get pushNotifications => 'الإشعارات الفورية';
+  String get pushNotifications => 'الإشعارات';
 
   @override
   String get pushNotificationsSub => 'تفعيل أو تعطيل جميع الإشعارات';
@@ -576,7 +576,8 @@ class AppLocalizationsAr extends AppLocalizations {
   String get parameterWarnings => 'تحذيرات المعايير';
 
   @override
-  String get parameterWarningsSub => 'انحراف pH أو EC خارج النطاق الآمن';
+  String get parameterWarningsSub =>
+      'انحراف pH، EC أو الحرارة خارج النطاق الآمن';
 
   @override
   String get askMeAboutHydroponic => 'اسألني عن نظام الزراعة المائية الخاص بك!';

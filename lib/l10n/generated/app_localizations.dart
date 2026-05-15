@@ -1133,7 +1133,7 @@ abstract class AppLocalizations {
   /// No description provided for @pushNotifications.
   ///
   /// In en, this message translates to:
-  /// **'Push Notifications'**
+  /// **'Notifications'**
   String get pushNotifications;
 
   /// No description provided for @pushNotificationsSub.
@@ -1181,7 +1181,7 @@ abstract class AppLocalizations {
   /// No description provided for @parameterWarningsSub.
   ///
   /// In en, this message translates to:
-  /// **'pH or EC deviation outside safe range'**
+  /// **'pH, EC or Temperature deviation outside safe range'**
   String get parameterWarningsSub;
 
   /// No description provided for @askMeAboutHydroponic.

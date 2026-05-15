@@ -10,6 +10,7 @@ import 'src/app/app.dart';
 import 'src/core/config/firebase_initializer.dart';
 
 import 'src/features/alerts/data/notification_service.dart';
+import 'src/features/settings/domain/notification_preferences.dart';
 
 Future<void> main() async {
   // Ensure Flutter is initialized before Firebase
@@ -46,6 +47,7 @@ Future<void> main() async {
       overrides: [
         themeProvider.overrideWith((ref) => ThemeNotifier(loadedTheme, prefs)),
         localeProvider.overrideWith((ref) => LocaleNotifier(prefs)),
+        notificationPreferencesProvider.overrideWith((ref) => NotificationPreferencesNotifier(prefs)),
       ],
       child: const RayyanApp(),
     ),

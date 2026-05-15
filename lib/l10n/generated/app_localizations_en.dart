@@ -547,7 +547,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get notificationSettingsTitle => 'Notification Settings';
 
   @override
-  String get pushNotifications => 'Push Notifications';
+  String get pushNotifications => 'Notifications';
 
   @override
   String get pushNotificationsSub => 'Enable or disable all notifications';
@@ -572,7 +572,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get parameterWarnings => 'Parameter Warnings';
 
   @override
-  String get parameterWarningsSub => 'pH or EC deviation outside safe range';
+  String get parameterWarningsSub =>
+      'pH, EC or Temperature deviation outside safe range';
 
   @override
   String get askMeAboutHydroponic => 'Ask me about your hydroponic system!';

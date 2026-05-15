@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
@@ -10,6 +10,7 @@ import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/utils/value_formatter.dart';
 import '../../../core/widgets/rayyan_header.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
+import '../../alerts/data/notification_service.dart';
 import '../domain/notification_preferences.dart';
 
 class AccountSecurityScreen extends ConsumerStatefulWidget {
@@ -606,39 +607,27 @@ class _ThresholdField extends StatelessWidget {
   }
 }
 
-class NotificationSettingsScreen extends StatefulWidget {
+class NotificationSettingsScreen extends ConsumerWidget {
   const NotificationSettingsScreen({super.key, required this.onNavigate});
   final ValueChanged<AppScreen> onNavigate;
 
-  @override
-  State<NotificationSettingsScreen> createState() =>
-      _NotificationSettingsScreenState();
-}
-
-class _NotificationSettingsScreenState
-    extends State<NotificationSettingsScreen> {
-  // Initialize with default values (Critical Alerts ON by default)
-  NotificationPreferences _prefs = const NotificationPreferences(
-    pushEnabled: true,
-    criticalAlertsEnabled: true, // ALWAYS ON DEFAULT (Requirement)
-    parameterWarningsEnabled: true,
-  );
-
-  void _updatePrefs(NotificationPreferences newPrefs) {
-    setState(() {
-      _prefs = newPrefs;
-    });
-    // TODO: Connect to backend API or local storage here
+  void _updatePrefs(WidgetRef ref, NotificationPreferences newPrefs) {
+    ref.read(notificationPreferencesProvider.notifier).updatePrefs(newPrefs);
+    if (!newPrefs.pushEnabled) {
+      ref.read(notificationServiceProvider).cancelAllNotifications();
+    }
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final prefs = ref.watch(notificationPreferencesProvider);
+
     return Scaffold(
       body: Column(
         children: [
           RayyanHeader(
             title: AppLocalizations.of(context)!.notificationSettingsTitle,
-            onBack: () => widget.onNavigate(AppScreen.settings),
+            onBack: () => onNavigate(AppScreen.settings),
           ),
           Expanded(
             child: ListView(
@@ -646,11 +635,12 @@ class _NotificationSettingsScreenState
               children: [
                 // Master Toggle
                 _buildSwitchTile(
+                  context: context,
                   title: AppLocalizations.of(context)!.pushNotifications,
                   subtitle: AppLocalizations.of(context)!.pushNotificationsSub,
-                  value: _prefs.pushEnabled,
+                  value: prefs.pushEnabled,
                   onChanged: (v) =>
-                      _updatePrefs(_prefs.copyWith(pushEnabled: v)),
+                      _updatePrefs(ref, prefs.copyWith(pushEnabled: v)),
                 ),
                 const SizedBox(height: 24),
 
@@ -672,16 +662,15 @@ class _NotificationSettingsScreenState
 
                 // Critical Alerts
                 _buildSwitchTile(
+                  context: context,
                   title: AppLocalizations.of(context)!.criticalSystemFailures,
                   subtitle: AppLocalizations.of(
                     context,
                   )!.criticalSystemFailuresSub,
-                  value: _prefs.criticalAlertsEnabled,
-                  // If master toggle is off, these should visually look disabled or handle logic
-                  // But for now, we just update the specific preference
-                  onChanged: _prefs.pushEnabled
+                  value: prefs.criticalAlertsEnabled,
+                  onChanged: prefs.pushEnabled
                       ? (v) => _updatePrefs(
-                          _prefs.copyWith(criticalAlertsEnabled: v),
+                          ref, prefs.copyWith(criticalAlertsEnabled: v),
                         )
                       : null,
                 ),
@@ -690,12 +679,13 @@ class _NotificationSettingsScreenState
 
                 // Water Level Alerts (NEW)
                 _buildSwitchTile(
+                  context: context,
                   title: AppLocalizations.of(context)!.waterLevelAlerts,
                   subtitle: AppLocalizations.of(context)!.waterLevelAlertsSub,
-                  value: _prefs.waterLevelNotificationsEnabled,
-                  onChanged: _prefs.pushEnabled
+                  value: prefs.waterLevelNotificationsEnabled,
+                  onChanged: prefs.pushEnabled
                       ? (v) => _updatePrefs(
-                          _prefs.copyWith(waterLevelNotificationsEnabled: v),
+                          ref, prefs.copyWith(waterLevelNotificationsEnabled: v),
                         )
                       : null,
                 ),
@@ -703,12 +693,13 @@ class _NotificationSettingsScreenState
                 const SizedBox(height: 8), // Spacing between tiles
                 // Warnings
                 _buildSwitchTile(
+                  context: context,
                   title: AppLocalizations.of(context)!.parameterWarnings,
                   subtitle: AppLocalizations.of(context)!.parameterWarningsSub,
-                  value: _prefs.parameterWarningsEnabled,
-                  onChanged: _prefs.pushEnabled
+                  value: prefs.parameterWarningsEnabled,
+                  onChanged: prefs.pushEnabled
                       ? (v) => _updatePrefs(
-                          _prefs.copyWith(parameterWarningsEnabled: v),
+                          ref, prefs.copyWith(parameterWarningsEnabled: v),
                         )
                       : null,
                 ),
@@ -721,6 +712,7 @@ class _NotificationSettingsScreenState
   }
 
   Widget _buildSwitchTile({
+    required BuildContext context,
     required String title,
     required String subtitle,
     required bool value,
