@@ -191,17 +191,10 @@ class _CameraFeedSection extends StatelessWidget {
         children: [
           // Image Container
           Container(
-            height: 250,
             width: double.infinity,
             decoration: BoxDecoration(
               color: RayyanColors.slate900,
               borderRadius: BorderRadius.circular(24),
-              image: model.imageUrl.isNotEmpty
-                  ? DecorationImage(
-                      image: NetworkImage(model.imageUrl),
-                      fit: BoxFit.cover,
-                    )
-                  : null,
               // Fallback gradient if there's no image
               gradient: model.imageUrl.isEmpty
                   ? const LinearGradient(
@@ -223,20 +216,34 @@ class _CameraFeedSection extends StatelessWidget {
                 ),
               ],
             ),
-            child: Stack(
-              children: [
-                // Live Analysis Indicator
-                Positioned(
-                  bottom: 24,
-                  left: 20,
-                  child: Container(
-                    padding: const EdgeInsets.symmetric(
-                      horizontal: 10,
-                      vertical: 6,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(24),
+              child: Stack(
+                children: [
+                  if (model.imageUrl.isNotEmpty)
+                    Image.network(
+                      model.imageUrl,
+                      width: double.infinity,
+                      fit: BoxFit.fitWidth,
+                    )
+                  else
+                    const SizedBox(
+                      width: double.infinity,
+                      height: 250,
+                    ),
+                  // Live Analysis Indicator
+                  Positioned(
+                    bottom: 24,
+                    left: 20,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 10,
+                        vertical: 6,
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
 
