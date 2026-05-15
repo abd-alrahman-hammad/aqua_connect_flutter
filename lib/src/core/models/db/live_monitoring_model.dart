@@ -94,10 +94,12 @@ class LiveMonitoringModel {
     for (final key in sortedKeys) {
       final spotData = spotsMap[key];
       if (spotData is Map) {
-        spots.add(SpotDetailModel.fromJson(
-          Map<dynamic, dynamic>.from(spotData),
-          key.toString(),
-        ));
+        spots.add(
+          SpotDetailModel.fromJson(
+            Map<dynamic, dynamic>.from(spotData),
+            key.toString(),
+          ),
+        );
       }
     }
 
@@ -211,13 +213,13 @@ class LiveMonitoringModel {
 
   @override
   int get hashCode => Object.hash(
-        confidence,
-        imageUrl,
-        lastUpdate,
-        statusAr,
-        statusEn,
-        totalSpots,
-      );
+    confidence,
+    imageUrl,
+    lastUpdate,
+    statusAr,
+    statusEn,
+    totalSpots,
+  );
 }
 
 // =============================================================================
@@ -317,6 +319,12 @@ class SpotDetailModel {
   }
 
   @override
-  int get hashCode =>
-      Object.hash(spotId, confidence, locationAr, locationEn, statusAr, statusEn);
+  int get hashCode => Object.hash(
+    spotId,
+    confidence,
+    locationAr,
+    locationEn,
+    statusAr,
+    statusEn,
+  );
 }

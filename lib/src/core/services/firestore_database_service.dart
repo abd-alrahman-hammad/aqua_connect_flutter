@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'firebase_auth_service.dart';
 import '../models/db/app_user_model.dart';
 import '../models/db/device_model.dart';
-import '../models/db/sensors_realtime_model.dart';
+
 
 import '../models/db/sensor_history_model.dart';
 import '../models/db/live_monitoring_model.dart';
@@ -22,9 +22,7 @@ class FirestoreDatabaseService {
   CollectionReference get _usersRef => _firestore.collection('users');
   CollectionReference get _devicesRef => _firestore.collection('devices');
 
-  // Helper method to get sub-collections for a specific device
-  CollectionReference _sensorsRealtimeRef(String deviceId) =>
-      _devicesRef.doc(deviceId).collection('sensorsRealtime');
+
 
 
 
@@ -153,30 +151,7 @@ class FirestoreDatabaseService {
     }
   }
 
-  // --- SensorsRealtime Collection (Device Sub-collection) ---
 
-  Future<void> updateSensorsRealtime(SensorsRealtimeModel data) async {
-    try {
-      // Document ID is the same as parent deviceId
-      await _sensorsRealtimeRef(
-        data.deviceId,
-      ).doc(data.deviceId).set(data.toJson(), SetOptions(merge: true));
-    } catch (e) {
-      throw Exception('Failed to update realtime sensors: $e');
-    }
-  }
-
-  Stream<SensorsRealtimeModel?> streamSensorsRealtime(String deviceId) {
-    return _sensorsRealtimeRef(deviceId).doc(deviceId).snapshots().map((doc) {
-      if (doc.exists && doc.data() != null) {
-        return SensorsRealtimeModel.fromJson(
-          doc.data() as Map<String, dynamic>,
-          doc.id,
-        );
-      }
-      return null;
-    });
-  }
 
 
 

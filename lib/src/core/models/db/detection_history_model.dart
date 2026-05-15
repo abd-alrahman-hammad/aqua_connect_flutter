@@ -4,7 +4,8 @@ import 'live_monitoring_model.dart';
 class DetectionHistoryModel {
   final String id;
   final String imageUrl;
-  final String confidence; // Keeping as String since UI expects e.g., '91%' but can parse from double
+  final String
+  confidence; // Keeping as String since UI expects e.g., '91%' but can parse from double
   final DateTime timestamp;
   final String status;
   final String title;
@@ -32,7 +33,7 @@ class DetectionHistoryModel {
 
   factory DetectionHistoryModel.fromFirestore(DocumentSnapshot doc) {
     final data = doc.data() as Map<String, dynamic>? ?? {};
-    
+
     // Parse confidence - handle both String ('91%') and double (0.91 or 91)
     String parsedConfidence = 'N/A';
     if (data['confidence'] != null) {
@@ -60,10 +61,10 @@ class DetectionHistoryModel {
         parsedTimestamp = DateTime.fromMillisecondsSinceEpoch(timeVal);
       }
     }
-    
+
     // Derive status from spots_details
     String derivedStatus = data['status'] ?? 'Healthy';
-    
+
     // Safely parse spotsMap
     Map<dynamic, dynamic> spotsMap = {};
     final rawSpots = data['spots_details'];
@@ -74,24 +75,27 @@ class DetectionHistoryModel {
         spotsMap['spot_${i + 1}'] = rawSpots[i];
       }
     }
-    
+
     if (data['status'] == null && spotsMap.isNotEmpty) {
       bool hasCritical = false;
       bool hasWarning = false;
       for (var spot in spotsMap.values) {
         if (spot is Map) {
-           final statusEn = (spot['status_en'] ?? '').toString().toLowerCase();
-           final statusAr = (spot['status_ar'] ?? '').toString().toLowerCase();
-           if (statusEn.contains('disease') || statusEn.contains('critical') || statusAr.contains('مصاب')) {
-             hasCritical = true;
-           }
-           else if (statusEn.contains('warn') || statusAr.contains('تحذير')) {
-             hasWarning = true;
-           }
+          final statusEn = (spot['status_en'] ?? '').toString().toLowerCase();
+          final statusAr = (spot['status_ar'] ?? '').toString().toLowerCase();
+          if (statusEn.contains('disease') ||
+              statusEn.contains('critical') ||
+              statusAr.contains('مصاب')) {
+            hasCritical = true;
+          } else if (statusEn.contains('warn') || statusAr.contains('تحذير')) {
+            hasWarning = true;
+          }
         }
       }
-      if (hasCritical) derivedStatus = 'Critical';
-      else if (hasWarning) derivedStatus = 'Warning';
+      if (hasCritical)
+        derivedStatus = 'Critical';
+      else if (hasWarning)
+        derivedStatus = 'Warning';
     }
 
     // Parse spots strictly as SpotDetailModels for UI processing
@@ -101,16 +105,19 @@ class DetectionHistoryModel {
       for (final key in sortedKeys) {
         final spotData = spotsMap[key];
         if (spotData is Map) {
-          parsedSpots.add(SpotDetailModel.fromJson(
-            Map<dynamic, dynamic>.from(spotData),
-            key.toString(),
-          ));
+          parsedSpots.add(
+            SpotDetailModel.fromJson(
+              Map<dynamic, dynamic>.from(spotData),
+              key.toString(),
+            ),
+          );
         }
       }
     }
 
     // Default titles if not provided
-    final String deviceId = data['device_id']?.toString().replaceAll('_', ' ') ?? 'Plant Device';
+    final String deviceId =
+        data['device_id']?.toString().replaceAll('_', ' ') ?? 'Plant Device';
     final int totalSpotsCount = spotsMap.length;
 
     return DetectionHistoryModel(
@@ -120,10 +127,19 @@ class DetectionHistoryModel {
       timestamp: parsedTimestamp,
       status: derivedStatus,
       title: data['title'] ?? deviceId,
-      subtitle: data['subtitle'] ?? (totalSpotsCount > 0 ? '$totalSpotsCount Spots Detected' : 'No issues found'),
-      description: data['description'] ?? (derivedStatus == 'Healthy' ? 'Optimal growth' : 'Action requires attention'),
+      subtitle:
+          data['subtitle'] ??
+          (totalSpotsCount > 0
+              ? '$totalSpotsCount Spots Detected'
+              : 'No issues found'),
+      description:
+          data['description'] ??
+          (derivedStatus == 'Healthy'
+              ? 'Optimal growth'
+              : 'Action requires attention'),
       rootCause: data['root_cause'] ?? 'Unknown',
-      recommendedTreatment: data['recommended_treatment'] ?? 'Consult an agronomist',
+      recommendedTreatment:
+          data['recommended_treatment'] ?? 'Consult an agronomist',
       spotsDetails: parsedSpots,
       totalSpots: totalSpotsCount,
     );
