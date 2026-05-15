@@ -54,76 +54,91 @@ class UserDevicesScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildDevicesList(BuildContext context, bool isDark, List<DeviceModel> devices) {
+  Widget _buildDevicesList(
+    BuildContext context,
+    bool isDark,
+    List<DeviceModel> devices,
+  ) {
     return ListView(
-      children: devices.map((device) => Padding(
-        padding: const EdgeInsets.only(bottom: 12.0),
-        child: Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: isDark ? RayyanColors.cardDark : Colors.white,
-            borderRadius: BorderRadius.circular(16),
-            border: Border.all(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.05)
-                  : RayyanColors.slate200,
-            ),
-            boxShadow: [
-              if (!isDark)
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.03),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-            ],
-          ),
-          child: Row(
-            children: [
-              Container(
-                width: 48,
-                height: 48,
+      children: devices
+          .map(
+            (device) => Padding(
+              padding: const EdgeInsets.only(bottom: 12.0),
+              child: Container(
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: isDark ? RayyanColors.surfaceDark : RayyanColors.onboardCardLight,
-                  borderRadius: BorderRadius.circular(12),
+                  color: isDark ? RayyanColors.cardDark : Colors.white,
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: isDark
+                        ? Colors.white.withValues(alpha: 0.05)
+                        : RayyanColors.slate200,
+                  ),
+                  boxShadow: [
+                    if (!isDark)
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.03),
+                        blurRadius: 10,
+                        offset: const Offset(0, 4),
+                      ),
+                  ],
                 ),
-                child: Icon(
-                  Icons.energy_savings_leaf_outlined,
-                  color: RayyanColors.primary,
-                ),
-              ),
-              const SizedBox(width: 16),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                child: Row(
                   children: [
-                    Text(
-                      device.name.isNotEmpty ? device.name : 'Smart Hydroponic System',
-                      style: GoogleFonts.manrope(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? Colors.white : Colors.black87,
+                    Container(
+                      width: 48,
+                      height: 48,
+                      decoration: BoxDecoration(
+                        color: isDark
+                            ? RayyanColors.surfaceDark
+                            : RayyanColors.onboardCardLight,
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: Icon(
+                        Icons.energy_savings_leaf_outlined,
+                        color: RayyanColors.primary,
                       ),
                     ),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Connected',
-                      style: GoogleFonts.manrope(
-                        fontSize: 12,
-                        color: RayyanColors.success,
-                        fontWeight: FontWeight.w600,
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            device.name.isNotEmpty
+                                ? device.name
+                                : 'Smart Hydroponic System',
+                            style: GoogleFonts.manrope(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: isDark ? Colors.white : Colors.black87,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          Text(
+                            'Connected',
+                            style: GoogleFonts.manrope(
+                              fontSize: 12,
+                              color: RayyanColors.success,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ],
                       ),
+                    ),
+                    IconButton(
+                      icon: const Icon(
+                        Icons.chevron_right,
+                        color: RayyanColors.slate400,
+                      ),
+                      onPressed: () => onNavigate(AppScreen.dashboard),
                     ),
                   ],
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.chevron_right, color: RayyanColors.slate400),
-                onPressed: () => onNavigate(AppScreen.dashboard),
-              ),
-            ],
-          ),
-        ),
-      )).toList(),
+            ),
+          )
+          .toList(),
     );
   }
 
@@ -150,12 +165,16 @@ class UserDevicesScreen extends ConsumerWidget {
             width: 72,
             height: 72,
             decoration: BoxDecoration(
-              color: isDark ? RayyanColors.surfaceDark : RayyanColors.onboardCardLight,
+              color: isDark
+                  ? RayyanColors.surfaceDark
+                  : RayyanColors.onboardCardLight,
               shape: BoxShape.circle,
             ),
             child: Icon(
               Icons.inventory_2_outlined,
-              color: isDark ? RayyanColors.primary : RayyanColors.onboardIconTint,
+              color: isDark
+                  ? RayyanColors.primary
+                  : RayyanColors.onboardIconTint,
               size: 32,
             ),
           ),
