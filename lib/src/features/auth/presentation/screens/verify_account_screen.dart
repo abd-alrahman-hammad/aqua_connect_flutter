@@ -9,6 +9,8 @@ import '../widgets/otp_input_field.dart';
 import '../widgets/auth_button.dart';
 import '../../../../core/services/firebase_auth_service.dart';
 import '../../../../core/services/user_database_service.dart';
+import '../../../../core/services/firestore_database_service.dart';
+import '../../../../core/models/db/app_user_model.dart';
 
 class VerifyAccountScreen extends ConsumerStatefulWidget {
   final String email;
@@ -112,6 +114,17 @@ class _VerifyAccountScreenState extends ConsumerState<VerifyAccountScreen> {
         if (user != null) {
           final userDbService = ref.read(userDatabaseServiceProvider);
           await userDbService.saveUser(user);
+
+          // Save to Firestore as requested
+          final firestoreService = ref.read(firestoreServiceProvider);
+          await firestoreService.createUser(
+            AppUserModel(
+              userId: user.uid,
+              name: user.displayName ?? '',
+              email: user.email ?? '',
+              createdAt: DateTime.now(),
+            ),
+          );
         }
       } catch (e) {
         debugPrint('Failed to save verified user: $e');
