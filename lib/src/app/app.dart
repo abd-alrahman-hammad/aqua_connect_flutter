@@ -29,6 +29,7 @@ import '../features/onboarding/presentation/qr_instructions_screen.dart';
 import '../features/onboarding/presentation/device_scan_qr_screen.dart';
 import '../features/onboarding/presentation/device_manual_entry_screen.dart';
 import '../features/onboarding/presentation/device_scan_error_screen.dart';
+import '../features/onboarding/presentation/user_devices_screen.dart';
 import 'app_controller.dart';
 import 'screens.dart';
 
@@ -140,8 +141,35 @@ class _AppRoot extends ConsumerWidget {
         );
       case AppScreen.more:
         page = MoreScreen(current: screen, onNavigate: controller.navigate);
+      case AppScreen.userDevices:
+        page = UserDevicesScreen(onNavigate: controller.navigate);
     }
 
-    return Scaffold(body: SafeArea(child: page));
+    return Scaffold(
+      body: SafeArea(
+        child: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: SlideTransition(
+                position: Tween<Offset>(
+                  begin: const Offset(0.05, 0),
+                  end: Offset.zero,
+                ).animate(CurvedAnimation(
+                  parent: animation,
+                  curve: Curves.easeOutCubic,
+                )),
+                child: child,
+              ),
+            );
+          },
+          child: Container(
+            key: ValueKey<AppScreen>(screen),
+            child: page,
+          ),
+        ),
+      ),
+    );
   }
 }
