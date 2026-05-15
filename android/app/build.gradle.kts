@@ -10,7 +10,7 @@ plugins {
 
 android {
     namespace = "com.rayyan.app"
-    compileSdk = flutter.compileSdkVersion
+    compileSdk = 36
     // Override NDK version to satisfy plugins (path_provider_android, sqflite_android)
     // which require NDK 27.0.12077973. This value is backward compatible and fixes
     // the build-time warning about mismatched NDK versions when building the APK.

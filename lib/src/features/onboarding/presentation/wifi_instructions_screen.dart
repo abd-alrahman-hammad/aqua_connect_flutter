@@ -36,7 +36,7 @@ class WifiInstructionsScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: Icon(Icons.close, color: isDark ? Colors.white : Colors.black87, size: 20),
-            onPressed: () => onNavigate(AppScreen.login), // Cancel onboarding
+            onPressed: () => onNavigate(AppScreen.deviceList), // Cancel onboarding, go to list
           ),
         ],
       ),
