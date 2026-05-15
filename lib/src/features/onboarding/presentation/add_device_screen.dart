@@ -144,79 +144,83 @@ class AddDeviceScreen extends ConsumerWidget {
 
             // Devices or Empty State
             if (hasDevices)
-              ...devices.map((device) => Padding(
-                padding: const EdgeInsets.only(bottom: 12.0),
-                child: Container(
-                  padding: const EdgeInsets.all(16),
-                  decoration: BoxDecoration(
-                    color: isDark ? RayyanColors.cardDark : Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    border: Border.all(
-                      color: isDark
-                          ? Colors.white.withValues(alpha: 0.05)
-                          : RayyanColors.slate200,
+              ...devices.map(
+                (device) => Padding(
+                  padding: const EdgeInsets.only(bottom: 12.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      color: isDark ? RayyanColors.cardDark : Colors.white,
+                      borderRadius: BorderRadius.circular(16),
+                      border: Border.all(
+                        color: isDark
+                            ? Colors.white.withValues(alpha: 0.05)
+                            : RayyanColors.slate200,
+                      ),
+                      boxShadow: [
+                        if (!isDark)
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.03),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                      ],
                     ),
-                    boxShadow: [
-                      if (!isDark)
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.03),
-                          blurRadius: 10,
-                          offset: const Offset(0, 4),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 48,
+                          height: 48,
+                          decoration: BoxDecoration(
+                            color: isDark
+                                ? RayyanColors.surfaceDark
+                                : RayyanColors.onboardCardLight,
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            Icons.energy_savings_leaf_outlined,
+                            color: RayyanColors.primary,
+                          ),
                         ),
-                    ],
-                  ),
-                  child: Row(
-                    children: [
-                      Container(
-                        width: 48,
-                        height: 48,
-                        decoration: BoxDecoration(
-                          color: isDark
-                              ? RayyanColors.surfaceDark
-                              : RayyanColors.onboardCardLight,
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                        child: Icon(
-                          Icons.energy_savings_leaf_outlined,
-                          color: RayyanColors.primary,
-                        ),
-                      ),
-                      const SizedBox(width: 16),
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              device.name.isNotEmpty ? device.name : 'Smart Hydroponic System',
-                              style: GoogleFonts.manrope(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                                color: isDark ? Colors.white : Colors.black87,
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                device.name.isNotEmpty
+                                    ? device.name
+                                    : 'Smart Hydroponic System',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold,
+                                  color: isDark ? Colors.white : Colors.black87,
+                                ),
                               ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              'Connected',
-                              style: GoogleFonts.manrope(
-                                fontSize: 12,
-                                color: RayyanColors.success,
-                                fontWeight: FontWeight.w600,
+                              const SizedBox(height: 4),
+                              Text(
+                                'Connected',
+                                style: GoogleFonts.manrope(
+                                  fontSize: 12,
+                                  color: RayyanColors.success,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.chevron_right,
-                          color: RayyanColors.slate400,
+                        IconButton(
+                          icon: const Icon(
+                            Icons.chevron_right,
+                            color: RayyanColors.slate400,
+                          ),
+                          onPressed: () => onNavigate(AppScreen.dashboard),
                         ),
-                        onPressed: () => onNavigate(AppScreen.dashboard),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
-              ))
+              )
             else
               // Empty State Card
               Container(
