@@ -35,31 +35,15 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final isRtl = Directionality.of(context) == TextDirection.rtl;
     // userProvider was unused and undefined
-    final bg = isDark
-        ? RayyanColors.backgroundDark
-        : RayyanColors.backgroundLight;
     final l10n = AppLocalizations.of(context)!;
 
     return RayyanPageScaffold(
       currentScreen: widget.current,
       onNavigate: widget.onNavigate,
-      backgroundColor: bg,
       child: Column(
         children: [
           Container(
             padding: const EdgeInsets.fromLTRB(24, 16, 24, 16),
-            decoration: BoxDecoration(
-              color: isDark
-                  ? Colors.white.withValues(alpha: 0.06)
-                  : Colors.white.withValues(alpha: 0.90),
-              border: Border(
-                bottom: BorderSide(
-                  color: isDark
-                      ? Colors.white.withValues(alpha: 0.05)
-                      : RayyanColors.slate200,
-                ),
-              ),
-            ),
             child: Center(
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 448),
@@ -374,6 +358,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
                     ),
                   ),
                 ),
+                const SizedBox(height: 60),
               ],
             ),
           ),
