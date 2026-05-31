@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../app/screens.dart';
-import '../../../core/services/hydroponic_database_service.dart';
+import '../application/dosing_controller.dart';
+import '../../../core/services/controls_repository.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/utils/value_formatter.dart';
 import '../../../core/widgets/rayyan_header.dart';
@@ -29,12 +30,15 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final controlsAsync = ref.watch(controlsStreamProvider);
-    final dbService = ref.read(hydroponicDatabaseServiceProvider);
+    final dbService = ref.read(controlsRepositoryProvider);
 
     final isLoading = controlsAsync.isLoading || controlsAsync.hasError;
     final autoMode = controlsAsync.valueOrNull?.autoMode ?? false;
     final ledLight = controlsAsync.valueOrNull?.ledLight ?? false;
     final isManualMode = !autoMode;
+    
+    final dosingState = ref.watch(dosingControllerProvider);
+    final dosingController = ref.read(dosingControllerProvider.notifier);
 
     return RayyanPageScaffold(
       currentScreen: widget.current,
@@ -89,90 +93,6 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                         ),
                       ],
                     ),
-                  ),
-                  const SizedBox(height: 16),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        AppLocalizations.of(context)!.hardwareModules,
-                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                          fontWeight: FontWeight.w800,
-                        ),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 10,
-                          vertical: 6,
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
-                  Wrap(
-                    spacing: 16,
-                    runSpacing: 16,
-                    children: [
-                      _ModuleCard(
-                        title: AppLocalizations.of(context)!.waterPump,
-                        icon: 'water_drop',
-                        active: controlsAsync.valueOrNull?.waterPump ?? false,
-                        isEnabled: isManualMode && !isLoading,
-                        onToggle: (value) => dbService.toggleWaterPump(value),
-                      ),
-                      _ModuleCard(
-                        title: AppLocalizations.of(context)!.ventilationFan,
-                        icon: 'mode_fan',
-                        active: controlsAsync.valueOrNull?.fan ?? false,
-                        isEnabled: isManualMode && !isLoading,
-                        onToggle: (value) => dbService.toggleFan(value),
-                      ),
-                      _ModuleCard(
-                        title: AppLocalizations.of(context)!.raiseEc,
-                        icon: 'science',
-                        active: controlsAsync.valueOrNull?.pumpEcUp ?? false,
-                        isEnabled: isManualMode && !isLoading,
-                        onToggle: (value) => dbService.togglePumpEcUp(value),
-                      ),
-                      _ModuleCard(
-                        title: AppLocalizations.of(context)!.lowerEc,
-                        icon: 'opacity',
-                        active: controlsAsync.valueOrNull?.pumpEcDown ?? false,
-                        isEnabled: isManualMode && !isLoading,
-                        onToggle: (value) => dbService.togglePumpEcDown(value),
-                      ),
-                      _ModuleCard(
-                        title: AppLocalizations.of(context)!.raisePh,
-                        // sub: 'Base Doser',
-                        icon: 'keyboard_arrow_up',
-                        active: controlsAsync.valueOrNull?.pumpPhUp ?? false,
-                        isEnabled: isManualMode && !isLoading,
-                        onToggle: (value) => dbService.togglePumpPhUp(value),
-                      ),
-                      _ModuleCard(
-                        title: AppLocalizations.of(context)!.lowerPh,
-                        icon: 'keyboard_arrow_down',
-                        active: controlsAsync.valueOrNull?.pumpPhDown ?? false,
-                        isEnabled: isManualMode && !isLoading,
-                        onToggle: (value) => dbService.togglePumpPhDown(value),
-                      ),
-                      _ModuleCard(
-                        title: AppLocalizations.of(context)!.uvLight,
-                        icon: 'flare',
-                        // Maps to ledLight as requested (UV Board)
-                        active: ledLight,
-                        isEnabled: isManualMode && !isLoading,
-                        onToggle: (value) => dbService.toggleLedLight(value),
-                      ),
-                      _ModuleCard(
-                        title: AppLocalizations.of(context)!.heatGen,
-                        icon: 'thermostat',
-                        active: controlsAsync.valueOrNull?.heater ?? false,
-                        isEnabled: isManualMode && !isLoading,
-                        onToggle: (value) => dbService.toggleHeater(value),
-                      ),
-                      // LED Light card removed as it is now UV Purifier
-                    ],
                   ),
                   const SizedBox(height: 16),
                   if (isManualMode)
@@ -245,6 +165,75 @@ class _ControlsScreenState extends ConsumerState<ControlsScreen> {
                         ],
                       ),
                     ),
+                  const SizedBox(height: 16),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        AppLocalizations.of(context)!.hardwareModules,
+                        style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                          fontWeight: FontWeight.w800,
+                        ),
+                      ),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 6,
+                        ),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 16),
+                  Wrap(
+                    spacing: 16,
+                    runSpacing: 16,
+                    children: [
+                      _ModuleCard(
+                        title: AppLocalizations.of(context)!.waterPump,
+                        icon: 'water_drop',
+                        active: controlsAsync.valueOrNull?.waterPump ?? false,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.toggleWaterPump(value),
+                      ),
+                      _ModuleCard(
+                        title: AppLocalizations.of(context)!.ventilationFan,
+                        icon: 'mode_fan',
+                        active: controlsAsync.valueOrNull?.fan ?? false,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.toggleFan(value),
+                      ),
+                      _ModuleCard(
+                        title: AppLocalizations.of(context)!.raiseEc,
+                        icon: 'science',
+                        active: dosingState.isEcUpActive,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dosingController.toggleEcUp(value),
+                      ),
+                      _ModuleCard(
+                        title: AppLocalizations.of(context)!.lowerPh,
+                        icon: 'keyboard_arrow_down',
+                        active: dosingState.isPhDownActive,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dosingController.togglePhDown(value),
+                      ),
+                      _ModuleCard(
+                        title: AppLocalizations.of(context)!.uvLight,
+                        icon: 'flare',
+                        // Maps to ledLight as requested (UV Board)
+                        active: ledLight,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.toggleLedLight(value),
+                      ),
+                      _ModuleCard(
+                        title: AppLocalizations.of(context)!.heatGen,
+                        icon: 'thermostat',
+                        active: controlsAsync.valueOrNull?.heater ?? false,
+                        isEnabled: isManualMode && !isLoading,
+                        onToggle: (value) => dbService.toggleHeater(value),
+                      ),
+                      // LED Light card removed as it is now UV Purifier
+                    ],
+                  ),
                   const SizedBox(height: 24),
                 ],
               ),

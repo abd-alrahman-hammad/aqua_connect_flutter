@@ -97,6 +97,15 @@ class FirebaseConfig {
   /// Path for EC Down Pump (0=off, 1=on)
   static const String pumpEcDownPath = '$controlsPath/pump_ec_down';
 
+  /// Root path for Dosing Control
+  static const String dosingControlPath = '/DosingControl/HYDRO_001';
+  
+  /// Path for EC Up steps
+  static const String ecUpStepsPath = '$dosingControlPath/ec_up_steps';
+  
+  /// Path for pH Down steps
+  static const String phDownStepsPath = '$dosingControlPath/ph_down_steps';
+
   /// Root path for users
   static const String usersPath = '/Users';
 
