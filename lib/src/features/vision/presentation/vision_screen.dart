@@ -40,7 +40,7 @@ class VisionScreen extends StatelessWidget {
           // Main Scrollable Content
           StreamBuilder<DatabaseEvent>(
             stream: FirebaseDatabase.instance
-                .ref('LiveMonitoring/Plant_Master')
+                .ref('LiveMonitoring/HYDRO_001')
                 .onValue,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting &&
@@ -109,8 +109,6 @@ class VisionScreen extends StatelessWidget {
 
                           // Image Area
                           _CameraFeedSection(model: model),
-
-                          const SizedBox(height: 48),
 
                           const SizedBox(height: 24),
 
@@ -190,47 +188,54 @@ class _CameraFeedSection extends StatelessWidget {
         alignment: Alignment.bottomCenter,
         children: [
           // Image Container
-          Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: RayyanColors.slate900,
-              borderRadius: BorderRadius.circular(24),
-              // Fallback gradient if there's no image
-              gradient: model.imageUrl.isEmpty
-                  ? const LinearGradient(
-                      begin: Alignment.topCenter,
-                      end: Alignment.bottomCenter,
-                      colors: [
-                        RayyanColors.visionGradientTop,
-                        RayyanColors.visionGradientMid,
-                        RayyanColors.visionGradientBottom,
-                      ],
-                      stops: [0.0, 0.5, 1.0],
-                    )
-                  : null,
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withValues(alpha: 0.15),
-                  blurRadius: 16,
-                  offset: const Offset(0, 8),
-                ),
-              ],
-            ),
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(24),
-              child: Stack(
-                children: [
-                  if (model.imageUrl.isNotEmpty)
-                    Image.network(
-                      model.imageUrl,
-                      width: double.infinity,
-                      fit: BoxFit.fitWidth,
-                    )
-                  else
-                    const SizedBox(
-                      width: double.infinity,
-                      height: 250,
-                    ),
+          AspectRatio(
+            aspectRatio: 16 / 9, // Wide camera ratio, smaller height, perfectly matches loading state
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: RayyanColors.slate900,
+                borderRadius: BorderRadius.circular(24),
+                // Fallback gradient if there's no image
+                gradient: model.imageUrl.isEmpty
+                    ? const LinearGradient(
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
+                        colors: [
+                          RayyanColors.visionGradientTop,
+                          RayyanColors.visionGradientMid,
+                          RayyanColors.visionGradientBottom,
+                        ],
+                        stops: [0.0, 0.5, 1.0],
+                      )
+                    : null,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withValues(alpha: 0.15),
+                    blurRadius: 16,
+                    offset: const Offset(0, 8),
+                  ),
+                ],
+              ),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(24),
+                child: Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    if (model.imageUrl.isNotEmpty)
+                      CachedNetworkImage(
+                        imageUrl: model.imageUrl,
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) => const Center(
+                          child: CircularProgressIndicator(
+                            color: RayyanColors.primary,
+                          ),
+                        ),
+                        errorWidget: (context, url, error) => const Center(
+                          child: Icon(Icons.broken_image, color: Colors.white54, size: 48),
+                        ),
+                      )
+                    else
+                      const SizedBox(),
                   // Live Analysis Indicator
                   Positioned(
                     bottom: 24,
@@ -246,7 +251,7 @@ class _CameraFeedSection extends StatelessWidget {
               ),
             ),
           ),
-
+          ), // Close AspectRatio
           // Camera Button Cutout Overlay
         ],
       ),

@@ -49,9 +49,9 @@ class DetectionHistoryModel {
       }
     }
 
-    // Parse timestamp using server_time
+    // Parse timestamp using last_update
     DateTime parsedTimestamp = DateTime.now();
-    final timeVal = data['server_time'] ?? data['last_update'];
+    final timeVal = data['last_update'] ?? data['server_time'];
     if (timeVal != null) {
       if (timeVal is Timestamp) {
         parsedTimestamp = timeVal.toDate();
