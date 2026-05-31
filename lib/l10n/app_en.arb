@@ -27,7 +27,17 @@
   "online": "ONLINE",
   "offline": "OFFLINE",
   "vitality": "VITALITY",
-  "welcomeBack": "WELCOME BACK,",
+  "welcomeBack": "Welcome back",
+  "stillNeedHelp": "Still need help?",
+  "specialistsAvailable": "Our specialists are available 24/7",
+  "callUs": "Call Us",
+  "callUsSub": "+1 (800) GROW-HELP",
+  "emailSupport": "Email Support",
+  "emailSupportSub": "support@techgrow.com",
+  "agriculturalExpert": "Agricultural Expert",
+  "agriculturalExpertSub": "Consult our specialists",
+  "whatsapp": "WhatsApp",
+  "whatsappSub": "Message our team",
   "alertsAndNotificationsTitle": "Alerts & Notifications",
   "dismiss": "Dismiss",
   "undo": "UNDO",
@@ -138,8 +148,6 @@
   "faqAnswer6": "Maintain water temperature between 65°F and 70°F (18°C - 21°C). Too warm can lead to root rot; too cold slows growth.",
   "faqQuestion7": "Why are my plant leaves turning yellow?",
   "faqAnswer7": "Yellow leaves often indicate nutrient deficiency (usually Nitrogen) or pH imbalance blocking nutrient uptake.",
-  "faqQuestion8": "How far apart should I space my plants?",
-  "faqAnswer8": "Space lettuce and herbs 6-8 inches apart. Larger fruiting plants like tomatoes need 12-18 inches of space.",
   "faqQuestion9": "How often should I clean the system?",
   "faqAnswer9": "Perform a full system flush and cleaning every 2-3 weeks to prevent algae buildup and salt accumulation.",
   "accountSecurityTitle": "Account Security",
@@ -332,5 +340,7 @@
         "type": "String"
       }
     }
-  }
+  },
+  "contactUsTitle": "Contact Us",
+  "contactUsSub": "Get in touch with our team"
 }

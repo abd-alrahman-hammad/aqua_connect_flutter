@@ -93,7 +93,37 @@ class AppLocalizationsEn extends AppLocalizations {
   String get vitality => 'VITALITY';
 
   @override
-  String get welcomeBack => 'WELCOME BACK,';
+  String get welcomeBack => 'Welcome back';
+
+  @override
+  String get stillNeedHelp => 'Still need help?';
+
+  @override
+  String get specialistsAvailable => 'Our specialists are available 24/7';
+
+  @override
+  String get callUs => 'Call Us';
+
+  @override
+  String get callUsSub => '+1 (800) GROW-HELP';
+
+  @override
+  String get emailSupport => 'Email Support';
+
+  @override
+  String get emailSupportSub => 'support@techgrow.com';
+
+  @override
+  String get agriculturalExpert => 'Agricultural Expert';
+
+  @override
+  String get agriculturalExpertSub => 'Consult our specialists';
+
+  @override
+  String get whatsapp => 'WhatsApp';
+
+  @override
+  String get whatsappSub => 'Message our team';
 
   @override
   String get alertsAndNotificationsTitle => 'Alerts & Notifications';
@@ -443,13 +473,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get faqAnswer7 =>
       'Yellow leaves often indicate nutrient deficiency (usually Nitrogen) or pH imbalance blocking nutrient uptake.';
-
-  @override
-  String get faqQuestion8 => 'How far apart should I space my plants?';
-
-  @override
-  String get faqAnswer8 =>
-      'Space lettuce and herbs 6-8 inches apart. Larger fruiting plants like tomatoes need 12-18 inches of space.';
 
   @override
   String get faqQuestion9 => 'How often should I clean the system?';
@@ -834,4 +857,10 @@ class AppLocalizationsEn extends AppLocalizations {
   String failedToResendCode(String error) {
     return 'Failed to resend code: $error';
   }
+
+  @override
+  String get contactUsTitle => 'Contact Us';
+
+  @override
+  String get contactUsSub => 'Get in touch with our team';
 }

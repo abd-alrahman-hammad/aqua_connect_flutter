@@ -30,6 +30,7 @@ import '../features/onboarding/presentation/device_scan_qr_screen.dart';
 import '../features/onboarding/presentation/device_manual_entry_screen.dart';
 import '../features/onboarding/presentation/device_scan_error_screen.dart';
 import '../features/onboarding/presentation/user_devices_screen.dart';
+import '../features/contact/presentation/contact_us_screen.dart';
 import 'app_controller.dart';
 import 'screens.dart';
 
@@ -143,31 +144,41 @@ class _AppRoot extends ConsumerWidget {
         page = MoreScreen(current: screen, onNavigate: controller.navigate);
       case AppScreen.userDevices:
         page = UserDevicesScreen(onNavigate: controller.navigate);
+      case AppScreen.contactUs:
+        page = ContactUsScreen(onNavigate: controller.navigate);
     }
 
-    return Scaffold(
-      body: SafeArea(
-        child: AnimatedSwitcher(
+    final canGoBack = controller.canGoBack;
+
+    return PopScope(
+      canPop: !canGoBack,
+      onPopInvokedWithResult: (didPop, _) {
+        if (!didPop && canGoBack) {
+          controller.goBack();
+        }
+      },
+      child: Scaffold(
+        body: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
           transitionBuilder: (Widget child, Animation<double> animation) {
             return FadeTransition(
               opacity: animation,
               child: SlideTransition(
-                position: Tween<Offset>(
-                  begin: const Offset(0.05, 0),
-                  end: Offset.zero,
-                ).animate(CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.easeOutCubic,
-                )),
+                position:
+                    Tween<Offset>(
+                      begin: const Offset(0.05, 0),
+                      end: Offset.zero,
+                    ).animate(
+                      CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeOutCubic,
+                      ),
+                    ),
                 child: child,
               ),
             );
           },
-          child: Container(
-            key: ValueKey<AppScreen>(screen),
-            child: page,
-          ),
+          child: Container(key: ValueKey<AppScreen>(screen), child: page),
         ),
       ),
     );

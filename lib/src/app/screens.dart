@@ -26,4 +26,5 @@ enum AppScreen {
   more,
   splash,
   userDevices,
+  contactUs,
 }

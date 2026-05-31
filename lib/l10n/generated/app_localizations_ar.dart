@@ -98,6 +98,36 @@ class AppLocalizationsAr extends AppLocalizations {
   String get welcomeBack => 'مرحبًا بعودتك،';
 
   @override
+  String get stillNeedHelp => 'هل ما زلت بحاجة للمساعدة؟';
+
+  @override
+  String get specialistsAvailable => 'المتخصصون لدينا متاحون على مدار الساعة';
+
+  @override
+  String get callUs => 'اتصل بنا';
+
+  @override
+  String get callUsSub => '+1 (800) GROW-HELP';
+
+  @override
+  String get emailSupport => 'الدعم عبر البريد';
+
+  @override
+  String get emailSupportSub => 'support@techgrow.com';
+
+  @override
+  String get agriculturalExpert => 'خبير زراعي';
+
+  @override
+  String get agriculturalExpertSub => 'استشر متخصصينا';
+
+  @override
+  String get whatsapp => 'واتساب';
+
+  @override
+  String get whatsappSub => 'راسل فريقنا';
+
+  @override
   String get alertsAndNotificationsTitle => 'التنبيهات والإشعارات';
 
   @override
@@ -446,13 +476,6 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get faqAnswer7 =>
       'غالباً ما تشير الأوراق الصفراء إلى نقص المغذيات (عادةً النيتروجين) أو اختلال الأس الهيدروجيني الذي يمنع امتصاص المغذيات.';
-
-  @override
-  String get faqQuestion8 => 'ما هي المسافة المناسبة بين النباتات؟';
-
-  @override
-  String get faqAnswer8 =>
-      'باعد بين الخس والأعشاب 15-20 سم. تحتاج النباتات المثمرة الأكبر مثل الطماطم إلى 30-45 سم.';
 
   @override
   String get faqQuestion9 => 'كم مرة يجب تنظيف النظام؟';
@@ -838,4 +861,10 @@ class AppLocalizationsAr extends AppLocalizations {
   String failedToResendCode(String error) {
     return 'فشل إعادة إرسال الرمز: $error';
   }
+
+  @override
+  String get contactUsTitle => 'تواصل معنا';
+
+  @override
+  String get contactUsSub => 'تواصل مع فريقنا';
 }

@@ -269,8 +269,68 @@ abstract class AppLocalizations {
   /// No description provided for @welcomeBack.
   ///
   /// In en, this message translates to:
-  /// **'WELCOME BACK,'**
+  /// **'Welcome back'**
   String get welcomeBack;
+
+  /// No description provided for @stillNeedHelp.
+  ///
+  /// In en, this message translates to:
+  /// **'Still need help?'**
+  String get stillNeedHelp;
+
+  /// No description provided for @specialistsAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Our specialists are available 24/7'**
+  String get specialistsAvailable;
+
+  /// No description provided for @callUs.
+  ///
+  /// In en, this message translates to:
+  /// **'Call Us'**
+  String get callUs;
+
+  /// No description provided for @callUsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'+1 (800) GROW-HELP'**
+  String get callUsSub;
+
+  /// No description provided for @emailSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Email Support'**
+  String get emailSupport;
+
+  /// No description provided for @emailSupportSub.
+  ///
+  /// In en, this message translates to:
+  /// **'support@techgrow.com'**
+  String get emailSupportSub;
+
+  /// No description provided for @agriculturalExpert.
+  ///
+  /// In en, this message translates to:
+  /// **'Agricultural Expert'**
+  String get agriculturalExpert;
+
+  /// No description provided for @agriculturalExpertSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Consult our specialists'**
+  String get agriculturalExpertSub;
+
+  /// No description provided for @whatsapp.
+  ///
+  /// In en, this message translates to:
+  /// **'WhatsApp'**
+  String get whatsapp;
+
+  /// No description provided for @whatsappSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Message our team'**
+  String get whatsappSub;
 
   /// No description provided for @alertsAndNotificationsTitle.
   ///
@@ -931,18 +991,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Yellow leaves often indicate nutrient deficiency (usually Nitrogen) or pH imbalance blocking nutrient uptake.'**
   String get faqAnswer7;
-
-  /// No description provided for @faqQuestion8.
-  ///
-  /// In en, this message translates to:
-  /// **'How far apart should I space my plants?'**
-  String get faqQuestion8;
-
-  /// No description provided for @faqAnswer8.
-  ///
-  /// In en, this message translates to:
-  /// **'Space lettuce and herbs 6-8 inches apart. Larger fruiting plants like tomatoes need 12-18 inches of space.'**
-  String get faqAnswer8;
 
   /// No description provided for @faqQuestion9.
   ///
@@ -1645,6 +1693,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Failed to resend code: {error}'**
   String failedToResendCode(String error);
+
+  /// No description provided for @contactUsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Us'**
+  String get contactUsTitle;
+
+  /// No description provided for @contactUsSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Get in touch with our team'**
+  String get contactUsSub;
 }
 
 class _AppLocalizationsDelegate
