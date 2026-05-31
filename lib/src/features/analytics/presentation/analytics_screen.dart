@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../app/screens.dart';
-import '../../../core/services/hydroponic_database_service.dart';
+import '../../../core/services/sensors_repository.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/utils/value_formatter.dart';
 import '../../../core/widgets/rayyan_header.dart';
@@ -117,6 +117,29 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
         'label': AppLocalizations.of(context)!.temperature,
       },
     ];
+
+    String trendIcon = 'trending_flat';
+    String trendText = AppLocalizations.of(context)!.stable;
+    Color trendColor = RayyanColors.nature;
+
+    if (historyAsync.hasValue && historyAsync.value != null) {
+      final history = historyAsync.value!;
+      if (history.length >= 2) {
+        final sortedKeys = history.keys.toList()..sort();
+        final lastVal = history[sortedKeys.last]!;
+        final firstVal = history[sortedKeys.first]!;
+        
+        if (lastVal > firstVal) {
+          trendIcon = 'trending_up';
+          trendText = AppLocalizations.of(context)!.rising;
+          trendColor = chartColor;
+        } else if (lastVal < firstVal) {
+          trendIcon = 'trending_down';
+          trendText = AppLocalizations.of(context)!.falling;
+          trendColor = chartColor;
+        }
+      }
+    }
 
     return RayyanPageScaffold(
       includeBottomNav: false,
@@ -274,30 +297,30 @@ class _AnalyticsScreenState extends ConsumerState<AnalyticsScreen> {
                               ),
                             ],
                           ),
-                          // Trend Indicator (Static for now, could be calculated)
+                          // Trend Indicator
                           Container(
                             padding: const EdgeInsets.symmetric(
                               horizontal: 10,
                               vertical: 6,
                             ),
                             decoration: BoxDecoration(
-                              color: RayyanColors.nature.withValues(alpha: 0.10),
+                              color: trendColor.withValues(alpha: 0.10),
                               borderRadius: BorderRadius.circular(999),
                             ),
                             child: Row(
                               mainAxisSize: MainAxisSize.min,
                               children: [
-                                const RayyanSymbol(
-                                  'trending_up',
+                                RayyanSymbol(
+                                  trendIcon,
                                   size: 16,
-                                  color: RayyanColors.nature,
+                                  color: trendColor,
                                 ),
                                 const SizedBox(width: 4),
                                 Text(
-                                  AppLocalizations.of(context)!.stable,
+                                  trendText,
                                   style: Theme.of(context).textTheme.labelMedium
                                       ?.copyWith(
-                                        color: RayyanColors.nature,
+                                        color: trendColor,
                                         fontWeight: FontWeight.w800,
                                       ),
                                 ),

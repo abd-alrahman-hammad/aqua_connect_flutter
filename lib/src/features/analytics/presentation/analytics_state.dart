@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/services/hydroponic_database_service.dart';
+import '../../../core/services/sensors_repository.dart';
 
 /// Provider to store the initial tab for the Analytics Screen.
 /// Used when navigating from Dashboard to a specific sensor chart.
@@ -44,7 +44,7 @@ final analyticsHistoryProvider = FutureProvider.family<Map<int, double>, String>
   sensorType,
 ) async {
   final range = ref.watch(analyticsTimeRangeProvider);
-  final dbService = ref.watch(hydroponicDatabaseServiceProvider);
+  final dbService = ref.watch(sensorsRepositoryProvider);
 
   // If we are in 24H mode, we might want to prioritize recent data or use a different strategy,
   // but for now, we use the same getSensorHistory method.

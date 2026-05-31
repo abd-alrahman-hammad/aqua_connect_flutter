@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../core/localization/locale_provider.dart';
-import '../../../core/services/hydroponic_database_service.dart';
+import '../../../core/services/sensors_repository.dart';
 import '../../../core/models/db/live_monitoring_model.dart';
 import '../data/notification_service.dart';
 import 'sensor_monitor_service.dart';

@@ -5,7 +5,7 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/models/hydroponic/settings_model.dart';
 import '../../../core/services/firebase_auth_service.dart';
-import '../../../core/services/hydroponic_database_service.dart';
+import '../../../core/services/controls_repository.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/utils/value_formatter.dart';
 import '../../../core/widgets/rayyan_header.dart';
@@ -116,10 +116,12 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: [
-          RayyanHeader(
-            title: AppLocalizations.of(context)!.accountSecurityTitle,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            RayyanHeader(
+              title: AppLocalizations.of(context)!.accountSecurityTitle,
             onBack: () => widget.onNavigate(AppScreen.settings),
           ),
           Expanded(
@@ -259,6 +261,7 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
           ),
         ],
       ),
+      ),
     );
   }
 }
@@ -317,13 +320,15 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final settingsAsync = ref.watch(settingsStreamProvider);
-    final dbService = ref.read(hydroponicDatabaseServiceProvider);
+    final dbService = ref.read(controlsRepositoryProvider);
 
     return Scaffold(
-      body: Column(
-        children: [
-          RayyanHeader(
-            title: AppLocalizations.of(context)!.operatingThresholdsTitle,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            RayyanHeader(
+              title: AppLocalizations.of(context)!.operatingThresholdsTitle,
             onBack: () => widget.onNavigate(AppScreen.settings),
           ),
           Expanded(
@@ -438,6 +443,7 @@ class _ThresholdsScreenState extends ConsumerState<ThresholdsScreen> {
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -623,10 +629,12 @@ class NotificationSettingsScreen extends ConsumerWidget {
     final prefs = ref.watch(notificationPreferencesProvider);
 
     return Scaffold(
-      body: Column(
-        children: [
-          RayyanHeader(
-            title: AppLocalizations.of(context)!.notificationSettingsTitle,
+      body: SafeArea(
+        bottom: false,
+        child: Column(
+          children: [
+            RayyanHeader(
+              title: AppLocalizations.of(context)!.notificationSettingsTitle,
             onBack: () => onNavigate(AppScreen.settings),
           ),
           Expanded(
@@ -707,6 +715,7 @@ class NotificationSettingsScreen extends ConsumerWidget {
             ),
           ),
         ],
+      ),
       ),
     );
   }
