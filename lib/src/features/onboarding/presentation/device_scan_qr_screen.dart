@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:mobile_scanner/mobile_scanner.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
@@ -74,8 +75,8 @@ class _DeviceScanQrScreenState extends ConsumerState<DeviceScanQrScreen> {
             break;
           case DeviceRegistrationStatus.notFound:
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('Invalid QR code. Please try again.'),
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.invalidQrCode),
                 backgroundColor: RayyanColors.critical,
                 behavior: SnackBarBehavior.floating,
               ),
@@ -83,8 +84,8 @@ class _DeviceScanQrScreenState extends ConsumerState<DeviceScanQrScreen> {
             break;
           case DeviceRegistrationStatus.alreadyRegistered:
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('This device is already registered to another user.'),
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.deviceAlreadyRegistered),
                 backgroundColor: RayyanColors.critical,
                 behavior: SnackBarBehavior.floating,
               ),
@@ -92,8 +93,8 @@ class _DeviceScanQrScreenState extends ConsumerState<DeviceScanQrScreen> {
             break;
           case DeviceRegistrationStatus.error:
             ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(
-                content: Text('An error occurred. Please try again.'),
+              SnackBar(
+                content: Text(AppLocalizations.of(context)!.generalError),
                 backgroundColor: RayyanColors.critical,
                 behavior: SnackBarBehavior.floating,
               ),
@@ -103,8 +104,8 @@ class _DeviceScanQrScreenState extends ConsumerState<DeviceScanQrScreen> {
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(
-              content: Text('An unexpected error occurred.'),
+            SnackBar(
+              content: Text(AppLocalizations.of(context)!.unexpectedError),
               backgroundColor: RayyanColors.critical,
               behavior: SnackBarBehavior.floating,
             ),
@@ -122,6 +123,7 @@ class _DeviceScanQrScreenState extends ConsumerState<DeviceScanQrScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.black, // Scanner usually looks best with black background
       extendBodyBehindAppBar: true,
@@ -138,7 +140,7 @@ class _DeviceScanQrScreenState extends ConsumerState<DeviceScanQrScreen> {
           onPressed: () => widget.onNavigate(AppScreen.qrInstructions),
         ),
         title: Text(
-          'Connect Device',
+          l10n.connectDevice,
           style: GoogleFonts.manrope(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -222,7 +224,7 @@ class _DeviceScanQrScreenState extends ConsumerState<DeviceScanQrScreen> {
                             ),
                             child: Center(
                               child: Text(
-                                'SCAN',
+                                l10n.scanQr,
                                 style: GoogleFonts.manrope(
                                   fontSize: 12,
                                   fontWeight: FontWeight.bold,
@@ -240,7 +242,7 @@ class _DeviceScanQrScreenState extends ConsumerState<DeviceScanQrScreen> {
                               color: Colors.transparent,
                               child: Center(
                                 child: Text(
-                                  'MANUAL',
+                                  l10n.manualEntry,
                                   style: GoogleFonts.manrope(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
@@ -278,7 +280,7 @@ class _DeviceScanQrScreenState extends ConsumerState<DeviceScanQrScreen> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Scan the QR code',
+                        l10n.scanQrTitle,
                         style: GoogleFonts.manrope(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -289,7 +291,7 @@ class _DeviceScanQrScreenState extends ConsumerState<DeviceScanQrScreen> {
                       Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 48.0),
                         child: Text(
-                          'Position the code within the frame for automatic detection.',
+                          l10n.scanQrSubtitle,
                           textAlign: TextAlign.center,
                           style: GoogleFonts.manrope(
                             fontSize: 12,

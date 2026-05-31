@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
@@ -37,7 +38,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
     final rawSerialNumber = _controller.text.trim();
     if (rawSerialNumber.length < 12) {
       setState(() {
-        _errorMessage = 'Please enter a valid 12-character serial number.';
+        _errorMessage = AppLocalizations.of(context)!.invalidSerialNumberLength;
       });
       return;
     }
@@ -54,7 +55,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
       if (currentUserId == null) {
         setState(() {
           _isProcessing = false;
-          _errorMessage = 'User not authenticated.';
+          _errorMessage = AppLocalizations.of(context)!.userNotAuthenticated;
         });
         return;
       }
@@ -70,24 +71,24 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
           break;
         case DeviceRegistrationStatus.notFound:
           setState(() {
-            _errorMessage = 'Invalid serial number. Please check and try again.';
+            _errorMessage = AppLocalizations.of(context)!.invalidSerialNumber;
           });
           break;
         case DeviceRegistrationStatus.alreadyRegistered:
           setState(() {
-            _errorMessage = 'This device is already registered to another user.';
+            _errorMessage = AppLocalizations.of(context)!.deviceAlreadyRegistered;
           });
           break;
         case DeviceRegistrationStatus.error:
           setState(() {
-            _errorMessage = 'An error occurred during registration. Please try again.';
+            _errorMessage = AppLocalizations.of(context)!.registrationError;
           });
           break;
       }
     } catch (e) {
       if (mounted) {
         setState(() {
-          _errorMessage = 'An unexpected error occurred. Please try again.';
+          _errorMessage = AppLocalizations.of(context)!.unexpectedError;
         });
       }
     } finally {
@@ -101,6 +102,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Scaffold(
@@ -120,7 +122,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
           onPressed: () => widget.onNavigate(AppScreen.deviceScanQr),
         ),
         title: Text(
-          'Connect Device',
+          l10n.connectDevice,
           style: GoogleFonts.manrope(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -177,7 +179,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                                         color: Colors.transparent,
                                         child: Center(
                                           child: Text(
-                                            'SCAN',
+                                            l10n.scanQr,
                                             style: GoogleFonts.manrope(
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold,
@@ -210,7 +212,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                                       ),
                                       child: Center(
                                         child: Text(
-                                          'MANUAL',
+                                          l10n.manualEntry,
                                           style: GoogleFonts.manrope(
                                             fontSize: 12,
                                             fontWeight: FontWeight.bold,
@@ -232,7 +234,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                               horizontal: 24.0,
                             ),
                             child: Text(
-                              'Enter the number of your\nappliance.',
+                              l10n.enterApplianceNumber,
                               style: GoogleFonts.manrope(
                                 fontSize: 24,
                                 fontWeight: FontWeight.w800,
@@ -250,7 +252,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                               horizontal: 24.0,
                             ),
                             child: Text(
-                              'Please type the serial code found on the sticker of your hydroponic unit.',
+                              l10n.typeSerialCode,
                               style: GoogleFonts.manrope(
                                 fontSize: 12,
                                 color: isDark ? Colors.white60 : Colors.black54,
@@ -268,7 +270,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                             child: Row(
                               children: [
                                 Text(
-                                  'Where can I find the serial number?',
+                                  l10n.whereIsSerialNumber,
                                   style: GoogleFonts.manrope(
                                     fontSize: 12,
                                     fontWeight: FontWeight.bold,
@@ -308,7 +310,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                                   ),
                                 const SizedBox(height: 16),
                                 Text(
-                                  'Format: XX:XX:XX:XX:XX:XX',
+                                  l10n.macAddressFormat,
                                   style: GoogleFonts.manrope(
                                     fontSize: 12,
                                     color: isDark ? Colors.white30 : Colors.black38,
@@ -352,7 +354,7 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                                         mainAxisAlignment: MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            'CONFIRM',
+                                            l10n.confirm,
                                             style: GoogleFonts.manrope(
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold,

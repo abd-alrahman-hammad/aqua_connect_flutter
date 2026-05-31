@@ -869,4 +869,165 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get falling => 'Falling';
+
+  @override
+  String get onboardingTitle => 'Where AI Meets Smart Farming';
+
+  @override
+  String get onboardingStartBtn => 'Start with Rayyan';
+
+  @override
+  String get onboardingVersion => 'V 2.4 SMART FARMING';
+
+  @override
+  String get yourAppliances => 'YOUR APPLIANCES';
+
+  @override
+  String get viewAll => 'View all';
+
+  @override
+  String get smartHydroponicSystem => 'Smart Hydroponic System';
+
+  @override
+  String get connected => 'Connected';
+
+  @override
+  String get disconnected => 'Disconnected';
+
+  @override
+  String get noAppliancesAdded => 'No appliances added';
+
+  @override
+  String get startJourney =>
+      'Start your hydroponic journey by\nconnecting your first system.';
+
+  @override
+  String get addYourAppliances => 'ADD YOUR APPLIANCES';
+
+  @override
+  String get ourProducts => 'OUR PRODUCTS';
+
+  @override
+  String get smartHydroponics => 'SMART HYDROPONICS';
+
+  @override
+  String get projectDescription =>
+      'Transform your home into a smart growing environment with our advanced hydroponic system. Designed for efficient water usage, automated monitoring, and healthy plant growth, it delivers fresh produce through modern IoT-powered farming technology.';
+
+  @override
+  String get selectCategory => 'Select Category';
+
+  @override
+  String get searchForDevice => 'Search for device...';
+
+  @override
+  String get selectApplianceType => 'SELECT APPLIANCE TYPE';
+
+  @override
+  String get nextBtn => 'NEXT';
+
+  @override
+  String get verticalFarmingUnit => 'Vertical Farming Unit';
+
+  @override
+  String get smartGrowTent => 'Smart Grow Tent';
+
+  @override
+  String get automatedGreenhouse => 'Automated Greenhouse';
+
+  @override
+  String get aquaponicsSystem => 'Aquaponics System';
+
+  @override
+  String get indoorHerbGarden => 'Indoor Herb Garden';
+
+  @override
+  String get smartComposter => 'Smart Composter';
+
+  @override
+  String get smartIrrigationHub => 'Smart Irrigation Hub';
+
+  @override
+  String get getReadyWifi => 'Get ready! 1/2';
+
+  @override
+  String get connectToGrow => 'Connect to Grow';
+
+  @override
+  String get wifiInstructionsSubtitle =>
+      'To properly add your appliance, make sure you are connected to a home network.';
+
+  @override
+  String get okNext => 'OK, NEXT';
+
+  @override
+  String get getReadyQr => 'Get ready! 2/2';
+
+  @override
+  String get qrInstructionsSubtitle =>
+      'Stay close to your appliance and get ready to scan the QR code.';
+
+  @override
+  String get okFound => 'OK, FOUND';
+
+  @override
+  String get connectDevice => 'Connect Device';
+
+  @override
+  String get scanQr => 'SCAN';
+
+  @override
+  String get manualEntry => 'MANUAL';
+
+  @override
+  String get scanQrTitle => 'Scan the QR code';
+
+  @override
+  String get scanQrSubtitle =>
+      'Position the code within the frame for automatic detection.';
+
+  @override
+  String get enterApplianceNumber => 'Enter the number of your\nappliance.';
+
+  @override
+  String get typeSerialCode =>
+      'Please type the serial code found on the sticker of your hydroponic unit.';
+
+  @override
+  String get whereIsSerialNumber => 'Where can I find the serial number?';
+
+  @override
+  String get confirm => 'CONFIRM';
+
+  @override
+  String get invalidQrCode => 'Invalid QR code. Please try again.';
+
+  @override
+  String get deviceAlreadyRegistered =>
+      'This device is already registered to another user.';
+
+  @override
+  String get generalError => 'An error occurred. Please try again.';
+
+  @override
+  String get unexpectedError =>
+      'An unexpected error occurred. Please try again.';
+
+  @override
+  String get macAddressFormat => 'Format: XX:XX:XX:XX:XX:XX';
+
+  @override
+  String get invalidSerialNumberLength =>
+      'Please enter a valid 12-character serial number.';
+
+  @override
+  String get userNotAuthenticated => 'User not authenticated.';
+
+  @override
+  String get invalidSerialNumber =>
+      'Invalid serial number. Please check and try again.';
+
+  @override
+  String get registrationError =>
+      'An error occurred during registration. Please try again.';
 }

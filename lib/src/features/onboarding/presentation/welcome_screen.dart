@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/theme/rayyan_colors.dart';
 
@@ -13,6 +14,7 @@ class WelcomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: Stack(
         fit: StackFit.expand,
@@ -83,7 +85,7 @@ class WelcomeScreen extends ConsumerWidget {
 
                   // Title
                   Text(
-                    'Rayyan',
+                    l10n.rayyanTitle,
                     style: GoogleFonts.manrope(
                       fontSize: 48,
                       fontWeight: FontWeight.w800,
@@ -95,7 +97,7 @@ class WelcomeScreen extends ConsumerWidget {
 
                   // Subtitle
                   Text(
-                    'Intelligence for the Living Lab',
+                    l10n.onboardingTitle,
                     style: GoogleFonts.manrope(
                       fontSize: 16,
                       fontWeight: FontWeight.w500,
@@ -120,7 +122,7 @@ class WelcomeScreen extends ConsumerWidget {
                         ),
                       ),
                       child: Text(
-                        'Start with Rayyan',
+                        l10n.onboardingStartBtn,
                         style: GoogleFonts.manrope(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
@@ -133,7 +135,7 @@ class WelcomeScreen extends ConsumerWidget {
 
                   // Version Text
                   Text(
-                    'V 2.0 PRECISION GROWTH',
+                    l10n.onboardingVersion,
                     style: GoogleFonts.manrope(
                       fontSize: 10,
                       fontWeight: FontWeight.w600,

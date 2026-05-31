@@ -873,4 +873,162 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get falling => 'تنخفض';
+
+  @override
+  String get onboardingTitle => 'حيث يلتقي الذكاء الاصطناعي بالزراعة الذكية';
+
+  @override
+  String get onboardingStartBtn => 'ابدأ مع ريان';
+
+  @override
+  String get onboardingVersion => 'V 2.4 الزراعة الذكية';
+
+  @override
+  String get yourAppliances => 'أجهزتك';
+
+  @override
+  String get viewAll => 'عرض الكل';
+
+  @override
+  String get smartHydroponicSystem => 'نظام الزراعة المائية الذكي';
+
+  @override
+  String get connected => 'متصل';
+
+  @override
+  String get disconnected => 'غير متصل';
+
+  @override
+  String get noAppliancesAdded => 'لم تتم إضافة أي أجهزة';
+
+  @override
+  String get startJourney =>
+      'ابدأ رحلة الزراعة المائية\nعن طريق توصيل نظامك الأول.';
+
+  @override
+  String get addYourAppliances => 'أضف أجهزتك';
+
+  @override
+  String get ourProducts => 'منتجاتنا';
+
+  @override
+  String get smartHydroponics => 'الزراعة المائية الذكية';
+
+  @override
+  String get projectDescription =>
+      'حوّل منزلك إلى بيئة نمو ذكية مع نظام الزراعة المائية المتطور الخاص بنا. مصمم للاستخدام الفعال للمياه، والمراقبة الآلية، ونمو النباتات الصحي، حيث يقدم منتجات طازجة من خلال تكنولوجيا الزراعة الحديثة المدعومة بإنترنت الأشياء.';
+
+  @override
+  String get selectCategory => 'اختر الفئة';
+
+  @override
+  String get searchForDevice => 'ابحث عن جهاز...';
+
+  @override
+  String get selectApplianceType => 'اختر نوع الجهاز';
+
+  @override
+  String get nextBtn => 'التالي';
+
+  @override
+  String get verticalFarmingUnit => 'وحدة الزراعة العمودية';
+
+  @override
+  String get smartGrowTent => 'خيمة النمو الذكية';
+
+  @override
+  String get automatedGreenhouse => 'صوبة زراعية آلية';
+
+  @override
+  String get aquaponicsSystem => 'نظام الأكوابونيك';
+
+  @override
+  String get indoorHerbGarden => 'حديقة الأعشاب الداخلية';
+
+  @override
+  String get smartComposter => 'سماد ذكي';
+
+  @override
+  String get smartIrrigationHub => 'مركز الري الذكي';
+
+  @override
+  String get getReadyWifi => 'استعد! 1/2';
+
+  @override
+  String get connectToGrow => 'اتصل لتنمو';
+
+  @override
+  String get wifiInstructionsSubtitle =>
+      'لإضافة جهازك بشكل صحيح، تأكد من اتصالك بشبكة منزلية.';
+
+  @override
+  String get okNext => 'حسناً، التالي';
+
+  @override
+  String get getReadyQr => 'استعد! 2/2';
+
+  @override
+  String get qrInstructionsSubtitle =>
+      'ابقَ قريباً من جهازك واستعد لمسح رمز الاستجابة السريعة (QR).';
+
+  @override
+  String get okFound => 'حسناً، وجدته';
+
+  @override
+  String get connectDevice => 'توصيل الجهاز';
+
+  @override
+  String get scanQr => 'مسح';
+
+  @override
+  String get manualEntry => 'يدوي';
+
+  @override
+  String get scanQrTitle => 'امسح رمز الاستجابة السريعة';
+
+  @override
+  String get scanQrSubtitle => 'ضع الرمز داخل الإطار للتعرف التلقائي.';
+
+  @override
+  String get enterApplianceNumber => 'أدخل رقم\nجهازك.';
+
+  @override
+  String get typeSerialCode =>
+      'يرجى كتابة الرمز التسلسلي الموجود على ملصق وحدة الزراعة المائية الخاصة بك.';
+
+  @override
+  String get whereIsSerialNumber => 'أين يمكنني العثور على الرقم التسلسلي؟';
+
+  @override
+  String get confirm => 'تأكيد';
+
+  @override
+  String get invalidQrCode => 'رمز QR غير صالح. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get deviceAlreadyRegistered => 'هذا الجهاز مسجل بالفعل لمستخدم آخر.';
+
+  @override
+  String get generalError => 'حدث خطأ. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get unexpectedError => 'حدث خطأ غير متوقع. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get macAddressFormat => 'الصيغة: XX:XX:XX:XX:XX:XX';
+
+  @override
+  String get invalidSerialNumberLength =>
+      'يرجى إدخال رقم تسلسلي صحيح مكون من 12 رمزاً.';
+
+  @override
+  String get userNotAuthenticated => 'المستخدم غير مصادق عليه.';
+
+  @override
+  String get invalidSerialNumber =>
+      'رقم تسلسلي غير صالح. يرجى التحقق والمحاولة مرة أخرى.';
+
+  @override
+  String get registrationError =>
+      'حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى.';
 }

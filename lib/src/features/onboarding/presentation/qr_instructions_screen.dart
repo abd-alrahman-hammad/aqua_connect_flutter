@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
@@ -13,6 +14,7 @@ class QrInstructionsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
     return Scaffold(
@@ -26,7 +28,7 @@ class QrInstructionsScreen extends ConsumerWidget {
           onPressed: () => onNavigate(AppScreen.wifiInstructions),
         ),
         title: Text(
-          'Get ready! 2/2',
+          l10n.getReadyQr,
           style: GoogleFonts.manrope(
             fontSize: 14,
             fontWeight: FontWeight.bold,
@@ -80,7 +82,7 @@ class QrInstructionsScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 48.0),
             child: Text(
-              'Stay close to your appliance and get ready to scan the QR code.',
+              l10n.qrInstructionsSubtitle,
               textAlign: TextAlign.center,
               style: GoogleFonts.manrope(
                 fontSize: 14,
@@ -113,7 +115,7 @@ class QrInstructionsScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'OK, FOUND',
+                      l10n.okFound,
                       style: GoogleFonts.manrope(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
@@ -35,7 +36,49 @@ class _DeviceListScreenState extends ConsumerState<DeviceListScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    final translatedDevices = _devices.map((device) {
+      String translatedName = device['name'];
+      switch (device['name']) {
+        case 'Smart Hydroponic System':
+          translatedName = l10n.smartHydroponicSystem;
+          break;
+        case 'Vertical Farming Unit':
+          translatedName = l10n.verticalFarmingUnit;
+          break;
+        case 'Smart Grow Tent':
+          translatedName = l10n.smartGrowTent;
+          break;
+        case 'Automated Greenhouse':
+          translatedName = l10n.automatedGreenhouse;
+          break;
+        case 'Aquaponics System':
+          translatedName = l10n.aquaponicsSystem;
+          break;
+        case 'Indoor Herb Garden':
+          translatedName = l10n.indoorHerbGarden;
+          break;
+        case 'Smart Composter':
+          translatedName = l10n.smartComposter;
+          break;
+        case 'Smart Irrigation Hub':
+          translatedName = l10n.smartIrrigationHub;
+          break;
+      }
+      return {
+        'id': device['name'],
+        'name': translatedName,
+        'icon': device['icon'],
+      };
+    }).toList();
+
+    // If _selectedDevice is using the English name or hasn't been set properly
+    final selectedDeviceData = translatedDevices.firstWhere(
+      (d) => d['id'] == _selectedDevice,
+      orElse: () => translatedDevices.first,
+    );
 
     return Scaffold(
       backgroundColor: isDark
@@ -54,7 +97,7 @@ class _DeviceListScreenState extends ConsumerState<DeviceListScreen> {
           onPressed: () => widget.onNavigate(AppScreen.addDevice),
         ),
         title: Text(
-          'Select Category',
+          l10n.selectCategory,
           style: GoogleFonts.manrope(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -81,7 +124,7 @@ class _DeviceListScreenState extends ConsumerState<DeviceListScreen> {
                   color: isDark ? Colors.white : Colors.black87,
                 ),
                 decoration: InputDecoration(
-                  hintText: 'Search for device...',
+                  hintText: l10n.searchForDevice,
                   hintStyle: GoogleFonts.manrope(
                     color: isDark ? Colors.white54 : Colors.black45,
                     fontSize: 14,
@@ -104,7 +147,7 @@ class _DeviceListScreenState extends ConsumerState<DeviceListScreen> {
               vertical: 8.0,
             ),
             child: Text(
-              'SELECT APPLIANCE TYPE',
+              l10n.selectApplianceType,
               style: GoogleFonts.manrope(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
@@ -120,11 +163,11 @@ class _DeviceListScreenState extends ConsumerState<DeviceListScreen> {
                 horizontal: 24.0,
                 vertical: 8.0,
               ),
-              itemCount: _devices.length,
+              itemCount: translatedDevices.length,
               separatorBuilder: (context, index) => const SizedBox(height: 12),
               itemBuilder: (context, index) {
-                final device = _devices[index];
-                final isSelected = _selectedDevice == device['name'];
+                final device = translatedDevices[index];
+                final isSelected = selectedDeviceData['id'] == device['id'];
 
                 return DeviceListItem(
                   device: device,
@@ -132,7 +175,7 @@ class _DeviceListScreenState extends ConsumerState<DeviceListScreen> {
                   isDark: isDark,
                   onTap: () {
                     setState(() {
-                      _selectedDevice = device['name'] as String;
+                      _selectedDevice = device['id'] as String;
                     });
                   },
                 );
@@ -147,10 +190,14 @@ class _DeviceListScreenState extends ConsumerState<DeviceListScreen> {
               width: double.infinity,
               height: 56,
               child: ElevatedButton(
-                onPressed: () => widget.onNavigate(AppScreen.wifiInstructions),
+                onPressed: _selectedDevice == 'Smart Hydroponic System'
+                    ? () => widget.onNavigate(AppScreen.wifiInstructions)
+                    : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: RayyanColors.primary,
                   foregroundColor: Colors.white,
+                  disabledBackgroundColor: RayyanColors.primary.withValues(alpha: 0.3),
+                  disabledForegroundColor: Colors.white.withValues(alpha: 0.5),
                   elevation: 0,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(12),
@@ -160,7 +207,7 @@ class _DeviceListScreenState extends ConsumerState<DeviceListScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'NEXT',
+                      l10n.nextBtn,
                       style: GoogleFonts.manrope(
                         fontSize: 14,
                         fontWeight: FontWeight.bold,

@@ -68,6 +68,7 @@ class AddDeviceScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final userDevicesAsync = ref.watch(userDevicesProvider);
     final devices = userDevicesAsync.valueOrNull ?? [];
@@ -89,7 +90,7 @@ class AddDeviceScreen extends ConsumerWidget {
           onPressed: () => _confirmLogout(context, ref),
         ),
         title: Text(
-          'Rayyan',
+          l10n.rayyanTitle,
           style: GoogleFonts.manrope(
             fontWeight: FontWeight.w800,
             color: isDark ? Colors.white : Colors.black87,
@@ -121,7 +122,7 @@ class AddDeviceScreen extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'YOUR APPLIANCES',
+                  l10n.yourAppliances,
                   style: GoogleFonts.manrope(
                     fontSize: 10,
                     fontWeight: FontWeight.w700,
@@ -132,7 +133,7 @@ class AddDeviceScreen extends ConsumerWidget {
                 GestureDetector(
                   onTap: () => onNavigate(AppScreen.userDevices),
                   child: Text(
-                    'View all',
+                    l10n.viewAll,
                     style: GoogleFonts.manrope(
                       fontSize: 10,
                       fontWeight: FontWeight.w700,
@@ -194,7 +195,7 @@ class AddDeviceScreen extends ConsumerWidget {
                               Text(
                                 device.name.isNotEmpty
                                     ? device.name
-                                    : 'Smart Hydroponic System',
+                                    : l10n.smartHydroponicSystem,
                                 style: GoogleFonts.manrope(
                                   fontSize: 14,
                                   fontWeight: FontWeight.bold,
@@ -203,7 +204,7 @@ class AddDeviceScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                isConnected ? 'Connected' : 'Disconnected',
+                                isConnected ? l10n.connected : l10n.disconnected,
                                 style: GoogleFonts.manrope(
                                   fontSize: 12,
                                   color: isConnected ? RayyanColors.success : RayyanColors.error,
@@ -264,7 +265,7 @@ class AddDeviceScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 24),
                     Text(
-                      'No appliances added',
+                      l10n.noAppliancesAdded,
                       style: GoogleFonts.manrope(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,
@@ -273,7 +274,7 @@ class AddDeviceScreen extends ConsumerWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      'Start your hydroponic journey by\nconnecting your first system.',
+                      l10n.startJourney,
                       textAlign: TextAlign.center,
                       style: GoogleFonts.manrope(
                         fontSize: 12,
@@ -296,7 +297,7 @@ class AddDeviceScreen extends ConsumerWidget {
                           ),
                         ),
                         child: Text(
-                          'ADD YOUR APPLIANCES',
+                          l10n.addYourAppliances,
                           style: GoogleFonts.manrope(
                             fontSize: 12,
                             fontWeight: FontWeight.w700,
@@ -313,7 +314,7 @@ class AddDeviceScreen extends ConsumerWidget {
 
             // OUR PROJECT Header
             Text(
-              'OUR PROJECT',
+              l10n.ourProducts,
               style: GoogleFonts.manrope(
                 fontSize: 10,
                 fontWeight: FontWeight.w700,
@@ -361,7 +362,7 @@ class AddDeviceScreen extends ConsumerWidget {
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Text(
-                            'SMART HYDROPONICS',
+                            l10n.smartHydroponics,
                             style: GoogleFonts.manrope(
                               fontSize: 10,
                               fontWeight: FontWeight.bold,
@@ -372,7 +373,7 @@ class AddDeviceScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 12),
                         Text(
-                          'Smart Hydroponic System',
+                          l10n.smartHydroponicSystem,
                           style: GoogleFonts.manrope(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -381,7 +382,7 @@ class AddDeviceScreen extends ConsumerWidget {
                         ),
                         const SizedBox(height: 8),
                         Text(
-                          'Transform your home into a smart growing environment with our advanced hydroponic system. Designed for efficient water usage, automated monitoring, and healthy plant growth, it delivers fresh produce through modern IoT-powered farming technology.',
+                          l10n.projectDescription,
                           style: GoogleFonts.manrope(
                             fontSize: 14,
                             color: isDark ? Colors.white60 : Colors.black54,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/models/db/device_model.dart';
 import '../../../core/services/firestore_database_service.dart';
@@ -15,6 +16,7 @@ class UserDevicesScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final userDevicesAsync = ref.watch(userDevicesProvider);
     final devices = userDevicesAsync.valueOrNull ?? [];
@@ -37,7 +39,7 @@ class UserDevicesScreen extends ConsumerWidget {
           onPressed: () => onNavigate(AppScreen.addDevice),
         ),
         title: Text(
-          'Your Appliances',
+          l10n.yourAppliances,
           style: GoogleFonts.manrope(
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -59,6 +61,7 @@ class UserDevicesScreen extends ConsumerWidget {
     bool isDark,
     List<DeviceModel> devices,
   ) {
+    final l10n = AppLocalizations.of(context)!;
     return ListView(
       children: devices
           .map(
@@ -107,7 +110,7 @@ class UserDevicesScreen extends ConsumerWidget {
                           Text(
                             device.name.isNotEmpty
                                 ? device.name
-                                : 'Smart Hydroponic System',
+                                : l10n.smartHydroponicSystem,
                             style: GoogleFonts.manrope(
                               fontSize: 14,
                               fontWeight: FontWeight.bold,
@@ -116,7 +119,7 @@ class UserDevicesScreen extends ConsumerWidget {
                           ),
                           const SizedBox(height: 4),
                           Text(
-                            'Connected',
+                            l10n.connected,
                             style: GoogleFonts.manrope(
                               fontSize: 12,
                               color: RayyanColors.success,
@@ -143,6 +146,7 @@ class UserDevicesScreen extends ConsumerWidget {
   }
 
   Widget _buildEmptyState(BuildContext context, bool isDark) {
+    final l10n = AppLocalizations.of(context)!;
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(32),
@@ -180,7 +184,7 @@ class UserDevicesScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 24),
           Text(
-            'No appliances added',
+            l10n.noAppliancesAdded,
             style: GoogleFonts.manrope(
               fontSize: 18,
               fontWeight: FontWeight.bold,
@@ -189,7 +193,7 @@ class UserDevicesScreen extends ConsumerWidget {
           ),
           const SizedBox(height: 8),
           Text(
-            'Start your hydroponic journey by\nconnecting your first system.',
+            l10n.startJourney,
             textAlign: TextAlign.center,
             style: GoogleFonts.manrope(
               fontSize: 12,
@@ -212,7 +216,7 @@ class UserDevicesScreen extends ConsumerWidget {
                 ),
               ),
               child: Text(
-                'ADD YOUR APPLIANCES',
+                l10n.addYourAppliances,
                 style: GoogleFonts.manrope(
                   fontSize: 12,
                   fontWeight: FontWeight.w700,

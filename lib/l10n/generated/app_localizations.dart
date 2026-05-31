@@ -1717,6 +1717,306 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Falling'**
   String get falling;
+
+  /// No description provided for @onboardingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Where AI Meets Smart Farming'**
+  String get onboardingTitle;
+
+  /// No description provided for @onboardingStartBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'Start with Rayyan'**
+  String get onboardingStartBtn;
+
+  /// No description provided for @onboardingVersion.
+  ///
+  /// In en, this message translates to:
+  /// **'V 2.4 SMART FARMING'**
+  String get onboardingVersion;
+
+  /// No description provided for @yourAppliances.
+  ///
+  /// In en, this message translates to:
+  /// **'YOUR APPLIANCES'**
+  String get yourAppliances;
+
+  /// No description provided for @viewAll.
+  ///
+  /// In en, this message translates to:
+  /// **'View all'**
+  String get viewAll;
+
+  /// No description provided for @smartHydroponicSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Hydroponic System'**
+  String get smartHydroponicSystem;
+
+  /// No description provided for @connected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get connected;
+
+  /// No description provided for @disconnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Disconnected'**
+  String get disconnected;
+
+  /// No description provided for @noAppliancesAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'No appliances added'**
+  String get noAppliancesAdded;
+
+  /// No description provided for @startJourney.
+  ///
+  /// In en, this message translates to:
+  /// **'Start your hydroponic journey by\nconnecting your first system.'**
+  String get startJourney;
+
+  /// No description provided for @addYourAppliances.
+  ///
+  /// In en, this message translates to:
+  /// **'ADD YOUR APPLIANCES'**
+  String get addYourAppliances;
+
+  /// No description provided for @ourProducts.
+  ///
+  /// In en, this message translates to:
+  /// **'OUR PRODUCTS'**
+  String get ourProducts;
+
+  /// No description provided for @smartHydroponics.
+  ///
+  /// In en, this message translates to:
+  /// **'SMART HYDROPONICS'**
+  String get smartHydroponics;
+
+  /// No description provided for @projectDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Transform your home into a smart growing environment with our advanced hydroponic system. Designed for efficient water usage, automated monitoring, and healthy plant growth, it delivers fresh produce through modern IoT-powered farming technology.'**
+  String get projectDescription;
+
+  /// No description provided for @selectCategory.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Category'**
+  String get selectCategory;
+
+  /// No description provided for @searchForDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Search for device...'**
+  String get searchForDevice;
+
+  /// No description provided for @selectApplianceType.
+  ///
+  /// In en, this message translates to:
+  /// **'SELECT APPLIANCE TYPE'**
+  String get selectApplianceType;
+
+  /// No description provided for @nextBtn.
+  ///
+  /// In en, this message translates to:
+  /// **'NEXT'**
+  String get nextBtn;
+
+  /// No description provided for @verticalFarmingUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'Vertical Farming Unit'**
+  String get verticalFarmingUnit;
+
+  /// No description provided for @smartGrowTent.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Grow Tent'**
+  String get smartGrowTent;
+
+  /// No description provided for @automatedGreenhouse.
+  ///
+  /// In en, this message translates to:
+  /// **'Automated Greenhouse'**
+  String get automatedGreenhouse;
+
+  /// No description provided for @aquaponicsSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'Aquaponics System'**
+  String get aquaponicsSystem;
+
+  /// No description provided for @indoorHerbGarden.
+  ///
+  /// In en, this message translates to:
+  /// **'Indoor Herb Garden'**
+  String get indoorHerbGarden;
+
+  /// No description provided for @smartComposter.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Composter'**
+  String get smartComposter;
+
+  /// No description provided for @smartIrrigationHub.
+  ///
+  /// In en, this message translates to:
+  /// **'Smart Irrigation Hub'**
+  String get smartIrrigationHub;
+
+  /// No description provided for @getReadyWifi.
+  ///
+  /// In en, this message translates to:
+  /// **'Get ready! 1/2'**
+  String get getReadyWifi;
+
+  /// No description provided for @connectToGrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect to Grow'**
+  String get connectToGrow;
+
+  /// No description provided for @wifiInstructionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'To properly add your appliance, make sure you are connected to a home network.'**
+  String get wifiInstructionsSubtitle;
+
+  /// No description provided for @okNext.
+  ///
+  /// In en, this message translates to:
+  /// **'OK, NEXT'**
+  String get okNext;
+
+  /// No description provided for @getReadyQr.
+  ///
+  /// In en, this message translates to:
+  /// **'Get ready! 2/2'**
+  String get getReadyQr;
+
+  /// No description provided for @qrInstructionsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Stay close to your appliance and get ready to scan the QR code.'**
+  String get qrInstructionsSubtitle;
+
+  /// No description provided for @okFound.
+  ///
+  /// In en, this message translates to:
+  /// **'OK, FOUND'**
+  String get okFound;
+
+  /// No description provided for @connectDevice.
+  ///
+  /// In en, this message translates to:
+  /// **'Connect Device'**
+  String get connectDevice;
+
+  /// No description provided for @scanQr.
+  ///
+  /// In en, this message translates to:
+  /// **'SCAN'**
+  String get scanQr;
+
+  /// No description provided for @manualEntry.
+  ///
+  /// In en, this message translates to:
+  /// **'MANUAL'**
+  String get manualEntry;
+
+  /// No description provided for @scanQrTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan the QR code'**
+  String get scanQrTitle;
+
+  /// No description provided for @scanQrSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Position the code within the frame for automatic detection.'**
+  String get scanQrSubtitle;
+
+  /// No description provided for @enterApplianceNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the number of your\nappliance.'**
+  String get enterApplianceNumber;
+
+  /// No description provided for @typeSerialCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Please type the serial code found on the sticker of your hydroponic unit.'**
+  String get typeSerialCode;
+
+  /// No description provided for @whereIsSerialNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Where can I find the serial number?'**
+  String get whereIsSerialNumber;
+
+  /// No description provided for @confirm.
+  ///
+  /// In en, this message translates to:
+  /// **'CONFIRM'**
+  String get confirm;
+
+  /// No description provided for @invalidQrCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid QR code. Please try again.'**
+  String get invalidQrCode;
+
+  /// No description provided for @deviceAlreadyRegistered.
+  ///
+  /// In en, this message translates to:
+  /// **'This device is already registered to another user.'**
+  String get deviceAlreadyRegistered;
+
+  /// No description provided for @generalError.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred. Please try again.'**
+  String get generalError;
+
+  /// No description provided for @unexpectedError.
+  ///
+  /// In en, this message translates to:
+  /// **'An unexpected error occurred. Please try again.'**
+  String get unexpectedError;
+
+  /// No description provided for @macAddressFormat.
+  ///
+  /// In en, this message translates to:
+  /// **'Format: XX:XX:XX:XX:XX:XX'**
+  String get macAddressFormat;
+
+  /// No description provided for @invalidSerialNumberLength.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a valid 12-character serial number.'**
+  String get invalidSerialNumberLength;
+
+  /// No description provided for @userNotAuthenticated.
+  ///
+  /// In en, this message translates to:
+  /// **'User not authenticated.'**
+  String get userNotAuthenticated;
+
+  /// No description provided for @invalidSerialNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Invalid serial number. Please check and try again.'**
+  String get invalidSerialNumber;
+
+  /// No description provided for @registrationError.
+  ///
+  /// In en, this message translates to:
+  /// **'An error occurred during registration. Please try again.'**
+  String get registrationError;
 }
 
 class _AppLocalizationsDelegate

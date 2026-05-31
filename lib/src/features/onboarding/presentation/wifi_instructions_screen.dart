@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../app/screens.dart';
 import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
@@ -13,6 +14,7 @@ class WifiInstructionsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
     return Scaffold(
@@ -26,7 +28,7 @@ class WifiInstructionsScreen extends ConsumerWidget {
           onPressed: () => onNavigate(AppScreen.deviceList),
         ),
         title: Text(
-          'Get ready! 1/2',
+          l10n.getReadyWifi,
           style: GoogleFonts.manrope(
             fontSize: 14,
             fontWeight: FontWeight.bold,
@@ -78,7 +80,7 @@ class WifiInstructionsScreen extends ConsumerWidget {
           
           // Title
           Text(
-            'Connect to Grow',
+            l10n.connectToGrow,
             style: GoogleFonts.manrope(
               fontSize: 20,
               fontWeight: FontWeight.w800,
@@ -93,7 +95,7 @@ class WifiInstructionsScreen extends ConsumerWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 48.0),
             child: Text(
-              'To properly add your appliance, make sure you are connected to a home network.',
+              l10n.wifiInstructionsSubtitle,
               textAlign: TextAlign.center,
               style: GoogleFonts.manrope(
                 fontSize: 12,
@@ -126,7 +128,7 @@ class WifiInstructionsScreen extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      'OK, NEXT',
+                      l10n.okNext,
                       style: GoogleFonts.manrope(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
