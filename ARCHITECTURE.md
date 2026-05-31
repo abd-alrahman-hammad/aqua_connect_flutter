@@ -40,7 +40,9 @@ This directory holds everything shared across multiple features. If logic or a w
 - `services/`: Low-level infrastructural services that features consume.
   - `firebase_auth_service.dart`: Maps Firebase Auth actions to the app.
   - `firestore_service.dart`: Base firestore operations.
-  - `hydroponic_database_service.dart`: Dedicated service for reading/writing realtime sensor data and controller thresholds.
+  - `realtime_database_provider.dart`: Core infrastructure and Firebase realtime connection provider.
+  - `controls_repository.dart`: Dedicated repository for reading/writing controller thresholds and manual toggles.
+  - `sensors_repository.dart`: Dedicated repository for reading realtime sensor data, telemetry, and live monitoring.
   - `user_database_service.dart`: Management of User profiles and metadata.
   - `storage_service.dart`: Handling Firebase Storage uploads (profile pictures).
   - `groq_service.dart`: The underlying networking layer connecting to Groq AI inference.
@@ -80,7 +82,7 @@ This is where the bulk of the application resides. Each folder is a distinct ver
 
 ### 4.2. Dependency Injection and Async Data
 All application dependencies are lazily loaded and cached via Riverpod.
-If a feature requires sensor data, it should `ref.watch(sensorsStreamProvider)` which utilizes the `hydroponic_database_service` to provide an `AsyncValue` representing `Loading`, `Error`, or `Data` inherently. UI dynamically reacts without needing explicit `setState()`.
+If a feature requires sensor data, it should `ref.watch(sensorsStreamProvider)` which utilizes the `sensors_repository.dart` to provide an `AsyncValue` representing `Loading`, `Error`, or `Data` inherently. UI dynamically reacts without needing explicit `setState()`.
 
 ## 5. Third-Party Integrations
 - **fl_chart**: Powers custom telemetry charts.
