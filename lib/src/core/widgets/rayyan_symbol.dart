@@ -157,6 +157,12 @@ class RayyanSymbol extends StatelessWidget {
         return Symbols.face_rounded;
       case 'calendar_month':
         return Symbols.calendar_month_rounded;
+      case 'call':
+        return Symbols.call_rounded;
+      case 'mail':
+        return Symbols.mail_rounded;
+      case 'forum':
+        return Symbols.forum_rounded;
       default:
         return Symbols.help_rounded;
     }
