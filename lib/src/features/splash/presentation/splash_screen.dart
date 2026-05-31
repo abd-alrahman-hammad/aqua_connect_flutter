@@ -101,7 +101,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       return;
     }
 
-    widget.onNavigate(AppScreen.dashboard);
+    widget.onNavigate(AppScreen.addDevice);
   }
 
   @override
