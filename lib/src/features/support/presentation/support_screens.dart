@@ -23,7 +23,6 @@ List<FaqItem> _getFaqs(AppLocalizations l10n) => [
   FaqItem(question: l10n.faqQuestion5, answer: l10n.faqAnswer5),
   FaqItem(question: l10n.faqQuestion6, answer: l10n.faqAnswer6),
   FaqItem(question: l10n.faqQuestion7, answer: l10n.faqAnswer7),
-  FaqItem(question: l10n.faqQuestion8, answer: l10n.faqAnswer8),
   FaqItem(question: l10n.faqQuestion9, answer: l10n.faqAnswer9),
 ];
 
@@ -408,3 +407,4 @@ class _FaqTileState extends State<_FaqTile> {
     );
   }
 }
+
