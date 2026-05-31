@@ -40,7 +40,7 @@ class RayyanPageScaffold extends StatelessWidget {
       backgroundColor: backgroundColor,
       body: Stack(
         children: [
-          SafeArea(top: false, bottom: false, child: content),
+          SafeArea(bottom: false, child: content),
           if (includeBottomNav)
             RayyanBottomNav(current: currentScreen, onNavigate: onNavigate),
         ],
