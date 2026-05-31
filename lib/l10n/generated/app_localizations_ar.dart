@@ -867,4 +867,10 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get contactUsSub => 'تواصل مع فريقنا';
+
+  @override
+  String get rising => 'ترتفع';
+
+  @override
+  String get falling => 'تنخفض';
 }

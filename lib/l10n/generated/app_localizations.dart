@@ -1705,6 +1705,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Get in touch with our team'**
   String get contactUsSub;
+
+  /// No description provided for @rising.
+  ///
+  /// In en, this message translates to:
+  /// **'Rising'**
+  String get rising;
+
+  /// No description provided for @falling.
+  ///
+  /// In en, this message translates to:
+  /// **'Falling'**
+  String get falling;
 }
 
 class _AppLocalizationsDelegate

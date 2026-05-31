@@ -342,5 +342,7 @@
     }
   },
   "contactUsTitle": "Contact Us",
-  "contactUsSub": "Get in touch with our team"
+  "contactUsSub": "Get in touch with our team",
+  "rising": "Rising",
+  "falling": "Falling"
 }

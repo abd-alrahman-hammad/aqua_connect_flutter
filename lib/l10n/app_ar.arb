@@ -287,5 +287,7 @@
   "verificationCodeResent": "تم إعادة إرسال رمز التحقق!",
   "failedToResendCode": "فشل إعادة إرسال الرمز: {error}",
   "contactUsTitle": "تواصل معنا",
-  "contactUsSub": "تواصل مع فريقنا"
+  "contactUsSub": "تواصل مع فريقنا",
+  "rising": "ترتفع",
+  "falling": "تنخفض"
 }

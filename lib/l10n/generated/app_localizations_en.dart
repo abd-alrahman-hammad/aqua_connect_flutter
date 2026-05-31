@@ -863,4 +863,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get contactUsSub => 'Get in touch with our team';
+
+  @override
+  String get rising => 'Rising';
+
+  @override
+  String get falling => 'Falling';
 }
