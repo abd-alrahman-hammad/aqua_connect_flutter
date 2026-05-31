@@ -8,6 +8,7 @@ import '../../../core/services/auth_preferences_service.dart';
 import '../../../core/services/firebase_auth_service.dart';
 import '../../../core/services/firestore_database_service.dart';
 import '../../../core/theme/rayyan_colors.dart';
+import '../../../core/services/sensors_repository.dart';
 
 class AddDeviceScreen extends ConsumerWidget {
   const AddDeviceScreen({super.key, required this.onNavigate});
@@ -71,6 +72,7 @@ class AddDeviceScreen extends ConsumerWidget {
     final userDevicesAsync = ref.watch(userDevicesProvider);
     final devices = userDevicesAsync.valueOrNull ?? [];
     final hasDevices = devices.isNotEmpty;
+    final isConnected = ref.watch(systemStatusProvider);
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -147,7 +149,9 @@ class AddDeviceScreen extends ConsumerWidget {
               ...devices.map(
                 (device) => Padding(
                   padding: const EdgeInsets.only(bottom: 12.0),
-                  child: Container(
+                  child: GestureDetector(
+                    onTap: () => onNavigate(AppScreen.dashboard),
+                    child: Container(
                     padding: const EdgeInsets.all(16),
                     decoration: BoxDecoration(
                       color: isDark ? RayyanColors.cardDark : Colors.white,
@@ -199,10 +203,10 @@ class AddDeviceScreen extends ConsumerWidget {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                'Connected',
+                                isConnected ? 'Connected' : 'Disconnected',
                                 style: GoogleFonts.manrope(
                                   fontSize: 12,
-                                  color: RayyanColors.success,
+                                  color: isConnected ? RayyanColors.success : RayyanColors.error,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
@@ -220,7 +224,8 @@ class AddDeviceScreen extends ConsumerWidget {
                     ),
                   ),
                 ),
-              )
+              ),
+            )
             else
               // Empty State Card
               Container(
