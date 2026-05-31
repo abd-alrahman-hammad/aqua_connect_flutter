@@ -246,12 +246,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           },
                           validator: (value) {
                             if (_emailError != null) return _emailError;
-                            if (value == null || value.isEmpty) {
+                            if (value == null || value.trim().isEmpty) {
                               return AppLocalizations.of(
                                 context,
                               )!.pleaseEnterEmail;
                             }
-                            if (!_emailRegex.hasMatch(value)) {
+                            if (!_emailRegex.hasMatch(value.trim())) {
                               return AppLocalizations.of(
                                 context,
                               )!.invalidEmailFormat;
