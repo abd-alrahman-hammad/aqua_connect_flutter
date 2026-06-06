@@ -1,6 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 
-import 'firebase_config.dart';
+// import 'firebase_config.dart';
 import '../../../../firebase_options.dart';
 
 /// Exception thrown when Firebase initialization fails
@@ -22,19 +22,6 @@ class FirebaseInitializer {
   // Private constructor to prevent instantiation
   FirebaseInitializer._();
 
-  /// Initializes Firebase with platform-specific configuration
-  ///
-  /// This method should be called in `main()` before `runApp()`:
-  /// ```dart
-  /// void main() async {
-  ///   WidgetsFlutterBinding.ensureInitialized();
-  ///   await FirebaseInitializer.initialize();
-  ///   runApp(MyApp());
-  /// }
-  /// ```
-  ///
-  /// Returns `true` if initialization was successful.
-  ///
   /// Throws [FirebaseInitException] if initialization fails.
   static Future<bool> initialize() async {
     try {
@@ -62,13 +49,6 @@ class FirebaseInitializer {
     }
   }
 
-  /// Gets the appropriate FirebaseOptions for the current platform
-  ///
-  /// Returns:
-  /// - [FirebaseConfig.web] for web platforms
-  /// - [FirebaseConfig.ios] for iOS platforms
-  /// - [FirebaseConfig.android] for Android platforms
-  ///
   /// Throws [FirebaseInitException] if platform is not supported.
   static FirebaseOptions _getPlatformOptions() {
     return DefaultFirebaseOptions.currentPlatform;
@@ -92,19 +72,9 @@ class FirebaseInitializer {
     return Firebase.app();
   }
 
-  /// Performs health check on Firebase initialization
-  ///
-  /// Returns a map with initialization status and details:
-  /// ```dart
-  /// {
-  ///   'initialized': true,
-  ///   'appName': '[DEFAULT]',
-  ///   'options': {
-  ///     'projectId': '....',
-  ///     'databaseURL': 'https://...'
-  ///   }
-  /// }
-  /// ```
+  // Performs health check on Firebase initialization
+  // Returns a map with initialization status and details:
+
   static Map<String, dynamic> getStatus() {
     if (!isInitialized) {
       return {'initialized': false, 'error': 'Firebase not initialized'};

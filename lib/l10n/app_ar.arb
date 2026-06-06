@@ -88,7 +88,7 @@
   "createAccount": "إنشاء حساب",
   "joinFuture": "انضم لمستقبل الزراعة الآلية",
   "fullName": "الاسم الكامل",
-  "fullNameHint": "أحمد علي",
+  "fullNameHint": "عبد الرحمن حماد",
   "alreadyHaveAccount": "لديك حساب بالفعل؟ ",
   "resetLinkSent": "تم إرسال رابط إعادة التعيين",
   "sendResetLink": "إرسال رابط إعادة التعيين",
@@ -339,5 +339,9 @@
   "invalidSerialNumberLength": "يرجى إدخال رقم تسلسلي صحيح مكون من 12 رمزاً.",
   "userNotAuthenticated": "المستخدم غير مصادق عليه.",
   "invalidSerialNumber": "رقم تسلسلي غير صالح. يرجى التحقق والمحاولة مرة أخرى.",
-  "registrationError": "حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى."
+  "registrationError": "حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى.",
+  "passwordComplexityError": "يجب أن تحتوي كلمة المرور على حرف واحد، ورقم واحد، ورمز واحد على الأقل",
+  "passwordStrengthWeak": "ضعيفة",
+  "passwordStrengthMedium": "متوسطة",
+  "passwordStrengthStrong": "قوية"
 }

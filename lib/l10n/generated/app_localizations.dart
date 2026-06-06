@@ -635,7 +635,7 @@ abstract class AppLocalizations {
   /// No description provided for @fullNameHint.
   ///
   /// In en, this message translates to:
-  /// **'Alex Rivera'**
+  /// **'Abdelrahman Hammad'**
   String get fullNameHint;
 
   /// No description provided for @alreadyHaveAccount.
@@ -2017,6 +2017,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'An error occurred during registration. Please try again.'**
   String get registrationError;
+
+  /// No description provided for @passwordComplexityError.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must contain at least one letter, one number, and one symbol'**
+  String get passwordComplexityError;
+
+  /// No description provided for @passwordStrengthWeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Weak'**
+  String get passwordStrengthWeak;
+
+  /// No description provided for @passwordStrengthMedium.
+  ///
+  /// In en, this message translates to:
+  /// **'Medium'**
+  String get passwordStrengthMedium;
+
+  /// No description provided for @passwordStrengthStrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Strong'**
+  String get passwordStrengthStrong;
 }
 
 class _AppLocalizationsDelegate

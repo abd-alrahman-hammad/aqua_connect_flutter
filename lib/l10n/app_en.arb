@@ -88,7 +88,7 @@
   "createAccount": "Create Account",
   "joinFuture": "Join the future of automated farming",
   "fullName": "Full Name",
-  "fullNameHint": "Alex Rivera",
+  "fullNameHint": "Abdelrahman Hammad",
   "alreadyHaveAccount": "Already have an account? ",
   "resetLinkSent": "Reset Link Sent",
   "sendResetLink": "Send Reset Link",
@@ -394,5 +394,9 @@
   "invalidSerialNumberLength": "Please enter a valid 12-character serial number.",
   "userNotAuthenticated": "User not authenticated.",
   "invalidSerialNumber": "Invalid serial number. Please check and try again.",
-  "registrationError": "An error occurred during registration. Please try again."
+  "registrationError": "An error occurred during registration. Please try again.",
+  "passwordComplexityError": "Password must contain at least one letter, one number, and one symbol",
+  "passwordStrengthWeak": "Weak",
+  "passwordStrengthMedium": "Medium",
+  "passwordStrengthStrong": "Strong"
 }

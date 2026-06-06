@@ -282,7 +282,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get fullName => 'Full Name';
 
   @override
-  String get fullNameHint => 'Alex Rivera';
+  String get fullNameHint => 'Abdelrahman Hammad';
 
   @override
   String get alreadyHaveAccount => 'Already have an account? ';
@@ -1030,4 +1030,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get registrationError =>
       'An error occurred during registration. Please try again.';
+
+  @override
+  String get passwordComplexityError =>
+      'Password must contain at least one letter, one number, and one symbol';
+
+  @override
+  String get passwordStrengthWeak => 'Weak';
+
+  @override
+  String get passwordStrengthMedium => 'Medium';
+
+  @override
+  String get passwordStrengthStrong => 'Strong';
 }

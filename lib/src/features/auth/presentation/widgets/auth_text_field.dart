@@ -167,6 +167,7 @@ class AuthPasswordField extends StatelessWidget {
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(color: Colors.red.shade400, width: 1.2),
             ),
+            errorMaxLines: 3,
             suffixIcon: IconButton(
               onPressed: onToggleVisibility,
               icon: RayyanSymbol(

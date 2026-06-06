@@ -65,8 +65,10 @@ class _OtpInputFieldState extends State<OtpInputField> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    return Directionality(
+      textDirection: TextDirection.ltr,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: List.generate(widget.length, (index) {
         return Container(
           width: 50,
@@ -111,6 +113,7 @@ class _OtpInputFieldState extends State<OtpInputField> {
           ),
         );
       }),
+      ),
     );
   }
 }

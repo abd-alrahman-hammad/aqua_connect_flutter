@@ -12,6 +12,8 @@ import '../../../core/widgets/rayyan_header.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
 import '../../alerts/data/notification_service.dart';
 import '../domain/notification_preferences.dart';
+import '../../../core/utils/password_validator.dart';
+import '../../auth/presentation/widgets/password_strength_indicator.dart';
 
 class AccountSecurityScreen extends ConsumerStatefulWidget {
   const AccountSecurityScreen({super.key, required this.onNavigate});
@@ -177,10 +179,10 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                                   context,
                                 )!.pleaseEnterNewPassword;
                               }
-                              if (v.length < 8) {
+                              if (!PasswordValidator.isValid(v)) {
                                 return AppLocalizations.of(
                                   context,
-                                )!.passwordMinLength;
+                                )!.passwordComplexityError;
                               }
                               return null;
                             },
@@ -197,6 +199,7 @@ class _AccountSecurityScreenState extends ConsumerState<AccountSecurityScreen> {
                               ),
                             ),
                           ),
+                          PasswordStrengthIndicator(password: _newPasswordController.text),
                           const SizedBox(height: 12),
                           _Field(
                             label: AppLocalizations.of(
@@ -838,6 +841,7 @@ class _Field extends StatelessWidget {
                 width: 1.2,
               ),
             ),
+            errorMaxLines: 3,
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(12),
               borderSide: BorderSide(

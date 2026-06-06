@@ -284,7 +284,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get fullName => 'الاسم الكامل';
 
   @override
-  String get fullNameHint => 'أحمد علي';
+  String get fullNameHint => 'عبد الرحمن حماد';
 
   @override
   String get alreadyHaveAccount => 'لديك حساب بالفعل؟ ';
@@ -1031,4 +1031,17 @@ class AppLocalizationsAr extends AppLocalizations {
   @override
   String get registrationError =>
       'حدث خطأ أثناء التسجيل. يرجى المحاولة مرة أخرى.';
+
+  @override
+  String get passwordComplexityError =>
+      'يجب أن تحتوي كلمة المرور على حرف واحد، ورقم واحد، ورمز واحد على الأقل';
+
+  @override
+  String get passwordStrengthWeak => 'ضعيفة';
+
+  @override
+  String get passwordStrengthMedium => 'متوسطة';
+
+  @override
+  String get passwordStrengthStrong => 'قوية';
 }

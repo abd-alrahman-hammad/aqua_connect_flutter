@@ -1,4 +1,4 @@
-﻿import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../../l10n/generated/app_localizations.dart';
 import '../../../../core/theme/rayyan_colors.dart';
@@ -7,7 +7,9 @@ import '../../../../core/services/firebase_auth_service.dart';
 import '../widgets/auth_brand_header.dart';
 import '../widgets/auth_text_field.dart';
 import '../widgets/auth_button.dart';
+import '../widgets/password_strength_indicator.dart';
 import 'verify_account_screen.dart';
+import '../../../../core/utils/password_validator.dart';
 
 class SignupScreen extends ConsumerStatefulWidget {
   const SignupScreen({super.key});
@@ -173,14 +175,15 @@ class _SignupScreenState extends ConsumerState<SignupScreen> {
                                 context,
                               )!.pleaseEnterAPassword;
                             }
-                            if (value.length < 8) {
+                            if (!PasswordValidator.isValid(value)) {
                               return AppLocalizations.of(
                                 context,
-                              )!.passwordLengthError;
+                              )!.passwordComplexityError;
                             }
                             return null;
                           },
                         ),
+                        PasswordStrengthIndicator(password: _passwordController.text),
                         const SizedBox(height: 16),
                         AuthButton(
                           label: AppLocalizations.of(context)!.signUp,
