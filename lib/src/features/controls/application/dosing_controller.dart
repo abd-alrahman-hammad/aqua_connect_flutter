@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/firebase_config.dart';
+import '../../../core/config/firebase_paths.dart';
 
 class DosingState {
   final bool isEcUpActive;
@@ -42,7 +43,7 @@ class DosingController extends StateNotifier<DosingState> {
   }
 
   void _startMonitoring() {
-    final ref = _database.child(FirebaseConfig.dosingControlPath);
+    final ref = _database.child(FirebasePaths.dosingControlPath);
 
     _sub = ref.onValue.listen((event) {
       final data = event.snapshot.value;
@@ -93,7 +94,7 @@ class DosingController extends StateNotifier<DosingState> {
 
   Future<void> _sendEcUpSteps(int steps) async {
     try {
-      await _database.child(FirebaseConfig.ecUpStepsPath).set(steps);
+      await _database.child(FirebasePaths.ecUpStepsPath).set(steps);
     } catch (e) {
       // Handle error quietly or log it
     }
@@ -101,7 +102,7 @@ class DosingController extends StateNotifier<DosingState> {
 
   Future<void> _sendPhDownSteps(int steps) async {
     try {
-      await _database.child(FirebaseConfig.phDownStepsPath).set(steps);
+      await _database.child(FirebasePaths.phDownStepsPath).set(steps);
     } catch (e) {
       // Handle error quietly or log it
     }

@@ -5,6 +5,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/firebase_config.dart';
+import '../config/firebase_paths.dart';
 import '../models/hydroponic/sensors_model.dart';
 import '../models/db/live_monitoring_model.dart';
 import 'realtime_database_provider.dart';
@@ -22,7 +23,7 @@ class SensorsRepository {
 
   Stream<SensorsModel> watchSensors() {
     try {
-      final ref = _database.child(FirebaseConfig.sensorsPath);
+      final ref = _database.child(FirebasePaths.sensorsPath);
 
       return ref.onValue
           .map((event) {
@@ -58,7 +59,7 @@ class SensorsRepository {
 
   Stream<int> watchWaterLevel() {
     try {
-      final ref = _database.child(FirebaseConfig.waterLevelPath);
+      final ref = _database.child(FirebasePaths.waterLevelPath);
 
       return ref.onValue
           .map((event) {
@@ -146,7 +147,7 @@ class SensorsRepository {
 
   Future<SensorsModel> getSensors() async {
     try {
-      final ref = _database.child(FirebaseConfig.sensorsPath);
+      final ref = _database.child(FirebasePaths.sensorsPath);
       final snapshot = await ref.get();
 
       if (!snapshot.exists || snapshot.value == null) {
@@ -179,7 +180,7 @@ class SensorsRepository {
       final querySnapshot = await firestore
           .collection('devices')
           .doc(deviceId)
-          .collection(FirebaseConfig.sensorHistoryCollectionPath)
+          .collection(FirebasePaths.sensorHistoryCollectionPath)
           .where('timestamp', isGreaterThanOrEqualTo: startTimeSeconds)
           .orderBy('timestamp')
           .get();

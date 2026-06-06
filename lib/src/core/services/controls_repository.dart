@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../config/firebase_config.dart';
+import '../config/firebase_paths.dart';
 import '../models/hydroponic/controls_model.dart';
 import '../models/hydroponic/settings_model.dart';
 import 'realtime_database_provider.dart';
@@ -21,7 +22,7 @@ class ControlsRepository {
 
   Stream<ControlsModel> watchControls() {
     try {
-      final ref = _database.child(FirebaseConfig.controlsPath);
+      final ref = _database.child(FirebasePaths.controlsPath);
 
       return ref.onValue
           .map((event) {
@@ -57,7 +58,7 @@ class ControlsRepository {
 
   Stream<SettingsModel> watchSettings() {
     try {
-      final ref = _database.child(FirebaseConfig.settingsPath);
+      final ref = _database.child(FirebasePaths.settingsPath);
 
       return ref.onValue
           .map((event) {
@@ -97,7 +98,7 @@ class ControlsRepository {
 
   Future<void> toggleAutoMode(bool enabled) async {
     try {
-      final ref = _database.child(FirebaseConfig.autoModePath);
+      final ref = _database.child(FirebasePaths.autoModePath);
       await ref.set(enabled ? 1 : 0);
     } catch (e) {
       throw DatabaseException('Failed to update auto mode: $e', null, e);
@@ -106,7 +107,7 @@ class ControlsRepository {
 
   Future<void> toggleLedLight(bool enabled) async {
     try {
-      final ref = _database.child(FirebaseConfig.ledLightPath);
+      final ref = _database.child(FirebasePaths.ledLightPath);
       await ref.set(enabled ? 1 : 0);
     } catch (e) {
       throw DatabaseException('Failed to update LED light: $e', null, e);
@@ -115,7 +116,7 @@ class ControlsRepository {
 
   Future<void> toggleWaterPump(bool enabled) async {
     try {
-      final ref = _database.child(FirebaseConfig.waterPumpPath);
+      final ref = _database.child(FirebasePaths.waterPumpPath);
       await ref.set(enabled ? 1 : 0);
     } catch (e) {
       throw DatabaseException('Failed to update Water Pump: $e', null, e);
@@ -124,7 +125,7 @@ class ControlsRepository {
 
   Future<void> toggleFan(bool enabled) async {
     try {
-      final ref = _database.child(FirebaseConfig.fanPath);
+      final ref = _database.child(FirebasePaths.fanPath);
       await ref.set(enabled ? 1 : 0);
     } catch (e) {
       throw DatabaseException('Failed to update Fan: $e', null, e);
@@ -133,7 +134,7 @@ class ControlsRepository {
 
   Future<void> toggleHeater(bool enabled) async {
     try {
-      final ref = _database.child(FirebaseConfig.heaterPath);
+      final ref = _database.child(FirebasePaths.heaterPath);
       await ref.set(enabled ? 1 : 0);
     } catch (e) {
       throw DatabaseException('Failed to update Heater: $e', null, e);
@@ -142,7 +143,7 @@ class ControlsRepository {
 
   Future<void> togglePumpPhUp(bool enabled) async {
     try {
-      final ref = _database.child(FirebaseConfig.pumpPhUpPath);
+      final ref = _database.child(FirebasePaths.pumpPhUpPath);
       await ref.set(enabled ? 1 : 0);
     } catch (e) {
       throw DatabaseException('Failed to update pH Up Pump: $e', null, e);
@@ -151,7 +152,7 @@ class ControlsRepository {
 
   Future<void> togglePumpPhDown(bool enabled) async {
     try {
-      final ref = _database.child(FirebaseConfig.pumpPhDownPath);
+      final ref = _database.child(FirebasePaths.pumpPhDownPath);
       await ref.set(enabled ? 1 : 0);
     } catch (e) {
       throw DatabaseException('Failed to update pH Down Pump: $e', null, e);
@@ -160,7 +161,7 @@ class ControlsRepository {
 
   Future<void> togglePumpEcUp(bool enabled) async {
     try {
-      final ref = _database.child(FirebaseConfig.pumpEcUpPath);
+      final ref = _database.child(FirebasePaths.pumpEcUpPath);
       await ref.set(enabled ? 1 : 0);
     } catch (e) {
       throw DatabaseException('Failed to update EC Up Pump: $e', null, e);
@@ -169,7 +170,7 @@ class ControlsRepository {
 
   Future<void> togglePumpEcDown(bool enabled) async {
     try {
-      final ref = _database.child(FirebaseConfig.pumpEcDownPath);
+      final ref = _database.child(FirebasePaths.pumpEcDownPath);
       await ref.set(enabled ? 1 : 0);
     } catch (e) {
       throw DatabaseException('Failed to update EC Down Pump: $e', null, e);
@@ -178,7 +179,7 @@ class ControlsRepository {
 
   Future<void> updateControls(ControlsModel controls) async {
     try {
-      final ref = _database.child(FirebaseConfig.controlsPath);
+      final ref = _database.child(FirebasePaths.controlsPath);
       await ref.update(controls.toJson());
     } catch (e) {
       throw DatabaseException('Failed to update controls: $e', null, e);
@@ -199,7 +200,7 @@ class ControlsRepository {
     }
 
     try {
-      final ref = _database.child(FirebaseConfig.settingsPath);
+      final ref = _database.child(FirebasePaths.settingsPath);
       await ref.update(settings.toJson());
     } catch (e) {
       throw DatabaseException('Failed to update settings: $e', null, e);
@@ -218,7 +219,7 @@ class ControlsRepository {
     }
 
     try {
-      final ref = _database.child(FirebaseConfig.settingsPath);
+      final ref = _database.child(FirebasePaths.settingsPath);
       await ref.update({'temp_high': high, 'temp_low': low});
     } catch (e) {
       throw DatabaseException(
@@ -238,7 +239,7 @@ class ControlsRepository {
     }
 
     try {
-      final ref = _database.child(FirebaseConfig.phHighPath);
+      final ref = _database.child(FirebasePaths.phHighPath);
       await ref.set(phHigh);
     } catch (e) {
       throw DatabaseException('Failed to update pH threshold: $e', null, e);
@@ -254,7 +255,7 @@ class ControlsRepository {
     }
 
     try {
-      final ref = _database.child(FirebaseConfig.ecLowPath);
+      final ref = _database.child(FirebasePaths.ecLowPath);
       await ref.set(ecLow);
     } catch (e) {
       throw DatabaseException('Failed to update EC threshold: $e', null, e);
@@ -267,7 +268,7 @@ class ControlsRepository {
 
   Future<ControlsModel> getControls() async {
     try {
-      final ref = _database.child(FirebaseConfig.controlsPath);
+      final ref = _database.child(FirebasePaths.controlsPath);
       final snapshot = await ref.get();
 
       if (!snapshot.exists || snapshot.value == null) {
@@ -287,7 +288,7 @@ class ControlsRepository {
 
   Future<SettingsModel> getSettings() async {
     try {
-      final ref = _database.child(FirebaseConfig.settingsPath);
+      final ref = _database.child(FirebasePaths.settingsPath);
       final snapshot = await ref.get();
 
       if (!snapshot.exists || snapshot.value == null) {
