@@ -449,14 +449,12 @@ class _MenuItem extends StatelessWidget {
     required this.icon,
     required this.title,
     this.subtitle,
-    this.subtitleWidget,
     required this.onTap,
   });
 
   final String icon;
   final String title;
   final String? subtitle;
-  final Widget? subtitleWidget;
   final VoidCallback onTap;
 
   @override
@@ -489,7 +487,6 @@ class _MenuItem extends StatelessWidget {
                             : RayyanColors.slate500,
                       ),
                     ),
-                  if (subtitleWidget != null) subtitleWidget!,
                 ],
               ),
             ),

@@ -25,10 +25,10 @@ class NotificationPreferencesNotifier extends StateNotifier<NotificationPreferen
   Future<void> updatePrefs(NotificationPreferences newPrefs) async {
     state = newPrefs;
     if (_prefs != null) {
-      await _prefs!.setBool(_pushKey, newPrefs.pushEnabled);
-      await _prefs!.setBool(_criticalKey, newPrefs.criticalAlertsEnabled);
-      await _prefs!.setBool(_warningsKey, newPrefs.parameterWarningsEnabled);
-      await _prefs!.setBool(_waterKey, newPrefs.waterLevelNotificationsEnabled);
+      await _prefs.setBool(_pushKey, newPrefs.pushEnabled);
+      await _prefs.setBool(_criticalKey, newPrefs.criticalAlertsEnabled);
+      await _prefs.setBool(_warningsKey, newPrefs.parameterWarningsEnabled);
+      await _prefs.setBool(_waterKey, newPrefs.waterLevelNotificationsEnabled);
     }
   }
 }

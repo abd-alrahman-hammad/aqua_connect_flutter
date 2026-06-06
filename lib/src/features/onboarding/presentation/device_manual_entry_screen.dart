@@ -10,7 +10,7 @@ import '../../../core/theme/rayyan_colors.dart';
 import '../../../core/widgets/rayyan_symbol.dart';
 import '../../../core/services/firestore_database_service.dart';
 
-// Use the same provider defined in device_scan_qr_screen.dart if needed, 
+// Use the same provider defined in device_scan_qr_screen.dart if needed,
 // or define it here if it's simpler. Assuming we can just create it.
 final firestoreServiceProvider = Provider((ref) => FirestoreDatabaseService());
 
@@ -20,10 +20,12 @@ class DeviceManualEntryScreen extends ConsumerStatefulWidget {
   final void Function(AppScreen) onNavigate;
 
   @override
-  ConsumerState<DeviceManualEntryScreen> createState() => _DeviceManualEntryScreenState();
+  ConsumerState<DeviceManualEntryScreen> createState() =>
+      _DeviceManualEntryScreenState();
 }
 
-class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScreen> {
+class _DeviceManualEntryScreenState
+    extends ConsumerState<DeviceManualEntryScreen> {
   final TextEditingController _controller = TextEditingController();
   bool _isProcessing = false;
   String _errorMessage = '';
@@ -61,7 +63,10 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
       }
 
       final firestoreService = ref.read(firestoreServiceProvider);
-      final status = await firestoreService.registerDevice(serialNumber, currentUserId);
+      final status = await firestoreService.registerDevice(
+        serialNumber,
+        currentUserId,
+      );
 
       if (!mounted) return;
 
@@ -76,7 +81,9 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
           break;
         case DeviceRegistrationStatus.alreadyRegistered:
           setState(() {
-            _errorMessage = AppLocalizations.of(context)!.deviceAlreadyRegistered;
+            _errorMessage = AppLocalizations.of(
+              context,
+            )!.deviceAlreadyRegistered;
           });
           break;
         case DeviceRegistrationStatus.error:
@@ -98,6 +105,76 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
         });
       }
     }
+  }
+
+  void _showSerialNumberHelp(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        final isDark = Theme.of(context).brightness == Brightness.dark;
+        return Dialog(
+          backgroundColor: Colors.transparent,
+          insetPadding: const EdgeInsets.all(24),
+          child: Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              color: isDark ? RayyanColors.cardDark : Colors.white,
+              borderRadius: BorderRadius.circular(16),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        AppLocalizations.of(context)!.whereIsSerialNumber,
+                        style: GoogleFonts.manrope(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: isDark ? Colors.white : Colors.black87,
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      icon: Icon(
+                        Icons.close,
+                        color: isDark ? Colors.white70 : Colors.black54,
+                      ),
+                      onPressed: () => Navigator.of(context).pop(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(8),
+                  child: Image.asset(
+                    'assets/images/onboarding/serial_number_help.png',
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 200,
+                        color: isDark
+                            ? RayyanColors.surfaceDark
+                            : Colors.grey[200],
+                        alignment: Alignment.center,
+                        child: Text(
+                          'Waiting for image...',
+                          style: TextStyle(
+                            color: isDark ? Colors.white54 : Colors.black54,
+                          ),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 
   @override
@@ -173,8 +250,9 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                                 children: [
                                   Expanded(
                                     child: GestureDetector(
-                                      onTap: () =>
-                                          widget.onNavigate(AppScreen.deviceScanQr),
+                                      onTap: () => widget.onNavigate(
+                                        AppScreen.deviceScanQr,
+                                      ),
                                       child: Container(
                                         color: Colors.transparent,
                                         child: Center(
@@ -267,23 +345,26 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                             padding: const EdgeInsets.symmetric(
                               horizontal: 24.0,
                             ),
-                            child: Row(
-                              children: [
-                                Text(
-                                  l10n.whereIsSerialNumber,
-                                  style: GoogleFonts.manrope(
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.bold,
-                                    color: RayyanColors.primary,
+                            child: GestureDetector(
+                              onTap: () => _showSerialNumberHelp(context),
+                              child: Row(
+                                children: [
+                                  Text(
+                                    l10n.whereIsSerialNumber,
+                                    style: GoogleFonts.manrope(
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                      color: RayyanColors.primary,
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(width: 4),
-                                const Icon(
-                                  Icons.arrow_forward,
-                                  color: RayyanColors.primary,
-                                  size: 14,
-                                ),
-                              ],
+                                  const SizedBox(width: 4),
+                                  const Icon(
+                                    Icons.arrow_forward,
+                                    color: RayyanColors.primary,
+                                    size: 14,
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
 
@@ -313,7 +394,9 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                                   l10n.macAddressFormat,
                                   style: GoogleFonts.manrope(
                                     fontSize: 12,
-                                    color: isDark ? Colors.white30 : Colors.black38,
+                                    color: isDark
+                                        ? Colors.white30
+                                        : Colors.black38,
                                   ),
                                 ),
                               ],
@@ -332,7 +415,9 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                               width: double.infinity,
                               height: 56,
                               child: ElevatedButton(
-                                onPressed: _isProcessing ? null : _submitSerialNumber,
+                                onPressed: _isProcessing
+                                    ? null
+                                    : _submitSerialNumber,
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: RayyanColors.primary,
                                   foregroundColor: Colors.white,
@@ -351,7 +436,8 @@ class _DeviceManualEntryScreenState extends ConsumerState<DeviceManualEntryScree
                                         ),
                                       )
                                     : Row(
-                                        mainAxisAlignment: MainAxisAlignment.center,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
                                         children: [
                                           Text(
                                             l10n.confirm,
@@ -428,7 +514,7 @@ class _MacAddressInputState extends State<MacAddressInput> {
   Widget build(BuildContext context) {
     final text = widget.controller.text;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     List<Widget> blocks = [];
     for (int i = 0; i < 6; i++) {
       String blockText = '';
@@ -436,15 +522,19 @@ class _MacAddressInputState extends State<MacAddressInput> {
         int endIndex = (i * 2 + 2 <= text.length) ? i * 2 + 2 : text.length;
         blockText = text.substring(i * 2, endIndex);
       }
-      
-      bool isFocused = _focusNode.hasFocus && (text.length ~/ 2 == i || (text.length == 12 && i == 5));
-      
+
+      bool isFocused =
+          _focusNode.hasFocus &&
+          (text.length ~/ 2 == i || (text.length == 12 && i == 5));
+
       blocks.add(
         Container(
           width: 40,
           height: 54,
           decoration: BoxDecoration(
-            color: isDark ? RayyanColors.surfaceDark : RayyanColors.onboardCardLight,
+            color: isDark
+                ? RayyanColors.surfaceDark
+                : RayyanColors.onboardCardLight,
             borderRadius: BorderRadius.circular(12),
             border: Border.all(
               color: isFocused ? RayyanColors.primary : Colors.transparent,
@@ -460,9 +550,9 @@ class _MacAddressInputState extends State<MacAddressInput> {
               fontWeight: FontWeight.w600,
             ),
           ),
-        )
+        ),
       );
-      
+
       if (i < 5) {
         blocks.add(
           Padding(
@@ -475,7 +565,7 @@ class _MacAddressInputState extends State<MacAddressInput> {
                 fontWeight: FontWeight.bold,
               ),
             ),
-          )
+          ),
         );
       }
     }
@@ -500,16 +590,12 @@ class _MacAddressInputState extends State<MacAddressInput> {
                 focusNode: _focusNode,
                 keyboardType: TextInputType.text,
                 textCapitalization: TextCapitalization.characters,
-                inputFormatters: [
-                  _MacAddressFormatter(),
-                ],
+                inputFormatters: [_MacAddressFormatter()],
                 autocorrect: false,
                 enableSuggestions: false,
                 cursorColor: Colors.transparent,
                 style: const TextStyle(color: Colors.transparent),
-                decoration: const InputDecoration(
-                  border: InputBorder.none,
-                ),
+                decoration: const InputDecoration(border: InputBorder.none),
               ),
             ),
           ),
@@ -525,12 +611,15 @@ class _MacAddressFormatter extends TextInputFormatter {
     TextEditingValue oldValue,
     TextEditingValue newValue,
   ) {
-    String newText = newValue.text.toUpperCase().replaceAll(RegExp(r'[^0-9A-Z]'), '');
-    
+    String newText = newValue.text.toUpperCase().replaceAll(
+      RegExp(r'[^0-9A-Z]'),
+      '',
+    );
+
     if (newText.length > 12) {
       newText = newText.substring(0, 12);
     }
-    
+
     return TextEditingValue(
       text: newText,
       selection: TextSelection.collapsed(offset: newText.length),
